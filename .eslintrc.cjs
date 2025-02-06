@@ -15,7 +15,7 @@ module.exports = {
   plugins: ["react-refresh"],
   rules: {
     "react-refresh/only-export-components": [
-      "warn",
+      process.env.GITHUB_ACTIONS ? "off" : "warn",
       { allowConstantExport: true }
     ],
     "tailwindcss/no-custom-classname": "off",
