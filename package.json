@@ -13,7 +13,7 @@
     "serve": "vite preview",
     "preview": "tsc && vite build && vite preview",
     "type-check": "tsc --noEmit",
-    "lint": "dlx eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "npx eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "fix": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
     "fmt": "pnpm fmt:check && pnpm fmt:write",
     "fmt:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",

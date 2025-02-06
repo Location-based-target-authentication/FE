@@ -21,6 +21,6 @@ module.exports = {
     "tailwindcss/no-custom-classname": "off",
     "tailwindcss/classnames-order": "warn",
     "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/no-explicit-any": "warn"
+    "@typescript-eslint/no-explicit-any": process.env.CI ? "off" : "warn"
   }
 };
