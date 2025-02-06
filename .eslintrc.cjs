@@ -16,10 +16,11 @@ module.exports = {
   rules: {
     "react-refresh/only-export-components": [
       "warn",
-      { allowConstantExport: true },
+      { allowConstantExport: true }
     ],
     "tailwindcss/no-custom-classname": "off",
     "tailwindcss/classnames-order": "warn",
     "@typescript-eslint/ban-ts-comment": "off",
-  },
+    "@typescript-eslint/no-explicit-any": "warn"
+  }
 };
