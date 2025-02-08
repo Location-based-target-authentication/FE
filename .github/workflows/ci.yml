@@ -3,11 +3,11 @@ name: Frontend CI
 on:
   push:
     branches:
-      - dev
+      - develop
       - feat/*
   pull_request:
     branches:
-      - dev
+      - develop
 
 jobs:
   build-and-test:
@@ -15,11 +15,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
