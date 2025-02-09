@@ -3,11 +3,11 @@ name: Frontend CI
 on:
   push:
     branches:
-      - develop
+      - dev
       - feat/*
   pull_request:
     branches:
-      - develop
+      - dev
 
 jobs:
   build-and-test:
