@@ -68,17 +68,17 @@ function KakaoMap() {
     function deg2rad(deg) {
       return deg * (Math.PI / 180);
     }
-    var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2 - lat1); // deg2rad below
-    var dLon = deg2rad(lng2 - lng1);
-    var a =
+    const R = 6371; // Radius of the earth in km
+    const dLat = deg2rad(lat2 - lat1); // deg2rad below
+    const dLon = deg2rad(lng2 - lng1);
+    const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(deg2rad(lat1)) *
         Math.cos(deg2rad(lat2)) *
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c; // Distance in km
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distance in km
     return d;
   };
 
@@ -122,7 +122,7 @@ function KakaoMap() {
           lat: Number(y)
         })
       );
-      setPositionInfo(positionInfosData);
+      setPositionInfo(positionInfosData as any);
     });
   }, [keyword]);
 
@@ -131,7 +131,7 @@ function KakaoMap() {
       {/* 입력창 + 뒤로가기 버튼 */}
       <div className="relative flex w-full max-w-md items-center gap-2 rounded-full bg-white px-4 py-2 shadow-md">
         <button onClick={goBack} className="flex items-center justify-center">
-          <ArrowLeft className="h-5 w-5 text-gray-500" />
+          <ArrowLeft className="size-5 text-gray-500" />
         </button>
         <input
           onChange={(e) => setSearchInputValue(e.target.value)}
@@ -166,7 +166,7 @@ function KakaoMap() {
           className="absolute bottom-4 right-4 z-10 flex size-[40px] items-center justify-center rounded-full bg-white shadow-md"
           onClick={setCenterToMyPosition}
         >
-          <Gps className="h-5 w-5 text-gray-500" />
+          <Gps />
         </button>
       </div>
 
