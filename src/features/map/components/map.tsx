@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import Gps from "@/asset/map/gps.svg";
 import positionIconUrl from "@/asset/map/position.svg?url";
@@ -7,10 +7,14 @@ import { debounce } from "es-toolkit";
 import { map } from "es-toolkit/compat";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 
+import useKakaoPlaces from "@/hooks/useKakaoMapService";
 import MapHeader from "./map-header";
 import PlaceList from "./place-list";
 
 function KakaoMap() {
+  // Hooks
+  const { placesService, status: serviceStatus } = useKakaoPlaces();
+
   // state
   const [center, setCenter] = useState({
     lat: 33.450701,
@@ -37,14 +41,17 @@ function KakaoMap() {
 
   const setCenterToMyPosition = () => setCenter(position);
 
-  const getDistance = (destinationLat, destinationLng) => {
-    return getFormattedDistance({
-      originLat: center.lat,
-      originLng: center.lng,
-      destinationLat,
-      destinationLng
-    });
-  };
+  const getDistance = useCallback(
+    (destinationLat, destinationLng) => {
+      return getFormattedDistance({
+        originLat: center.lat,
+        originLng: center.lng,
+        destinationLat,
+        destinationLng
+      });
+    },
+    [center.lat, center.lng]
+  );
 
   const updateCenterWhenMapMoved = useMemo(
     () =>
@@ -73,10 +80,10 @@ function KakaoMap() {
   }, []);
 
   useEffect(() => {
-    const places = new kakao.maps.services.Places();
+    if (!placesService || !serviceStatus) return;
 
-    places.keywordSearch(keyword, (positionInfo, status) => {
-      if (status !== kakao.maps.services.Status.OK) return;
+    placesService.keywordSearch(keyword, (positionInfo, status) => {
+      if (status !== serviceStatus.OK) return;
 
       const data = map(positionInfo, ({ place_name, address_name, x, y }) => ({
         place_name,
@@ -86,7 +93,7 @@ function KakaoMap() {
       }));
       setPlacesData(data as any);
     });
-  }, [keyword]);
+  }, [keyword, placesService, serviceStatus]);
 
   return (
     <div className="flex size-full h-screen flex-col items-center bg-gray-50 p-4">
@@ -95,7 +102,6 @@ function KakaoMap() {
       <div className="relative mt-4 h-[70%] w-full max-w-md">
         <Map
           className="size-full"
-          id="map"
           center={center}
           level={4}
           onCenterChanged={updateCenterWhenMapMoved}
