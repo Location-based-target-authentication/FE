@@ -19,7 +19,7 @@ const convert = (queryClient: QueryClient) => (m: any) => {
   };
 };
 
-export const createAppRouter = (queryClient: QueryClient) =>
+const createAppRouter = (queryClient: QueryClient) =>
   createBrowserRouter([
     {
       path: paths.home.path,
@@ -27,8 +27,8 @@ export const createAppRouter = (queryClient: QueryClient) =>
       ErrorBoundary: RootErrorBoundary
     },
     {
-      path: paths.map.path,
-      lazy: () => import("./routes/map/view").then(convert(queryClient))
+      path: paths.map.search.path,
+      lazy: () => import("./routes/map/search").then(convert(queryClient))
     },
     {
       path: "*",
