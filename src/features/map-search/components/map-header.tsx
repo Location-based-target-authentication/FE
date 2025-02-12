@@ -4,12 +4,21 @@ import { useState } from "react";
 
 import { useNavigate } from "react-router";
 
-function MapHeader({ handleSetKeyword }) {
+interface MapHeaderProps {
+  handleSetKeyword: (
+    e:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.MouseEvent<HTMLButtonElement>,
+    searchInputValue: string
+  ) => void;
+}
+
+function MapHeader({ handleSetKeyword }: MapHeaderProps) {
   const navigate = useNavigate();
 
   const [searchInputValue, setSearchInputValue] = useState("");
 
-  const goBack = () => navigate(-1);
+  const goBack = async () => navigate(-1);
 
   return (
     <div className="relative flex w-full max-w-md items-center gap-2 rounded-full bg-white px-4 py-2 shadow-md">

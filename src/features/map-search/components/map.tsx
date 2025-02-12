@@ -8,6 +8,7 @@ import { map } from "es-toolkit/compat";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 
 import useKakaoPlaces from "@/hooks/useKakaoMapService";
+import type { PlaceData } from "../types";
 import MapHeader from "./map-header";
 import PlaceList from "./place-list";
 
@@ -27,12 +28,17 @@ function KakaoMap() {
   });
 
   const [keyword, setKeyword] = useState("");
-  const [placesData, setPlacesData] = useState([]);
+  const [placesData, setPlacesData] = useState<PlaceData[]>([]);
 
   // function
-  const handleSetKeyword = (e, searchInputValue) => {
+  const handleSetKeyword = (
+    e:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.MouseEvent<HTMLButtonElement>,
+    searchInputValue: string
+  ) => {
     const c1 = e.type === "click";
-    const c2 = e.type === "keydown" && e.key === "Enter";
+    const c2 = e.type === "keydown" && "key" in e && e.key === "Enter";
 
     if (!c1 && !c2) return;
 
@@ -42,7 +48,7 @@ function KakaoMap() {
   const setCenterToMyPosition = () => setCenter(position);
 
   const getDistance = useCallback(
-    (destinationLat, destinationLng) => {
+    (destinationLat: number, destinationLng: number) => {
       return getFormattedDistance({
         originLat: center.lat,
         originLng: center.lng,
@@ -91,7 +97,7 @@ function KakaoMap() {
         lng: Number(x),
         lat: Number(y)
       }));
-      setPlacesData(data as any);
+      setPlacesData(data);
     });
   }, [keyword, placesService, serviceStatus]);
 

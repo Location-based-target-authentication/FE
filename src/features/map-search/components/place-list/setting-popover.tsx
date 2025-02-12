@@ -7,16 +7,24 @@ import {
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
-function SettingPopover({ lat, lng }) {
+interface SettingPopoverProps {
+  lat: number;
+  lng: number;
+}
+
+function SettingPopover({ lat, lng }: SettingPopoverProps) {
   const navigate = useNavigate();
 
-  const handleReturnToFormPage = async (location) => {
+  const handleReturnToFormPage = async (location: {
+    lat: number;
+    lng: number;
+  }) => {
     if (!location) {
       toast.error("위치 선택을 다시해주세요.");
       return;
     }
 
-    navigate("/", { state: { location } });
+    return navigate("/", { state: { location } });
   };
 
   return (

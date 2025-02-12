@@ -1,8 +1,11 @@
 import { useEffect, useRef } from "react";
 
+import { Nullable } from "@/types/common";
+import { Places, Status } from "@/types/kakao";
+
 const useKakaoPlaces = () => {
-  const placesServiceRef = useRef(null);
-  const statusRef = useRef(null);
+  const placesServiceRef = useRef<Nullable<Places>>(null);
+  const statusRef = useRef<Nullable<Status>>(null);
 
   useEffect(() => {
     const { Places, Status } = window.kakao.maps.services;
