@@ -1,11 +1,13 @@
-import HomeDisable from "@/asset/navbar/home-disable.svg";
-import Home from "@/asset/navbar/home.svg";
-import UserDisable from "@/asset/navbar/user-disable.svg";
-import User from "@/asset/navbar/user.svg";
+import HomeDisable from "@/asset/navbar/home-disable.svg?react";
+import Home from "@/asset/navbar/home.svg?react";
+import UserDisable from "@/asset/navbar/user-disable.svg?react";
+import User from "@/asset/navbar/user.svg?react";
 
-const isEqualPath = (locationPath, path) => locationPath === path;
+const isEqualPath = (locationPath: string, path: string) => {
+  return locationPath === path;
+};
 
-export const generateNavbarInfo = (locationPath) => [
+export const generateNavbarInfo = (locationPath: string) => [
   {
     label: "홈",
     activeIcon: Home,
