@@ -1,3 +1,4 @@
+import { refreshAccessToken } from "@/features/auth/api/auth";
 import type {
   AxiosRequestConfig,
   AxiosResponse,
@@ -8,21 +9,14 @@ import { Axios, AxiosError } from "axios";
 import { get, isArray } from "es-toolkit/compat";
 
 import { Nullable } from "@/types/common";
-import {
-  ACCESS_TOKEN,
-  ENDPOINT_URL,
-  MEDIUM_REQUEST_TIMEOUT
-} from "@/config/envs";
+import { useAuthStore } from "@/stores/auth-store";
+import { ENDPOINT_URL, MEDIUM_REQUEST_TIMEOUT } from "@/config/envs";
+import { paths } from "@/config/paths";
 import { generateQueryParams } from "@/lib/axios/utils";
 
 interface Interceptor<V> {
   onFulfilled?: Nullable<(value: V) => V | Promise<V>>;
   onRejected?: Nullable<(error: any) => any>;
-}
-
-// Local Access Token 사용시
-if (ACCESS_TOKEN) {
-  document.cookie = `token=${ACCESS_TOKEN}; SameSite=None; Secure`;
 }
 
 // Axios Initialize
@@ -51,8 +45,34 @@ export const config: AxiosRequestConfig = {
   }
 };
 
+export const handleTokenExpiration = async (
+  refreshToken: string,
+  config: AxiosRequestConfig
+): Promise<AxiosResponse> => {
+  try {
+    const response = await refreshAccessToken(refreshToken);
+    useAuthStore.setState({
+      accessToken: response.data.accessToken,
+      refreshToken: response.data.refreshToken
+    });
+
+    axios.defaults.headers.common["Authorization"] =
+      `Bearer ${response.data.accessToken}`;
+    return axios.request(config);
+  } catch (error) {
+    window.location.href = paths.auth.login.path;
+    throw new Error("유효하지 않은 토큰입니다.");
+  }
+};
+
 const requestInterceptor: Interceptor<InternalAxiosRequestConfig> = {
-  onFulfilled: (config) => config,
+  onFulfilled: (config) => {
+    const accessToken = useAuthStore.getState().accessToken;
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
   onRejected: (error) => error
 };
 
@@ -93,7 +113,23 @@ const responseInterceptor: Interceptor<AxiosResponse> = {
 
     return config;
   },
-  onRejected: (error) => {
+  onRejected: async (error) => {
+    const { response, config } = error;
+    if (
+      response &&
+      response.status === 401 &&
+      response.data?.error?.code === "TOKEN_EXPIRED" /**확인 필요 */
+    ) {
+      const refreshToken = useAuthStore.getState().refreshToken;
+
+      if (!refreshToken) {
+        window.location.href = paths.auth.login.path;
+        return;
+      }
+
+      return handleTokenExpiration(refreshToken, config);
+    }
+
     return Promise.reject(error);
   }
 };

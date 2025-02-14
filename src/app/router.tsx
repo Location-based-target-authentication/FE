@@ -1,9 +1,12 @@
 import { useMemo } from "react";
 
+import KakaoCallback from "@/app/routes/auth/kakao-callback";
+import LoginView from "@/app/routes/auth/login";
 import {
   default as AppRoot,
   ErrorBoundary as RootErrorBoundary
 } from "@/app/routes/index.tsx";
+import PrivateRoute from "@/app/routes/PrivateRoute";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router";
 
@@ -23,12 +26,30 @@ export const createAppRouter = (queryClient: QueryClient) =>
   createBrowserRouter([
     {
       path: paths.home.path,
-      element: <AppRoot />,
+      element: <PrivateRoute />,
+      children: [
+        {
+          index: true,
+          element: <AppRoot />
+        },
+        {
+          path: paths.map.path,
+          lazy: () => import("./routes/map/view").then(convert(queryClient))
+        }
+      ],
       ErrorBoundary: RootErrorBoundary
     },
     {
-      path: paths.map.path,
-      lazy: () => import("./routes/map/view").then(convert(queryClient))
+      path: paths.auth.kakaoCallback.path,
+      element: <KakaoCallback />
+    },
+    {
+      path: paths.auth.googleCallback.path,
+      element: <KakaoCallback />
+    },
+    {
+      path: paths.auth.login.path,
+      element: <LoginView />
     },
     {
       path: "*",
