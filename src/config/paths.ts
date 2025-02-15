@@ -22,5 +22,10 @@ export const paths = {
       path: "/auth/callback/google",
       getHref: () => "/auth/callback/google"
     }
+  },
+
+  goal: {
+    path: "/goal",
+    getHref: () => "/goal"
   }
 } as const;
