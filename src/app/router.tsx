@@ -2,6 +2,7 @@ import { useMemo } from "react";
 
 import KakaoCallback from "@/app/routes/auth/kakao-callback";
 import LoginView from "@/app/routes/auth/login";
+import CreateGoalView from "@/app/routes/goal/create-goal";
 import {
   default as AppRoot,
   ErrorBoundary as RootErrorBoundary
@@ -51,6 +52,10 @@ export const createAppRouter = (queryClient: QueryClient) =>
     {
       path: paths.auth.login.path,
       element: <LoginView />
+    },
+    {
+      path: paths.goal.path,
+      element: <CreateGoalView />
     },
     {
       path: "*",
