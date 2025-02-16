@@ -16,3 +16,27 @@ export const testTodos = [
     title: "Svelte"
   }
 ];
+
+export const goalEveryDayCertification = {
+  id: 1,
+  title: "운동하기",
+  time: ["2021-07-01", "2021-07-31"],
+  day: ["월", "화", "수", "목", "금", "토", "일"],
+  position: { lat: 37.5071, lng: 127.06298 }
+};
+
+export const goalNotEveryDayCertification = {
+  id: 2,
+  title: "독서하기",
+  time: ["2021-07-01", "2021-07-31"],
+  day: ["월", "수", "금"],
+  position: { lat: 37.50766, lng: 127.06298 }
+};
+
+export const goalNotContainRadarCertification = {
+  id: 3,
+  title: "운동하기",
+  time: ["2021-07-01", "2021-07-31"],
+  day: ["월", "화", "수", "목", "금", "토", "일"],
+  position: { lat: 37.5075, lng: 127.0633 }
+};
