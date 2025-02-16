@@ -2,6 +2,7 @@ import { fileURLToPath } from "url";
 
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
+import svgr from "vite-plugin-svgr";
 
 const server = {
   port: 8080,
@@ -11,7 +12,7 @@ const server = {
 // https://vitejs.dev/config/
 export default defineConfig({
   server,
-  plugins: [react()],
+  plugins: [react(), svgr()],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url))
