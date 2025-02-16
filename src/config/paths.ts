@@ -5,7 +5,18 @@ export const paths = {
   },
 
   map: {
-    path: "/map",
-    getHref: () => "/map"
+    search: {
+      path: "/map/search",
+      getHref: () => "/map/search"
+    },
+    certification: {
+      path: "/map/certification",
+      getHref: () => "/map/certification",
+
+      sucess: {
+        path: "/map/certification/success",
+        getHref: () => "/map/certification/success"
+      }
+    }
   }
 } as const;
