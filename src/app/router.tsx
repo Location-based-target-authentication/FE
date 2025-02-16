@@ -32,8 +32,8 @@ const createAppRouter = (queryClient: QueryClient) =>
           ErrorBoundary: RootErrorBoundary
         },
         {
-          path: paths.map.path,
-          lazy: () => import("./routes/map/view").then(convert(queryClient))
+          path: paths.map.search.path,
+          lazy: () => import("./routes/map/search").then(convert(queryClient))
         },
         {
           path: "*",
