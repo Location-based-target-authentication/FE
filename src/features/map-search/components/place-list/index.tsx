@@ -8,7 +8,7 @@ interface PlaceListProps {
 
 function PlaceList({ placesData, getDistance }: PlaceListProps) {
   return (
-    <div className="mt-4 flex h-[30%] w-full max-w-md flex-col gap-3 overflow-x-hidden overflow-y-scroll rounded-lg bg-white p-4 shadow-md">
+    <div className="mt-4 flex h-[30%] w-full flex-col gap-3 overflow-x-hidden overflow-y-scroll rounded-lg bg-white p-4 shadow-md">
       {placesData.length === 0 ? (
         <div className="flex h-full flex-col items-center justify-center py-10 text-gray-500">
           <p className="text-sm">검색 결과가 없습니다.</p>
