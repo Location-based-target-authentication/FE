@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import Gps from "@/asset/map/gps.svg";
+import Gps from "@/asset/map/gps.svg?react";
 import positionIconUrl from "@/asset/map/position.svg?url";
 import { getFormattedDistance } from "@/utils/map";
 import { debounce } from "es-toolkit";
@@ -17,15 +17,8 @@ function KakaoMap() {
   const { placesService, status: serviceStatus } = useKakaoPlaces();
 
   // state
-  const [center, setCenter] = useState({
-    lat: 33.450701,
-    lng: 126.570667
-  });
-
-  const [position, setPosition] = useState({
-    lat: 33.450701,
-    lng: 126.570667
-  });
+  const [center, setCenter] = useState({ lat: 33.450701, lng: 126.570667 });
+  const [position, setPosition] = useState({ lat: 33.450701, lng: 126.570667 });
 
   const [keyword, setKeyword] = useState("");
   const [placesData, setPlacesData] = useState<PlaceData[]>([]);
@@ -78,11 +71,15 @@ function KakaoMap() {
       }
     );
 
-    navigator.geolocation.watchPosition(
+    const watchId = navigator.geolocation.watchPosition(
       ({ coords: { latitude, longitude } }) => {
         setPosition({ lat: latitude, lng: longitude });
       }
     );
+    return () => {
+      if (!watchId) return;
+      navigator.geolocation.clearWatch(watchId);
+    };
   }, []);
 
   useEffect(() => {
@@ -105,7 +102,7 @@ function KakaoMap() {
     <div className="flex size-full h-screen flex-col items-center bg-gray-50 p-4">
       <MapHeader handleSetKeyword={handleSetKeyword} />
 
-      <div className="relative mt-4 h-[70%] w-full max-w-md">
+      <div className="relative mt-4 h-[70%] w-full">
         <Map
           className="size-full"
           center={center}

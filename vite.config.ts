@@ -12,18 +12,7 @@ const server = {
 // https://vitejs.dev/config/
 export default defineConfig({
   server,
-  plugins: [
-    react(),
-    svgr({
-      svgrOptions: {
-        exportType: "default",
-        ref: true,
-        svgo: false,
-        titleProp: true
-      },
-      include: "**/*.svg"
-    })
-  ],
+  plugins: [react(), svgr()],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url))

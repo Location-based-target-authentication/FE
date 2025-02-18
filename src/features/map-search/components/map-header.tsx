@@ -21,7 +21,7 @@ function MapHeader({ handleSetKeyword }: MapHeaderProps) {
   const goBack = async () => navigate(-1);
 
   return (
-    <div className="relative flex w-full max-w-md items-center gap-2 rounded-full bg-white px-4 py-2 shadow-md">
+    <div className="relative flex w-full items-center gap-2 rounded-full bg-white px-4 py-2 shadow-md">
       <button onClick={goBack} className="flex items-center justify-center">
         <ArrowLeft className="size-5 text-gray-500" />
       </button>
