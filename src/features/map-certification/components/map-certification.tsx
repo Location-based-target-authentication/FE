@@ -34,10 +34,12 @@ function MapCertification() {
 
   const { mutate, isPending } = useMutation({
     ...generate_qo_postGoalsAchieve(1),
-    onSuccess: () => {
-      /** @todo 홈 페이지에 사용도되는 데이터 쿼리 무효화 필요 */
+    onSuccess: (data) => {
+      /** @todo 홈 페이지에 사용도되는 데이터 쿼리 무효화 필요, 응답값으로 point 받아 성공 페이지로 전달 */
 
-      navigate("/map/certification/success", { state: { title } });
+      navigate("/map/certification/success", {
+        state: { title, point: data.point }
+      });
     }
   });
 
@@ -58,7 +60,7 @@ function MapCertification() {
   );
 
   const isContainRadar = useMemo(() => {
-    if (!serverPosition) return 0;
+    if (!serverPosition) return false;
 
     const distance =
       getDistance({

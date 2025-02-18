@@ -7,7 +7,7 @@ function MapCertificationSuccess() {
   const navigate = useNavigate();
   const location = useLocation();
   const {
-    state: { title }
+    state: { title, point }
   } = location;
 
   const navigateToHome = () => {
@@ -24,8 +24,7 @@ function MapCertificationSuccess() {
         <p className="text-2xl font-medium text-[#4CAF50]">{`"${title}"`}</p>
         <div className="text-center">
           <p className="text-2xl font-medium leading-relaxed">
-            목표를 완료해서{" "}
-            <span className="text-[#4CAF50]">박지성을ㄴ으라</span>를
+            목표를 완료해서 <span className="text-[#4CAF50]">{point}</span>를
           </p>
           <p className="text-xl font-medium">획득했어요!</p>
         </div>

@@ -1,4 +1,8 @@
-export const simpleGenerateSecond = (times = []) => {
+type TimeUnit = "h" | "m" | "s";
+
+export const simpleGenerateSecond = (
+  times: [number, TimeUnit][] = []
+): number => {
   let s = 0;
   for (const [v, unit] of times) {
     if (unit === "h") s += v * 60 * 60 * 1000;
