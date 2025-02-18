@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button/button";
 import ToastifyButton from "@/components/ui/toastify/toastify";
 
 import { useQuery } from "@tanstack/react-query";
+import { get } from "es-toolkit/compat";
 import { useNavigate } from "react-router";
 
 import { paths } from "@/config/paths";

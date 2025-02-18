@@ -28,7 +28,7 @@ const createAppRouter = (queryClient: QueryClient) =>
     },
     {
       path: paths.map.search.path,
-      lazy: () => import("./routes/map/view").then(convert(queryClient))
+      lazy: () => import("./routes/map/search").then(convert(queryClient))
     },
     {
       path: paths.map.certification.path,
