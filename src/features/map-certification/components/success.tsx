@@ -7,7 +7,7 @@ function MapCertificationSuccess() {
   const navigate = useNavigate();
   const location = useLocation();
   const {
-    state: { title, point }
+    state: { name, point }
   } = location;
 
   const navigateToHome = () => {
@@ -21,7 +21,7 @@ function MapCertificationSuccess() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#f5f7f5] p-4">
       <div className="flex w-full max-w-md flex-1 flex-col items-center justify-center space-y-6">
         <h1 className="text-3xl font-bold">축하해요!</h1>
-        <p className="text-2xl font-medium text-[#4CAF50]">{`"${title}"`}</p>
+        <p className="text-2xl font-medium text-[#4CAF50]">{`"${name}"`}</p>
         <div className="text-center">
           <p className="text-2xl font-medium leading-relaxed">
             목표를 완료해서 <span className="text-[#4CAF50]">{point}</span>를
