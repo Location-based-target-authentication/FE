@@ -1,10 +1,11 @@
 import { UseMutateFunction } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 
 interface CertificationButtonProps {
   buttonDisabled: boolean;
   isContainRadar: boolean;
   isPending: boolean;
-  mutate: UseMutateFunction<any, Error, void, unknown>;
+  mutate: UseMutateFunction<{ point: number }, AxiosError, void, unknown>;
 }
 
 function CertificationButton({

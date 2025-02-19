@@ -13,7 +13,7 @@ import { useNavigate } from "react-router";
 import {
   generate_qo_getGoals,
   generate_qo_postGoalsAchieve
-} from "@/lib/react-query/queryOptions/max";
+} from "@/lib/react-query/queryOptions/goals";
 import useUserLocation from "@/hooks/useUserLocation";
 import CertificationButton from "./certification-button";
 import GoalsInfo from "./goals-info";
