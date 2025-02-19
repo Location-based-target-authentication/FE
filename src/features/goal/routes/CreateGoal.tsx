@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { createGoal } from "@/features/goal/api/goal";
+import {
+  createGoal,
+  createTempSaveGoal,
+  getTempGoal
+} from "@/features/goal/api/goal";
 import { GoalData } from "@/features/goal/types/goal-create";
 import { getPoint } from "@/features/point/\bapi/point";
 import { format } from "date-fns";
@@ -50,17 +54,21 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   useEffect(() => {
     if (!goalId) return;
 
-    const savedGoal = localStorage.getItem(`goal_${goalId}`);
-    if (savedGoal) {
-      const parsedGoal = JSON.parse(savedGoal);
-      setGoalName(parsedGoal.goalName || "");
-      setStartDate(
-        parsedGoal.startDate ? new Date(parsedGoal.startDate) : null
-      );
-      setEndDate(parsedGoal.endDate ? new Date(parsedGoal.endDate) : null);
-      setTargetLocation(parsedGoal.location || "");
-    }
+    const fetchGoalData = async () => {
+      try {
+        const goalData = await getTempGoal(goalId);
+        setGoalName(goalData.goalName || "");
+        setStartDate(goalData.startDate ? new Date(goalData.startDate) : null);
+        setEndDate(goalData.endDate ? new Date(goalData.endDate) : null);
+        setTargetLocation(goalData.location || "");
+      } catch (error) {
+        console.error("임시 목표 데이터 불러오기 실패:", error);
+      }
+    };
+
+    fetchGoalData();
   }, [goalId]);
+
   const handleDateClick = (): void => {
     navigate("/goal/date");
   };
@@ -96,15 +104,21 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     }
   };
 
-  const handleTempSave = (): void => {
+  const handleTempSave = async (): Promise<void> => {
     const tempData: GoalData = {
       goalName,
       startDate: startDate ? startDate.toISOString() : null,
       endDate: endDate ? endDate.toISOString() : null,
       targetLocation
     };
+    try {
+      await createTempSaveGoal(tempData);
 
-    localStorage.setItem(`goal_${goalId}`, JSON.stringify(tempData));
+      navigate("/goal/list");
+    } catch (error) {
+      console.error(error);
+      alert("목표 등록에 실패했습니다.");
+    }
     navigate("/goal/list");
   };
 
@@ -129,7 +143,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     <div className="p-4">
       <div className="flex items-center border-b pb-2 text-xl font-bold">
         <button onClick={handleBackButtonClick} className="mr-2 text-gray-600">
-          &lt; {/* '<' 버튼 */}
+          &lt;
         </button>
         목표 추가
       </div>
