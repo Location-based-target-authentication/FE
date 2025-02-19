@@ -18,11 +18,13 @@ export const testTodos = [
 ];
 
 export const goalEveryDayCertification = {
-  id: 1,
-  title: "운동하기",
-  time: ["2021-07-01", "2021-07-31"],
-  day: ["월", "화", "수", "목", "금", "토", "일"],
-  position: { lat: 37.5071, lng: 127.06298 }
+  id: 14,
+  name: "태권도233",
+  startDate: "2025-02-19",
+  endDate: "2025-02-28",
+  latitude: 37.5071,
+  longitude: 127.06298,
+  days: ["MON", "WED", "THU", "FRI", "SAT", "SUN"]
 };
 
 export const goalNotEveryDayCertification = {
