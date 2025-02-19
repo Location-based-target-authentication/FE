@@ -10,6 +10,7 @@ const GoalForm = () => {
   const [endDate, setEndDate] = useState("");
   const [repeatDays, setRepeatDays] = useState([]);
   const [location, setLocation] = useState("");
+  const [selectedDays, setSelectedDays] = useState([]);
 
   useEffect(() => {
     const savedGoal = localStorage.getItem("tempGoal");
@@ -27,6 +28,16 @@ const GoalForm = () => {
     const tempGoal = { goalName, startDate, endDate, repeatDays, location };
     localStorage.setItem("tempGoal", JSON.stringify(tempGoal));
   };
+  const days = ["일", "월", "화", "수", "목", "금", "토"];
+  const toggleDay = (day) => {
+    setSelectedDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+    );
+  };
+
+  const selectAllDays = () => {
+    setSelectedDays(days);
+  };
 
   return (
     <div className="space-y-4">
@@ -40,6 +51,27 @@ const GoalForm = () => {
           className="w-full rounded border p-2"
         />
       </div>
+
+      <label className="font-semibold">
+        반복 요일 (주 {selectedDays.length}일)
+      </label>
+      <div className="mt-2 flex gap-2">
+        {days.map((day, index) => (
+          <button
+            key={index}
+            className={`rounded px-4 py-2 ${selectedDays.includes(day) ? "bg-green-500 text-white" : "bg-gray-200"}`}
+            onClick={() => toggleDay(day)}
+          >
+            {day}
+          </button>
+        ))}
+      </div>
+      <button
+        onClick={selectAllDays}
+        className="mt-2 w-full rounded bg-blue-500 p-2 text-white"
+      >
+        매일하기
+      </button>
 
       <DatePicker
         label="목표 기간"

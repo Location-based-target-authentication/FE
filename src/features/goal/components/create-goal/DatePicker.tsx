@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { paths } from "@/config/paths";
 
@@ -11,23 +11,13 @@ const DatePicker = ({
 }) => {
   const navigate = useNavigate();
   const goToDatePage = () => {
-    navigate("/goal/date"); // 이렇게 경로로 이동
+    navigate(paths.goal.date.path);
   };
+
   return (
     <div>
       <label className="font-semibold">{label}</label>
       <div className="flex space-x-2">
-        <Link
-          to={paths.goal.date.path}
-          className="w-full rounded border p-2 text-center"
-        >
-          이동해
-        </Link>
-        <Link
-          to={paths.goal.date.path} // 시작 날짜 페이지로 이동
-          className="w-full rounded border p-2 text-center"
-        ></Link>
-
         <input
           type="date"
           value={startDate}
@@ -39,6 +29,7 @@ const DatePicker = ({
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
+          onClick={goToDatePage}
           className="w-full rounded border p-2"
         />
       </div>
