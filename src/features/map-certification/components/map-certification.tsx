@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import containTargetUrl from "@/asset/map/contain-target.svg?url";
 import Gps from "@/asset/map/gps.svg?react";
@@ -6,7 +6,6 @@ import notContainTargetUrl from "@/asset/map/not-contain-target.svg?url";
 import positionIconUrl from "@/asset/map/position.svg?url";
 import { getDistance } from "@/utils/map";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { debounce } from "es-toolkit";
 import { join, map, replace } from "es-toolkit/compat";
 import { Circle, Map, MapMarker } from "react-kakao-maps-sdk";
 import { useNavigate } from "react-router";
@@ -15,6 +14,7 @@ import {
   generate_qo_getGoals,
   generate_qo_postGoalsAchieve
 } from "@/lib/react-query/queryOptions/max";
+import useUserLocation from "@/hooks/useUserLocation";
 import CertificationButton from "./certification-button";
 import GoalsInfo from "./goals-info";
 import {
@@ -25,7 +25,10 @@ import {
 const DISTANCE_DIFFRENCE = 20;
 
 function MapCertification() {
+  // Hooks
   const navigate = useNavigate();
+  const { center, position, setCenterToMyPosition, updateCenterWhenMapMoved } =
+    useUserLocation();
   const {
     data: {
       name,
@@ -48,22 +51,7 @@ function MapCertification() {
     }
   });
 
-  // states
-  const [center, setCenter] = useState({ lat: 33.450701, lng: 126.570667 });
-  const [position, setPosition] = useState({ lat: 33.450701, lng: 126.570667 });
-
   // useMemos
-  const updateCenterWhenMapMoved = useMemo(
-    () =>
-      debounce((map: kakao.maps.Map) => {
-        setCenter({
-          lat: map.getCenter().getLat(),
-          lng: map.getCenter().getLng()
-        });
-      }, 500),
-    []
-  );
-
   const isContainRadar = useMemo(() => {
     if (!serverLatitude || !serverLongitude) return false;
 
@@ -97,31 +85,6 @@ function MapCertification() {
     () => !isContainRadar || isPending,
     [isContainRadar, isPending]
   );
-
-  // function
-  const setCenterToMyPosition = () => setCenter(position);
-
-  // effect
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      ({ coords: { latitude, longitude } }) => {
-        setCenter({ lat: latitude, lng: longitude });
-      },
-      (error) => console.error(error)
-    );
-
-    const watchId = navigator.geolocation.watchPosition(
-      ({ coords: { latitude, longitude } }) => {
-        setPosition({ lat: latitude, lng: longitude });
-      },
-      (error) => console.error(error)
-    );
-
-    return () => {
-      if (!watchId) return;
-      navigator.geolocation.clearWatch(watchId);
-    };
-  }, []);
 
   return (
     <div className="relative flex h-screen w-full flex-col items-center bg-gray-50">

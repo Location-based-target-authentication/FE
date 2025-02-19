@@ -23,7 +23,7 @@ export const goalEveryDayCertification = {
   startDate: "2025-02-19",
   endDate: "2025-02-28",
   latitude: 37.5071,
-  longitude: 127.06298,
+  longitude: 127.0629,
   days: ["MON", "WED", "THU", "FRI", "SAT", "SUN"]
 };
 
