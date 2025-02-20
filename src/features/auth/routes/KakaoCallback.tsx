@@ -4,7 +4,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useCallback, useEffect, useState } from "react";
 
 import { kakaoLogin } from "@/features/auth/api/auth";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router";
 
 import { useAuthStore } from "@/stores/auth-store";
 import { paths } from "@/config/paths";

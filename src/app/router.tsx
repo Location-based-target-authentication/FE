@@ -7,6 +7,7 @@ import {
   ErrorBoundary as RootErrorBoundary
 } from "@/app/routes/index.tsx";
 import PrivateRoute from "@/app/routes/PrivateRoute";
+import GoogleCallback from "@/features/auth/routes/GoogleCallback";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router";
 
@@ -45,7 +46,7 @@ export const createAppRouter = (queryClient: QueryClient) =>
     },
     {
       path: paths.auth.googleCallback.path,
-      element: <KakaoCallback />
+      element: <GoogleCallback />
     },
     {
       path: paths.auth.login.path,
