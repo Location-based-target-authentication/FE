@@ -118,7 +118,7 @@ const responseInterceptor: Interceptor<AxiosResponse> = {
     if (
       response &&
       response.status === 401 &&
-      response.data?.error?.code === "TOKEN_EXPIRED" /**확인 필요 */
+      response.data?.error?.error === "TOKEN_EXPIRED"
     ) {
       const refreshToken = useAuthStore.getState().refreshToken;
 
