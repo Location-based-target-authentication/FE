@@ -21,12 +21,16 @@ function PlaceList({
     () => new Array(placesData.length).fill(false)
   );
 
-  const toggleAddressVisibility = (idx: number) => () => {
+  const toggleAddressVisibility = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    idx: number
+  ) => {
     setIsVisibleAddressName((prev) => {
       const newState = new Array(placesData.length).fill(false);
       newState[idx] = !prev[idx];
       return newState;
     });
+    e.stopPropagation();
   };
 
   return (
@@ -60,7 +64,9 @@ function PlaceList({
                     </div>
                     <div
                       className="relative cursor-pointer"
-                      onClick={toggleAddressVisibility(idx)}
+                      onClick={(e) => {
+                        toggleAddressVisibility(e, idx);
+                      }}
                     >
                       {isVisibleAddressName[idx] ? <ArrowUp /> : <ArrwoDown />}
                       {isVisibleAddressName[idx] && (
