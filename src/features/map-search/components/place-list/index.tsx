@@ -9,13 +9,13 @@ import SettingPopover from "./setting-popover";
 interface PlaceListProps {
   placesData: PlaceData[];
   getDistance: (lat: number, lng: number) => string;
-  setSelectedPosition: ({ lat, lng }: { lat: number; lng: number }) => void;
+  moveToSelectedPosition: ({ lat, lng }: { lat: number; lng: number }) => void;
 }
 
 function PlaceList({
   placesData,
   getDistance,
-  setSelectedPosition
+  moveToSelectedPosition
 }: PlaceListProps) {
   const [isVisibleAddressName, setIsVisibleAddressName] = useState<boolean[]>(
     () => new Array(placesData.length).fill(false)
@@ -47,9 +47,7 @@ function PlaceList({
               <div
                 key={`${placeName} ${roadAddressName}`}
                 className="flex cursor-pointer items-center justify-between rounded-lg border p-3 shadow-sm"
-                onClick={() => {
-                  setSelectedPosition({ lat, lng });
-                }}
+                onClick={() => moveToSelectedPosition({ lat, lng })}
               >
                 <div>
                   <div className="mb-1 whitespace-pre-line break-words text-sm font-semibold">

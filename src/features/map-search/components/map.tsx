@@ -77,7 +77,13 @@ function KakaoMap() {
     );
   }, [selectedPosition]);
 
-  const clickEx = ({ lat, lng }: { lat: number; lng: number }) => {
+  const moveToSelectedPosition = ({
+    lat,
+    lng
+  }: {
+    lat: number;
+    lng: number;
+  }) => {
     setSelectedPosition({ lat, lng });
     setCenter({ lat, lng });
   };
@@ -146,7 +152,7 @@ function KakaoMap() {
       <PlaceList
         placesData={placesData}
         getDistance={getDistance}
-        setSelectedPosition={clickEx}
+        moveToSelectedPosition={moveToSelectedPosition}
       />
     </div>
   );
