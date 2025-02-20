@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import containTargetUrl from "@/asset/map/contain-target.svg?url";
 import Gps from "@/asset/map/gps.svg?react";
 import positionIconUrl from "@/asset/map/position.svg?url";
 import { getFormattedDistance } from "@/utils/map";
@@ -71,7 +72,7 @@ function KakaoMap() {
 
     return (
       <MapMarker
-        image={{ src: positionIconUrl, size: { width: 30, height: 30 } }}
+        image={{ src: containTargetUrl, size: { width: 24, height: 24 } }}
         position={{ lat, lng }}
       />
     );
@@ -113,13 +114,16 @@ function KakaoMap() {
     placesService.keywordSearch(keyword, (positionInfo, status) => {
       if (status !== serviceStatus.OK) return;
 
-      const data = map(positionInfo, ({ place_name, address_name, x, y }) => ({
-        placeName: place_name,
-        addressName: address_name,
-        roadAddressName: address_name,
-        lng: Number(x),
-        lat: Number(y)
-      }));
+      const data = map(
+        positionInfo,
+        ({ place_name, address_name, road_address_name, x, y }) => ({
+          placeName: place_name,
+          addressName: address_name,
+          roadAddressName: road_address_name,
+          lng: Number(x),
+          lat: Number(y)
+        })
+      );
       setPlacesData(data);
     });
   }, [keyword, placesService, serviceStatus]);
@@ -136,7 +140,7 @@ function KakaoMap() {
           onCenterChanged={updateCenterWhenMapMoved}
         >
           <MapMarker
-            image={{ src: positionIconUrl, size: { width: 30, height: 30 } }}
+            image={{ src: positionIconUrl, size: { width: 18, height: 18 } }}
             position={position}
           />
           {memoizedSelectedMarker}
