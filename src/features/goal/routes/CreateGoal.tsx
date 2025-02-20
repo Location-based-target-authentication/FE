@@ -5,35 +5,45 @@ import {
   createTempSaveGoal,
   getTempGoal
 } from "@/features/goal/api/goal";
-import { GoalData } from "@/features/goal/types/goal-create";
+import BalanceInfo from "@/features/goal/components/create-goal/BalanceInfo";
+import DatePicker from "@/features/goal/components/create-goal/DatePicker";
+import DayPicker from "@/features/goal/components/create-goal/DayPicker";
+import SaveButtons from "@/features/goal/components/create-goal/SaveButtons";
+import { GoalData, GoalStatus } from "@/features/goal/types/goal-create";
 import { getPoint } from "@/features/point/\bapi/point";
-import { format } from "date-fns";
 import { useLocation, useNavigate } from "react-router";
 
 import { useAuthStore } from "@/stores/auth-store";
+import { paths } from "@/config/paths";
 
 interface CreateGoalProps {
   goalId: number | null;
 }
 
+const dayMapping: Record<string, string> = {
+  일: "SUN",
+  월: "MON",
+  화: "TUE",
+  수: "WED",
+  목: "THU",
+  금: "FRI",
+  토: "SAT"
+};
+
 const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const userId = useAuthStore((state) => state.userId);
 
-  const [goalName, setGoalName] = useState("");
+  const [goalName, setGoalName] = useState<string>("");
   const [startDate, setStartDate] = useState<Date | null>(
     location.state?.startDate || null
   );
   const [endDate, setEndDate] = useState<Date | null>(
     location.state?.endDate || null
   );
-
-  const [targetLocation, setTargetLocation] = useState("");
-
+  const [targetLocation, setTargetLocation] = useState<string>("");
   const [balancePoint, setBalancePoint] = useState<number>(0);
-
-  const userId = useAuthStore((state) => state.userId);
-
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
 
   const fetchBalancePoint = useCallback(async (): Promise<void> => {
@@ -48,19 +58,23 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   }, [userId]);
 
   useEffect(() => {
-    fetchBalancePoint;
+    fetchBalancePoint();
   }, [fetchBalancePoint]);
 
   useEffect(() => {
     if (!goalId) return;
 
-    const fetchGoalData = async () => {
+    const fetchGoalData = async (): Promise<void> => {
       try {
-        const goalData = await getTempGoal(goalId);
-        setGoalName(goalData.goalName || "");
-        setStartDate(goalData.startDate ? new Date(goalData.startDate) : null);
-        setEndDate(goalData.endDate ? new Date(goalData.endDate) : null);
-        setTargetLocation(goalData.location || "");
+        const goalData: GoalData = await getTempGoal(goalId);
+        setGoalName(goalData.goal.name || "");
+        setStartDate(
+          goalData.goal.startDate ? new Date(goalData.goal.startDate) : null
+        );
+        setEndDate(
+          goalData.goal.endDate ? new Date(goalData.goal.endDate) : null
+        );
+        setTargetLocation(goalData.goal.locationName || "");
       } catch (error) {
         console.error("임시 목표 데이터 불러오기 실패:", error);
       }
@@ -70,74 +84,67 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   }, [goalId]);
 
   const handleDateClick = (): void => {
-    navigate("/goal/date");
+    navigate(paths.goal.date.path);
   };
 
   const handleEndDateClick = (): void => {
-    navigate("/goal/date", { state: { mode: "end", startDate } });
+    navigate(paths.goal.date.path, { state: { mode: "end", startDate } });
   };
 
   const handleSave = async () => {
-    if (!goalName.trim()) {
+    if (!goalName.trim() || !userId) {
       alert("목표명을 입력해주세요.");
       return;
     }
 
-    // data 객체 생성
     const goalData: GoalData = {
-      goalName,
-      startDate: startDate ? startDate.toISOString() : null,
-      endDate: endDate ? endDate.toISOString() : null,
-      targetLocation
+      goal: {
+        userId,
+        name: goalName,
+        startDate: startDate ? startDate.toISOString() : null,
+        endDate: endDate ? endDate.toISOString() : null,
+        locationName: targetLocation
+      },
+      status: GoalStatus.ACTIVE,
+      days: selectedDays.map((day) => dayMapping[day])
     };
 
     try {
-      // API 호출
       await createGoal(goalData);
-
-      // 성공적으로 등록되면 목표 목록 페이지로 이동
-      navigate("/goal/list"); // 목표 목록 페이지로 이동
-      alert("목표가 등록되었습니다!");
+      navigate(paths.goal.list.path);
     } catch (error) {
       console.error(error);
-      alert("목표 등록에 실패했습니다.");
     }
   };
 
   const handleTempSave = async (): Promise<void> => {
+    if (!userId) return;
     const tempData: GoalData = {
-      goalName,
-      startDate: startDate ? startDate.toISOString() : null,
-      endDate: endDate ? endDate.toISOString() : null,
-      targetLocation
+      goal: {
+        userId,
+        name: goalName,
+        startDate: startDate ? startDate.toISOString() : null,
+        endDate: endDate ? endDate.toISOString() : null,
+        locationName: targetLocation
+      },
+      status: GoalStatus.DRAFT,
+      days: selectedDays.map((day) => dayMapping[day])
     };
+
     try {
       await createTempSaveGoal(tempData);
 
-      navigate("/goal/list");
+      navigate(paths.goal.list.path);
     } catch (error) {
       console.error(error);
       alert("목표 등록에 실패했습니다.");
     }
-    navigate("/goal/list");
+    navigate(paths.goal.list.path);
   };
 
   const handleBackButtonClick = (): void => {
-    navigate("/goal/list");
+    navigate(paths.goal.list.path);
   };
-
-  const days = ["일", "월", "화", "수", "목", "금", "토"];
-  const toggleDay = (day: string) => {
-    setSelectedDays((prev) =>
-      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
-    );
-  };
-
-  const selectAllDays = (): void => {
-    setSelectedDays((prev) => (prev.length === days.length ? [] : days));
-  };
-
-  const isDaily = selectedDays.length === 7;
 
   return (
     <div className="p-4">
@@ -157,44 +164,25 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
           placeholder="목표명을 입력하세요"
         />
       </div>
-      <div className="mt-4">
-        <label className="block text-gray-600">목표 기간</label>
-        <div className="flex space-x-2">
-          <button
-            className="rounded border px-4 py-2"
-            onClick={handleDateClick}
-          >
-            {startDate ? format(startDate, "yyyy-MM-dd") : "시작 날짜"}
-          </button>
-          <span>~</span>
-          <button
-            className="rounded border px-4 py-2"
-            onClick={handleEndDateClick}
-          >
-            {endDate ? format(endDate, "yyyy-MM-dd") : "종료 날짜"}
-          </button>
-        </div>
-      </div>
-      <label className="font-semibold">
-        반복 요일 (주 {selectedDays.length}일)
-      </label>
-      <div className="mt-2 flex gap-2">
-        {days.map((day, index) => (
-          <button
-            key={index}
-            className={`rounded px-4 py-2 ${selectedDays.includes(day) ? "bg-green-500 text-white" : "bg-gray-200"}`}
-            onClick={() => toggleDay(day)}
-          >
-            {day}
-          </button>
-        ))}
-      </div>
-      <button
-        onClick={selectAllDays}
-        className={`mt-2 w-full rounded p-2 ${isDaily ? "bg-green-500 text-white" : "bg-gray-200 text-gray-500"}`}
-      >
-        매일하기
-      </button>
+      <DatePicker
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateClick={handleDateClick}
+        onEndDateClick={handleEndDateClick}
+      />
+      <DayPicker
+        selectedDays={selectedDays}
+        onToggleDay={(day) =>
+          setSelectedDays((prev) =>
+            prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+          )
+        }
+        onSelectAllDays={() =>
+          setSelectedDays(
+            selectedDays.length === 7 ? [] : Object.keys(dayMapping)
+          )
+        }
+      />
 
       <div className="mt-4">
         <label className="block text-gray-600">장소 설정</label>
@@ -204,26 +192,10 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
           placeholder="장소를 입력하세요"
         />
       </div>
-      <div className="mt-4">
-        차감 포인트: <span className="font-bold">200p</span>
-      </div>
-      <div className="mt-4">
-        보유 포인트: <span className="font-bold">{balancePoint}P</span>
-      </div>
-      <div className="mt-4 flex space-x-2">
-        <button
-          className="rounded bg-gray-200 px-4 py-2"
-          onClick={handleTempSave}
-        >
-          임시 저장
-        </button>
-        <button
-          className="rounded bg-blue-500 px-4 py-2 text-white"
-          onClick={handleSave}
-        >
-          등록하기
-        </button>
-      </div>
+
+      <BalanceInfo balancePoint={balancePoint} />
+
+      <SaveButtons onTempSave={handleTempSave} onSave={handleSave} />
     </div>
   );
 };

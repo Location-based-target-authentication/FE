@@ -19,6 +19,6 @@ export function createTempSaveGoal(data: GoalData) {
 
 export function getTempGoal(goalId: number) {
   return GET({
-    url: `${BASE_PATH}?goalId=${goalId}`
+    url: `${BASE_PATH}/check/${goalId}`
   });
 }

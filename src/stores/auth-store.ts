@@ -3,7 +3,7 @@ import { create } from "zustand";
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
-  userId: string | null;
+  userId: number | null;
   isAuthenticated: boolean;
   setTokens: (accessToken: string, refreshToken: string) => void;
 }

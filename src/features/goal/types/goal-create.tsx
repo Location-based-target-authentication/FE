@@ -1,6 +1,16 @@
+export enum GoalStatus {
+  DRAFT = "DRAFT",
+  ACTIVE = "ACTIVE"
+}
+
 export type GoalData = {
-  goalName: string;
-  startDate: string | null;
-  endDate: string | null;
-  targetLocation: string;
+  goal: {
+    userId: number;
+    name: string;
+    startDate: string | null;
+    endDate: string | null;
+    locationName: string;
+  };
+  status: GoalStatus;
+  days: string[];
 };
