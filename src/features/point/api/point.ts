@@ -3,6 +3,6 @@ import { Point } from "@/features/point/\btypes/get-point";
 
 import { GET } from "@/lib/axios";
 
-export function getPoint(userId: string): Promise<Point> {
+export function getPoint(userId: number): Promise<Point> {
   return GET({ url: `${BASE_PATH}?${userId}` });
 }

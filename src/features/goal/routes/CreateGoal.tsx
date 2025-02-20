@@ -91,10 +91,14 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     navigate(paths.goal.date.path, { state: { mode: "end", startDate } });
   };
 
-  const handleSave = async () => {
-    if (!goalName.trim() || !userId) {
-      alert("목표명을 입력해주세요.");
-      return;
+  const handleSaveWithStatus = async (status: GoalStatus): Promise<void> => {
+    if (!userId) return;
+
+    if (status === GoalStatus.ACTIVE) {
+      if (!goalName.trim() || !startDate || !endDate || !targetLocation) {
+        alert("모든 필수 항목을 입력해주세요.");
+        return;
+      }
     }
 
     const goalData: GoalData = {
@@ -105,41 +109,18 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
         endDate: endDate ? endDate.toISOString() : null,
         locationName: targetLocation
       },
-      status: GoalStatus.ACTIVE,
+      status,
       days: selectedDays.map((day) => dayMapping[day])
     };
 
     try {
-      await createGoal(goalData);
+      status === GoalStatus.DRAFT
+        ? await createTempSaveGoal(goalData)
+        : await createGoal(goalData);
       navigate(paths.goal.list.path);
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleTempSave = async (): Promise<void> => {
-    if (!userId) return;
-    const tempData: GoalData = {
-      goal: {
-        userId,
-        name: goalName,
-        startDate: startDate ? startDate.toISOString() : null,
-        endDate: endDate ? endDate.toISOString() : null,
-        locationName: targetLocation
-      },
-      status: GoalStatus.DRAFT,
-      days: selectedDays.map((day) => dayMapping[day])
-    };
-
-    try {
-      await createTempSaveGoal(tempData);
-
-      navigate(paths.goal.list.path);
-    } catch (error) {
-      console.error(error);
-      alert("목표 등록에 실패했습니다.");
-    }
-    navigate(paths.goal.list.path);
   };
 
   const handleBackButtonClick = (): void => {
@@ -195,7 +176,10 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
 
       <BalanceInfo balancePoint={balancePoint} />
 
-      <SaveButtons onTempSave={handleTempSave} onSave={handleSave} />
+      <SaveButtons
+        onTempSave={() => handleSaveWithStatus(GoalStatus.DRAFT)}
+        onSave={() => handleSaveWithStatus(GoalStatus.ACTIVE)}
+      />
     </div>
   );
 };
