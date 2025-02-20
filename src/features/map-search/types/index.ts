@@ -1,6 +1,7 @@
 export interface PlaceData {
-  place_name: string;
-  address_name: string;
+  placeName: string;
+  addressName: string;
+  roadAddressName: string;
   lng: number;
   lat: number;
 }

@@ -19,6 +19,7 @@ function KakaoMap() {
   // state
   const [center, setCenter] = useState({ lat: 33.450701, lng: 126.570667 });
   const [position, setPosition] = useState({ lat: 33.450701, lng: 126.570667 });
+  const [selectedPosition, setSelectedPosition] = useState({ lat: 0, lng: 0 });
 
   const [keyword, setKeyword] = useState("");
   const [placesData, setPlacesData] = useState<PlaceData[]>([]);
@@ -43,13 +44,13 @@ function KakaoMap() {
   const getDistance = useCallback(
     (destinationLat: number, destinationLng: number) => {
       return getFormattedDistance({
-        originLat: center.lat,
-        originLng: center.lng,
+        originLat: position.lat,
+        originLng: position.lng,
         destinationLat,
         destinationLng
       });
     },
-    [center.lat, center.lng]
+    [position.lat, position.lng]
   );
 
   const updateCenterWhenMapMoved = useMemo(
@@ -62,6 +63,24 @@ function KakaoMap() {
       }, 500),
     []
   );
+
+  const memoizedSelectedMarker = useMemo(() => {
+    const { lat, lng } = selectedPosition;
+
+    if (lat === 0 && lng === 0) return null;
+
+    return (
+      <MapMarker
+        image={{ src: positionIconUrl, size: { width: 30, height: 30 } }}
+        position={{ lat, lng }}
+      />
+    );
+  }, [selectedPosition]);
+
+  const clickEx = ({ lat, lng }: { lat: number; lng: number }) => {
+    setSelectedPosition({ lat, lng });
+    setCenter({ lat, lng });
+  };
 
   // effect
   useEffect(() => {
@@ -89,8 +108,9 @@ function KakaoMap() {
       if (status !== serviceStatus.OK) return;
 
       const data = map(positionInfo, ({ place_name, address_name, x, y }) => ({
-        place_name,
-        address_name,
+        placeName: place_name,
+        addressName: address_name,
+        roadAddressName: address_name,
         lng: Number(x),
         lat: Number(y)
       }));
@@ -113,6 +133,7 @@ function KakaoMap() {
             image={{ src: positionIconUrl, size: { width: 30, height: 30 } }}
             position={position}
           />
+          {memoizedSelectedMarker}
         </Map>
         <button
           className="absolute bottom-4 right-4 z-10 flex size-[40px] items-center justify-center rounded-full bg-white shadow-md"
@@ -122,7 +143,11 @@ function KakaoMap() {
         </button>
       </div>
 
-      <PlaceList placesData={placesData} getDistance={getDistance} />
+      <PlaceList
+        placesData={placesData}
+        getDistance={getDistance}
+        setSelectedPosition={clickEx}
+      />
     </div>
   );
 }
