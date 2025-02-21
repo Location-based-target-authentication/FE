@@ -8,7 +8,7 @@ export const GoogleLoginButton = (): JSX.Element => {
     <div className="mt-8 flex justify-center">
       <button onClick={handleLoginClick}>
         <img
-          src="/images/google.png"
+          src="/images/login-google.png"
           alt="구글 로그인"
           className="h-[48px] w-[335px] object-contain"
         />
