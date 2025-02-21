@@ -14,7 +14,7 @@ const Login = () => {
 
   return (
     <div className="flex h-screen items-center justify-center">
-      <div className="relative flex flex-col space-y-4 text-center">
+      <div className="relative flex flex-col text-center">
         <div
           className="h-[812px] w-[375px] bg-cover bg-center"
           style={{ backgroundImage: `url(${randomImage})` }}
