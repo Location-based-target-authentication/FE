@@ -5,9 +5,9 @@ import { KakaoLoginButton } from "@/features/auth/components/KakaoLoginButton";
 
 const Login = () => {
   const imagePaths = [
-    "/images/login.jpeg",
-    "/images/login.jpeg",
-    "/images/login.jpeg"
+    "/images/login-background.jpeg",
+    "/images/login-background.jpeg",
+    "/images/login-background.jpeg"
   ];
 
   const [randomImage] = useState<string>(imagePaths[0]);
@@ -21,7 +21,7 @@ const Login = () => {
         ></div>
         <div className="absolute top-[144px] m-0 flex w-full justify-center p-0">
           <img
-            src="/images/WillGO.png"
+            src="/images/login-logo.png"
             alt="Logo"
             className="h-[50px] w-[119px]"
           />

@@ -8,7 +8,7 @@ export const KakaoLoginButton = (): JSX.Element => {
     <div className="mt-8 flex justify-center">
       <button onClick={handleLoginClick}>
         <img
-          src="/images/kakao.png"
+          src="/images/login-kakao.png"
           alt="카카오 로그인"
           className="h-[48px] w-[335px] object-contain"
         />
