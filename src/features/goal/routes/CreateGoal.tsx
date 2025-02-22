@@ -17,9 +17,8 @@ import { useAuthStore } from "@/stores/auth-store";
 import { paths } from "@/config/paths";
 
 interface CreateGoalProps {
-  goalId: number | null;
+  goalId?: number;
 }
-
 const dayMapping: Record<string, string> = {
   일: "SUN",
   월: "MON",
