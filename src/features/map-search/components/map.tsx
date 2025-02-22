@@ -110,7 +110,7 @@ function KakaoMap() {
           onCenterChanged={updateCenterWhenMapMoved}
         >
           <MapMarker
-            image={{ src: positionIconUrl, size: { width: 20, height: 30 } }}
+            image={{ src: positionIconUrl, size: { width: 30, height: 30 } }}
             position={position}
           />
         </Map>
