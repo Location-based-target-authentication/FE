@@ -34,7 +34,10 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   const navigate = useNavigate();
   const userId = useAuthStore((state) => state.userId);
 
-  const [goalName, setGoalName] = useState<string>("");
+  const [goalName, setGoalName] = useState<string>(
+    location.state?.goalName || ""
+  );
+
   const [startDate, setStartDate] = useState<Date | null>(
     location.state?.startDate || null
   );
@@ -44,6 +47,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   const [targetLocation, setTargetLocation] = useState<string>("");
   const [balancePoint, setBalancePoint] = useState<number>(0);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   const fetchBalancePoint = useCallback(async (): Promise<void> => {
     try {
@@ -55,7 +59,6 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
       console.error("포인트 불러오기 실패:", error);
     }
   }, [userId]);
-
   useEffect(() => {
     fetchBalancePoint();
   }, [fetchBalancePoint]);
@@ -83,11 +86,15 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   }, [goalId]);
 
   const handleDateClick = (): void => {
-    navigate(paths.goal.date.path);
+    navigate(paths.goal.date.path, {
+      state: { goalName }
+    });
   };
 
   const handleEndDateClick = (): void => {
-    navigate(paths.goal.date.path, { state: { mode: "end", startDate } });
+    navigate(paths.goal.date.path, {
+      state: { mode: "end", goalName, startDate }
+    });
   };
 
   const handleSaveWithStatus = async (status: GoalStatus): Promise<void> => {
@@ -126,22 +133,33 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     navigate(paths.goal.list.path);
   };
 
+  useEffect(() => {
+    setIsFormValid(
+      goalName.trim().length >= 2 &&
+        !!startDate &&
+        !!endDate &&
+        selectedDays.length > 0
+    );
+  }, [goalName, startDate, endDate, selectedDays]);
+
   return (
-    <div className="p-4">
+    <div className="mx-auto h-[812px] w-[375px] bg-white p-4">
       <div className="flex items-center border-b pb-2 text-xl font-bold">
         <button onClick={handleBackButtonClick} className="mr-2 text-gray-600">
           &lt;
         </button>
         목표 추가
       </div>
-      <div className="mt-4">
-        <label className="block text-gray-600">목표 명</label>
+      <div className="mt-4 h-[86px] w-[335px]">
+        <label className="block text-[14px] font-medium leading-[16px] tracking-[-2.5%] text-[#1A1A1A]">
+          목표 명
+        </label>
         <input
           type="text"
-          className="mt-1 w-full rounded border p-2"
+          className="mt-[6px] h-[44px] w-[335px] rounded-[8px] bg-gray-50 p-[14px_10px] placeholder:text-[14px] placeholder:font-medium placeholder:leading-[16px] placeholder:tracking-[-2.5%] placeholder:text-[#A0A0A0]"
           value={goalName}
           onChange={(e) => setGoalName(e.target.value)}
-          placeholder="목표명을 입력하세요"
+          placeholder="최소 2자이상~20자까지 입력해 주세요."
         />
       </div>
       <DatePicker
@@ -150,6 +168,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
         onStartDateClick={handleDateClick}
         onEndDateClick={handleEndDateClick}
       />
+
       <DayPicker
         selectedDays={selectedDays}
         onToggleDay={(day) =>
@@ -164,20 +183,24 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
         }
       />
 
-      <div className="mt-4">
-        <label className="block text-gray-600">장소 설정</label>
+      <div className="mt-[20px] flex h-[66px] w-[335px] flex-col justify-between gap-[6px]">
+        <label className="text-[14px] font-medium leading-[16px] tracking-[-2.5%] text-gray-600">
+          장소 설정
+        </label>
         <input
           type="text"
-          className="mt-1 w-full rounded border p-2"
-          placeholder="장소를 입력하세요"
+          className="h-[44px] w-full rounded-[8px] border bg-gray-50 p-[14px_10px] text-sm text-gray-400"
+          placeholder="장소를 선택해주세요"
         />
       </div>
-
+      <div className="mt-[10px] flex h-[120px] w-[335px] items-center justify-center bg-gray-50 text-gray-600">
+        📍 지도 (추후 추가)
+      </div>
       <BalanceInfo balancePoint={balancePoint} />
-
       <SaveButtons
         onTempSave={() => handleSaveWithStatus(GoalStatus.DRAFT)}
         onSave={() => handleSaveWithStatus(GoalStatus.ACTIVE)}
+        isFormValid={isFormValid}
       />
     </div>
   );

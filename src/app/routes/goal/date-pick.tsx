@@ -15,6 +15,7 @@ const DatePick = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const goalName = location.state?.goalName || "";
   const mode: "start" | "end" = location.state?.mode || "start";
   const startDate: Date | null = location.state?.startDate
     ? new Date(location.state.startDate)
@@ -28,9 +29,11 @@ const DatePick = () => {
   const handleConfirm = () => {
     if (!selectedDate) return;
     if (mode === "end") {
-      navigate("/goal", { state: { startDate, endDate: selectedDate } });
+      navigate("/goal", {
+        state: { startDate, endDate: selectedDate, goalName }
+      });
     } else {
-      navigate("/goal", { state: { startDate: selectedDate } });
+      navigate("/goal", { state: { startDate: selectedDate, goalName } });
     }
   };
 
