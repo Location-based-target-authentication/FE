@@ -54,7 +54,7 @@ const KakaoCallback = (): JSX.Element | null => {
     }
   }, [searchParams, handleKakaoLogin, navigate]);
 
-  if (error) return <MainErrorFallback errorMessage={error} />;
+  if (error) return <MainErrorFallback />;
   if (loading)
     return (
       <div className="flex h-screen w-screen items-center justify-center">
