@@ -23,5 +23,12 @@ export const paths = {
       path: "/auth/callback/google",
       getHref: () => "/auth/callback/google"
     }
+  },
+
+  user: {
+    myPage: {
+      path: "/user/my-page",
+      getHref: () => "/my-page"
+    }
   }
 } as const;

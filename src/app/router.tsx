@@ -9,6 +9,7 @@ import {
   ErrorBoundary as RootErrorBoundary
 } from "@/app/routes/index.tsx";
 import PrivateRoute from "@/app/routes/PrivateRoute";
+import MyPageView from "@/app/routes/user/my-page";
 import GoogleCallback from "@/features/auth/routes/GoogleCallback";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router";
@@ -40,6 +41,10 @@ const createAppRouter = (queryClient: QueryClient) =>
             }
           ],
           ErrorBoundary: RootErrorBoundary
+        },
+        {
+          path: paths.user.myPage.path,
+          element: <MyPageView />
         },
         {
           path: paths.map.search.path,
