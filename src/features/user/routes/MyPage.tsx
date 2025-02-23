@@ -160,17 +160,13 @@ const MyPage: React.FC = () => {
               </svg>
             </button>
           </div>
-          <div className="flex w-[375px] flex-1 flex-col items-center justify-end bg-[#F6F7F9] py-[30px]">
-            <div className="grow">
-              <div className="flex w-[375px] justify-center pb-[30px]">
-                <button
-                  onClick={handleLogout}
-                  className="h-[48px] w-[335px] rounded-lg border border-green-500 text-[16px] font-medium text-green-500 hover:bg-green-100"
-                >
-                  로그아웃
-                </button>
-              </div>
-            </div>
+          <div className="absolute top-[456px] flex w-[375px] justify-center">
+            <button
+              onClick={handleLogout}
+              className="h-[48px] w-[335px] rounded-lg border border-green-500 text-[16px] font-medium text-green-500 hover:bg-green-100"
+            >
+              로그아웃
+            </button>
           </div>
         </div>
       </div>
