@@ -12,7 +12,10 @@ import GoalList from "./goal-list";
 import { generatDdateText, generateDayText } from "./index.const";
 
 const HomePage = () => {
-  const { data: goals } = useQuery(generate_qo_getGoals());
+  const { data: goals } = useQuery({
+    ...generate_qo_getGoals(),
+    initialData: []
+  });
 
   const goalCount = useMemo(() => {
     if (!goals) return 0;

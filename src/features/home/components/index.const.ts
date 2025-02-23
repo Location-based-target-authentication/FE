@@ -1,6 +1,8 @@
 import { join, map, replace } from "es-toolkit/compat";
 
-export const DAYS_STRING_MAP = new Map([
+import { WeekDay } from "../types";
+
+export const DAYS_STRING_MAP = new Map<WeekDay, string>([
   ["MON", "월"],
   ["TUE", "화"],
   ["WED", "수"],
@@ -10,14 +12,14 @@ export const DAYS_STRING_MAP = new Map([
   ["SUN", "일"]
 ]);
 
-export const generatDdateText = (startDate, endDate) => {
+export const generatDdateText = (startDate: string, endDate: string) => {
   const replacedStartDate = replace(startDate, /-/g, ". ");
   const replacedEndDate = replace(endDate, /-/g, ". ");
 
   return `${replacedStartDate} ~ ${replacedEndDate}`;
 };
 
-export const generateDayText = (days) => {
+export const generateDayText = (days: WeekDay[]) => {
   const transformDays = map(days, (day) => DAYS_STRING_MAP.get(day));
   const day = days.length === 7 ? "매일" : join(transformDays, ", ");
 
