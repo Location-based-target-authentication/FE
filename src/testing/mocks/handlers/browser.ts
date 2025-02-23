@@ -1,4 +1,4 @@
-import { testGoals1, testGoals2 } from "@/testing/testUtils";
+import { testGoals1 } from "@/testing/testUtils";
 import { http, HttpResponse } from "msw";
 
 import { ENDPOINT_URL } from "@/config/envs";
