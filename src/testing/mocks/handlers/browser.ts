@@ -1,8 +1,10 @@
-import { testTodos } from "@/testing/testUtils";
+import { testGoals1, testGoals2 } from "@/testing/testUtils";
 import { http, HttpResponse } from "msw";
 
+import { ENDPOINT_URL } from "@/config/envs";
+
 export const handlers = [
-  http.get("http://localhost:3000/todos", () => {
-    return HttpResponse.json(testTodos);
+  http.get(`${ENDPOINT_URL}api/v1/goals`, () => {
+    return HttpResponse.json(testGoals1);
   })
 ];
