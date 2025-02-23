@@ -1,4 +1,4 @@
-enum SocialType {
+export enum SocialType {
   KAKAO = "KAKAO",
   GOOGLE = "GOOGLE"
 }
@@ -6,6 +6,7 @@ enum SocialType {
 export type UserInfo = {
   name: string;
   phone: string;
+  email?: string;
   socialType: SocialType;
   points: number;
   eventCoupons: number;

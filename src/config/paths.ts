@@ -28,7 +28,11 @@ export const paths = {
   user: {
     myPage: {
       path: "/user/my-page",
-      getHref: () => "/my-page"
+      getHref: () => "/user/my-page"
+    },
+    account: {
+      path: "user/account",
+      getHref: () => "/user/account"
     }
   }
 } as const;
