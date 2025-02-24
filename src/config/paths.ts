@@ -5,8 +5,10 @@ export const paths = {
   },
 
   map: {
-    path: "/map",
-    getHref: () => "/map"
+    search: {
+      path: "/map/search",
+      getHref: () => "/map/search"
+    }
   },
 
   auth: {
