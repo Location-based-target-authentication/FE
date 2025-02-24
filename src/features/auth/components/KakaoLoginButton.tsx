@@ -7,7 +7,7 @@ export const KakaoLoginButton = (): JSX.Element => {
       return;
     }
 
-    const KAKAO_LOGIN_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_APP_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+    const KAKAO_LOGIN_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
 
     window.location.href = KAKAO_LOGIN_URL;
   };
