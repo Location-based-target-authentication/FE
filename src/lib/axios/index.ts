@@ -50,7 +50,7 @@ export const handleTokenExpiration = async (
   config: AxiosRequestConfig
 ): Promise<AxiosResponse> => {
   try {
-    const response = await postRefreshAccessToken({ data: refreshToken });
+    const response = await postRefreshAccessToken({ data: { refreshToken } });
     useAuthStore.setState({
       accessToken: response.data.accessToken,
       refreshToken: response.data.refreshToken
