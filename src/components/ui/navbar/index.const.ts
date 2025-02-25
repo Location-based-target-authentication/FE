@@ -19,7 +19,7 @@ export const generateNavbarInfo = (locationPath: string) => [
     label: "내정보",
     activeIcon: User,
     notActiveIcon: UserDisable,
-    to: "/map",
-    isActvie: isEqualPath(locationPath, "/map")
+    to: "/profile",
+    isActvie: isEqualPath(locationPath, "/profile")
   }
 ];
