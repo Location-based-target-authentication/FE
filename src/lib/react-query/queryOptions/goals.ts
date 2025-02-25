@@ -1,3 +1,5 @@
+import { getGoalsCheck, getGoalsComplete } from "@/features/goal/api/goal";
+import { GOALS_CHECK, GOALS_COMPLETE } from "@/features/goal/api/path";
 import { getGoals, postGoalsAchieve } from "@/features/map-certification/api";
 import { GOALS } from "@/features/map-certification/api/paths";
 import { Goals } from "@/features/map-certification/types";
@@ -26,5 +28,19 @@ export const generate_qo_postGoalsAchieve: GenerateQoPostGoalsAchieve = (
 ) => {
   return {
     mutationFn: () => postGoalsAchieve({ pathParams: { id } })
+  };
+};
+
+export const generate_qo_getGoalsCheck = (id) => {
+  return {
+    queryKey: [GOALS_CHECK(id)],
+    queryFn: () => getGoalsCheck(id).then((data) => data)
+  };
+};
+
+export const generate_qo_getGoalsComplete = (id) => {
+  return {
+    queryKey: [GOALS_COMPLETE(id)],
+    queryFn: () => getGoalsComplete(id).then((data) => data)
   };
 };
