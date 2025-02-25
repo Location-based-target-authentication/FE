@@ -1,5 +1,3 @@
-import Layout from "@/components/layouts/layout";
-
 import { useMemo } from "react";
 
 import {
@@ -24,22 +22,27 @@ const convert = (queryClient: QueryClient) => (m: any) => {
 const createAppRouter = (queryClient: QueryClient) =>
   createBrowserRouter([
     {
-      element: <Layout />,
-      children: [
-        {
-          path: paths.home.path,
-          element: <AppRoot />,
-          ErrorBoundary: RootErrorBoundary
-        },
-        {
-          path: paths.map.search.path,
-          lazy: () => import("./routes/map/search").then(convert(queryClient))
-        },
-        {
-          path: "*",
-          lazy: () => import("./routes/not-found").then(convert(queryClient))
-        }
-      ]
+      path: paths.home.path,
+      element: <AppRoot />,
+      ErrorBoundary: RootErrorBoundary
+    },
+    {
+      path: paths.map.search.path,
+      lazy: () => import("./routes/map/search").then(convert(queryClient))
+    },
+    {
+      path: paths.map.certification.path,
+      lazy: () =>
+        import("./routes/map/certification/index").then(convert(queryClient))
+    },
+    {
+      path: paths.map.certification.sucess.path,
+      lazy: () =>
+        import("./routes/map/certification/success").then(convert(queryClient))
+    },
+    {
+      path: "*",
+      lazy: () => import("./routes/not-found").then(convert(queryClient))
     }
   ]);
 
