@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Running tests..."
+pnpm test
+
+echo "Starting lint-staged..."
+pnpx lint-staged
+
+echo "Commit process completed"

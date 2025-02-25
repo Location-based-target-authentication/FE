@@ -4,11 +4,11 @@ import containTargetUrl from "@/asset/map/contain-target.svg?url";
 import Gps from "@/asset/map/gps.svg?react";
 import positionIconUrl from "@/asset/map/position.svg?url";
 import { getFormattedDistance } from "@/utils/map";
-import { debounce } from "es-toolkit";
 import { map } from "es-toolkit/compat";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 
 import useKakaoPlaces from "@/hooks/useKakaoMapService";
+import useUserLocation from "@/hooks/useUserLocation";
 import type { PlaceData } from "../types";
 import MapHeader from "./map-header";
 import PlaceList from "./place-list";
@@ -16,12 +16,16 @@ import PlaceList from "./place-list";
 function KakaoMap() {
   // Hooks
   const { placesService, status: serviceStatus } = useKakaoPlaces();
+  const [selectedPosition, setSelectedPosition] = useState({ lat: 0, lng: 0 });
+  const {
+    center,
+    position,
+    setCenterToMyPosition,
+    updateCenterWhenMapMoved,
+    setCenter
+  } = useUserLocation();
 
   // state
-  const [center, setCenter] = useState({ lat: 33.450701, lng: 126.570667 });
-  const [position, setPosition] = useState({ lat: 33.450701, lng: 126.570667 });
-  const [selectedPosition, setSelectedPosition] = useState({ lat: 0, lng: 0 });
-
   const [keyword, setKeyword] = useState("");
   const [placesData, setPlacesData] = useState<PlaceData[]>([]);
 
@@ -40,8 +44,6 @@ function KakaoMap() {
     setKeyword(searchInputValue);
   };
 
-  const setCenterToMyPosition = () => setCenter(position);
-
   const getDistance = useCallback(
     (destinationLat: number, destinationLng: number) => {
       return getFormattedDistance({
@@ -52,17 +54,6 @@ function KakaoMap() {
       });
     },
     [position.lat, position.lng]
-  );
-
-  const updateCenterWhenMapMoved = useMemo(
-    () =>
-      debounce((map: kakao.maps.Map) => {
-        setCenter({
-          lat: map.getCenter().getLat(),
-          lng: map.getCenter().getLng()
-        });
-      }, 500),
-    []
   );
 
   const memoizedSelectedMarker = useMemo(() => {
@@ -90,23 +81,6 @@ function KakaoMap() {
   };
 
   // effect
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      ({ coords: { latitude, longitude } }) => {
-        setCenter({ lat: latitude, lng: longitude });
-      }
-    );
-
-    const watchId = navigator.geolocation.watchPosition(
-      ({ coords: { latitude, longitude } }) => {
-        setPosition({ lat: latitude, lng: longitude });
-      }
-    );
-    return () => {
-      if (!watchId) return;
-      navigator.geolocation.clearWatch(watchId);
-    };
-  }, []);
 
   useEffect(() => {
     if (!placesService || !serviceStatus) return;
