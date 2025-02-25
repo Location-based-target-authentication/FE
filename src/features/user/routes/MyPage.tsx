@@ -45,7 +45,7 @@ const MyPage: React.FC = () => {
       console.error("사용자 정보가 없습니다.");
       return;
     }
-    navigate(paths.user.account.path, { state: userInfo });
+    navigate(paths.user.account.path, { state: { ...userInfo, userId } });
   };
 
   return (
