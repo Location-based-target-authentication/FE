@@ -4,7 +4,6 @@ import convenienceStoreCouponUrl from "@/asset/reward/convenience-store-coupon.j
 export const generateCoupons = (point: number) => {
   const baseClass =
     "absolute bottom-0 left-0 flex h-12 w-full items-center justify-center rounded-b-lg font-semibold text-white";
-  const className = `${baseClass} ${point >= 5000 ? "bg-green-500" : "cursor-not-allowed bg-gray-400"}`;
 
   return [
     {
@@ -13,7 +12,7 @@ export const generateCoupons = (point: number) => {
       cost: 5000,
       image: coffeeCouponUrl,
       isDisabled: point < 5000,
-      className
+      className: `${baseClass} ${point >= 5000 ? "bg-green-500" : "cursor-not-allowed bg-gray-400"}`
     },
     {
       id: 2,
@@ -21,7 +20,7 @@ export const generateCoupons = (point: number) => {
       cost: 10000,
       image: convenienceStoreCouponUrl,
       isDisabled: point < 10000,
-      className
+      className: `${baseClass} ${point >= 10000 ? "bg-green-500" : "cursor-not-allowed bg-gray-400"}`
     }
   ];
 };

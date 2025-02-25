@@ -26,6 +26,6 @@ export const handlers = [
   http.post(`${ENDPOINT_URL}${POINT_DEDUC(1)}`, async () => {
     await delay(500);
 
-    return HttpResponse.json({ point: 411 });
+    return HttpResponse.json({ point: 10000 });
   })
 ];
