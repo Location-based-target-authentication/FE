@@ -18,5 +18,12 @@ export const paths = {
         getHref: () => "/map/certification/success"
       }
     }
+  },
+
+  profile: {
+    reward: {
+      path: "/profile/reward",
+      getHref: () => "/profile/reward"
+    }
   }
 } as const;
