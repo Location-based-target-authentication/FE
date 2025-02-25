@@ -4,7 +4,9 @@ import CompleteGoal from "./complete-goal";
 import ProgressGoal from "./progress-goal";
 
 export default function GoalPage() {
-  const [activeTab, setActiveTab] = useState("progress");
+  const [activeTab, setActiveTab] = useState<"progress" | "completed">(
+    "progress"
+  );
 
   const buttonInfo = useMemo(
     () => [

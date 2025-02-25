@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { join, map, slice } from "es-toolkit/compat";
 
 import { generate_qo_getGoalsCheck } from "@/lib/react-query/queryOptions/goals";
+import type { CertificationInfo } from "../../types";
 import {
   DATEITEM_BASIC_CLASS_NAME,
   generateCertificationItem,
@@ -18,7 +19,7 @@ function ProgressGoal() {
   const { data: progressGoals = [] } = useQuery(generate_qo_getGoalsCheck());
 
   const certificationInfoMaps = useMemo(() => {
-    const generateMap = (certificationInfo) => {
+    const generateMap = (certificationInfo: CertificationInfo[]) => {
       return new Map(
         map(certificationInfo, ({ date, isCertification }) => [
           date,
@@ -41,7 +42,8 @@ function ProgressGoal() {
           if (!isCertificationInfo) {
             return {
               className: `${DATEITEM_BASIC_CLASS_NAME} bg-gray-400`,
-              key: viewDay
+              key: viewDay,
+              day: ""
             };
           }
 
@@ -89,10 +91,10 @@ function ProgressGoal() {
 
           <div>
             <hr />
-            {map(allDays, (days) => (
+            {map(allDays, (days, idx) => (
               <div
                 className="mt-2 flex items-center justify-between gap-1"
-                key={days[0].key}
+                key={days[idx].key}
               >
                 {map(days, ({ key, className, day }) => (
                   <span key={key} className={`${className}`}>
