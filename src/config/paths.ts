@@ -22,6 +22,6 @@ export const paths = {
 
   goal: {
     path: "/goal",
-    getHref: () => "/goal/"
+    getHref: () => "/goal"
   }
 } as const;

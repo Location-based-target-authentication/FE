@@ -31,16 +31,16 @@ export const generate_qo_postGoalsAchieve: GenerateQoPostGoalsAchieve = (
   };
 };
 
-export const generate_qo_getGoalsCheck = (id) => {
+export const generate_qo_getGoalsCheck = () => {
   return {
-    queryKey: [GOALS_CHECK(id)],
-    queryFn: () => getGoalsCheck(id).then((data) => data)
+    queryKey: [GOALS_CHECK],
+    queryFn: () => getGoalsCheck().then((data) => data)
   };
 };
 
-export const generate_qo_getGoalsComplete = (id) => {
+export const generate_qo_getGoalsComplete = () => {
   return {
-    queryKey: [GOALS_COMPLETE(id)],
-    queryFn: () => getGoalsComplete(id).then((data) => data)
+    queryKey: [GOALS_COMPLETE],
+    queryFn: () => getGoalsComplete().then((data) => data)
   };
 };

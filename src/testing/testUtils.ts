@@ -49,7 +49,7 @@ export const goalCheckAll = {
   startDate: "2025-02-01",
   endDate: "2025-02-28",
   goalDaycnt: 28,
-  day: ["월", "수", "금"],
+  days: ["월", "수", "금"],
   viewDays: [
     "2025-02-02",
     "2025-02-03",
@@ -157,12 +157,18 @@ export const goalCheckNotAfterData = {
     { date: "2025-02-06", isCertification: false },
     { date: "2025-02-07", isCertification: false },
     { date: "2025-02-08", isCertification: false },
-    { date: "2025-02-09", isCertification: false },
-    { date: "2025-02-10", isCertification: false },
-    { date: "2025-02-11", isCertification: false },
+    { date: "2025-02-09", isCertification: true },
+    { date: "2025-02-10", isCertification: true },
+    { date: "2025-02-11", isCertification: true },
     { date: "2025-02-12", isCertification: false }
   ]
 };
+
+export const goalCheckDatas = [
+  goalCheckAll,
+  goalCheckNotBeforeData,
+  goalCheckNotAfterData
+];
 
 export const goalCompleteData1 = {
   id: 1,
@@ -181,3 +187,5 @@ export const goalCompleteData2 = {
   endDate: "2025-02-21",
   days: ["월", "화", "수", "목", "금", "토", "일"]
 };
+
+export const goalCompleteDatas = [goalCompleteData1, goalCompleteData2];

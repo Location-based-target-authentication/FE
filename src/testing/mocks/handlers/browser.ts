@@ -1,9 +1,6 @@
 import {
-  goalCheckAll,
-  goalCheckNotAfterData,
-  goalCheckNotBeforeData,
-  goalCompleteData1,
-  goalCompleteData2,
+  goalCheckDatas,
+  goalCompleteDatas,
   goalEveryDayCertification,
   goalNotContainRadarCertification,
   goalNotEveryDayCertification
@@ -22,20 +19,11 @@ export const handlers = [
   http.get(`${ENDPOINT_URL}api/v1/goals/3`, () => {
     return HttpResponse.json(goalNotContainRadarCertification);
   }),
-  http.get(`${ENDPOINT_URL}api/v1/goals/check/1`, () => {
-    return HttpResponse.json(goalCheckAll);
+  http.get(`${ENDPOINT_URL}api/v1/goals/check`, () => {
+    return HttpResponse.json(goalCheckDatas);
   }),
-  http.get(`${ENDPOINT_URL}api/v1/goals/check/2`, () => {
-    return HttpResponse.json(goalCheckNotBeforeData);
-  }),
-  http.get(`${ENDPOINT_URL}api/v1/goals/check/3`, () => {
-    return HttpResponse.json(goalCheckNotAfterData);
-  }),
-  http.get(`${ENDPOINT_URL}api/v1/goals/complete/1`, () => {
-    return HttpResponse.json(goalCompleteData1);
-  }),
-  http.get(`${ENDPOINT_URL}api/v1/goals/complete/2`, () => {
-    return HttpResponse.json(goalCompleteData2);
+  http.get(`${ENDPOINT_URL}api/v1/goals/complete`, () => {
+    return HttpResponse.json(goalCompleteDatas);
   }),
   http.post(`${ENDPOINT_URL}api/v1/goals/1/achieve`, async () => {
     await delay(500);
