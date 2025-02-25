@@ -1,9 +1,7 @@
+import Goal from "@/features/goal/components/goal/goal";
+
 function GoalView() {
-  return (
-    <div>
-      <h1>Goal</h1>
-    </div>
-  );
+  return <Goal />;
 }
 
 export default GoalView;
