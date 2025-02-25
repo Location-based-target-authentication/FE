@@ -2,15 +2,14 @@ import { BASE_PATH } from "@/features/auth/api/paths";
 
 import { GET, POST } from "@/lib/axios";
 
-export function getUserInfo(userId: number) {
+export function getUserInfo({ pathParam }: { pathParam: number }) {
   return GET({
-    url: `${BASE_PATH}?userId=${userId}`
+    url: `${BASE_PATH}?userId=${pathParam}`
   });
 }
 
-export function logout(userId: number) {
+export function logout({ pathParam }: { pathParam: number }) {
   return POST({
-    url: `${BASE_PATH}/${userId}/logout`,
-    data: {}
+    url: `${BASE_PATH}/${pathParam}/logout`
   });
 }

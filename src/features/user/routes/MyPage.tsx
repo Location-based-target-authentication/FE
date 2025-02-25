@@ -19,7 +19,7 @@ const MyPage: React.FC = () => {
 
     const fetchUserInfo = async (): Promise<void> => {
       try {
-        const response = await getUserInfo(userId);
+        const response = await getUserInfo({ pathParam: userId });
         setUserInfo(response.data);
       } catch (error) {
         console.error("사용자 정보를 불러오는 데 실패했습니다.", error);
@@ -33,7 +33,7 @@ const MyPage: React.FC = () => {
     if (!userId) return;
 
     try {
-      await logout(userId);
+      await logout({ pathParam: userId });
       navigate(paths.home.path);
     } catch (error) {
       console.error("로그아웃 실패:", error);
