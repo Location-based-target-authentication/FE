@@ -18,5 +18,19 @@ export const paths = {
         getHref: () => "/map/certification/success"
       }
     }
+  },
+  auth: {
+    login: {
+      path: "/auth/login",
+      getHref: () => "/auth/login"
+    },
+    kakaoCallback: {
+      path: "/auth/callback/kakao",
+      getHref: () => "/auth/callback/kakao"
+    },
+    googleCallback: {
+      path: "/auth/callback/google",
+      getHref: () => "/auth/callback/google"
+    }
   }
 } as const;
