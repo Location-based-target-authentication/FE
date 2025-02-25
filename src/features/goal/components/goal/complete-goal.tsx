@@ -16,7 +16,9 @@ function CompleteGoal() {
       map(completedGoals, (goal) => {
         const dateString = `${generateDateString(goal.startDate)} ~ ${generateDateString(goal.endDate)}`;
         const days = goal.days.length === 7 ? "매일" : join(goal.days, ",");
-        return { ...goal, dateString, days };
+        const achivePercentString = `${goal.achivePercent}% 달성`;
+
+        return { ...goal, dateString, days, achivePercentString };
       }),
     [completedGoals]
   );
@@ -25,13 +27,13 @@ function CompleteGoal() {
     <>
       {transformedCompletedGoals.length > 0 ? (
         transformedCompletedGoals.map(
-          ({ id, name, achivePercent, dateString, days }) => (
+          ({ id, name, achivePercentString, dateString, days }) => (
             <div
               key={id}
               className="mb-2 flex flex-col gap-3 rounded-lg border p-4"
             >
               <span className="text-[13px] text-green-500">
-                {achivePercent}% 달성
+                {achivePercentString}
               </span>
               <h3>{name}</h3>
               <div className="flex items-center gap-2">
