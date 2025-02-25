@@ -29,7 +29,10 @@ function SettingPopover({ lat, lng }: SettingPopoverProps) {
 
   return (
     <Popover>
-      <PopoverTrigger className="max-w-[100px] truncate rounded-full border border-green-500 px-3 py-1 text-xs text-green-500">
+      <PopoverTrigger
+        className="max-w-[100px] truncate rounded-full border border-green-500 px-3 py-1 text-xs text-green-500"
+        onClick={(e) => e.stopPropagation()}
+      >
         목표 설정
       </PopoverTrigger>
       <PopoverContent className="w-64 rounded-lg border border-gray-200 bg-white p-4 shadow-lg">

@@ -37,7 +37,13 @@ const useUserLocation = () => {
     };
   }, []);
 
-  return { center, position, setCenterToMyPosition, updateCenterWhenMapMoved };
+  return {
+    center,
+    position,
+    setCenterToMyPosition,
+    updateCenterWhenMapMoved,
+    setCenter
+  };
 };
 
 export default useUserLocation;
