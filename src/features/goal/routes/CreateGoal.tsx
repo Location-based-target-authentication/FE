@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
+import containTargetUrl from "@/asset/map/contain-target.svg?url";
 import {
   createGoal,
   createTempSaveGoal,
@@ -11,6 +12,8 @@ import DayPicker from "@/features/goal/components/create-goal/DayPicker";
 import SaveButtons from "@/features/goal/components/create-goal/SaveButtons";
 import { GoalData, GoalStatus } from "@/features/goal/types/goal-create";
 import { getPoint } from "@/features/point/\bapi/point";
+import { debounce } from "es-toolkit";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { useLocation, useNavigate } from "react-router";
 
 import { useAuthStore } from "@/stores/auth-store";
@@ -48,6 +51,8 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   const [balancePoint, setBalancePoint] = useState<number>(0);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
+  const [center, setCenter] = useState({ lat: 33.450701, lng: 126.570667 });
+  const [position, setPosition] = useState(null);
 
   const fetchBalancePoint = useCallback(async (): Promise<void> => {
     try {
@@ -62,6 +67,32 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   useEffect(() => {
     fetchBalancePoint();
   }, [fetchBalancePoint]);
+
+  const updateCenterWhenMapMoved = useMemo(
+    () =>
+      debounce((map: kakao.maps.Map) => {
+        setCenter({
+          lat: map.getCenter().getLat(),
+          lng: map.getCenter().getLng()
+        });
+      }, 500),
+    []
+  );
+
+  useEffect(() => {
+    if (location.state) {
+      const { position, placeName } = location.state;
+      setTargetLocation(placeName);
+      setPosition(position);
+      setCenter(position);
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        ({ coords: { latitude, longitude } }) => {
+          setCenter({ lat: latitude, lng: longitude });
+        }
+      );
+    }
+  }, [location.state]);
 
   useEffect(() => {
     if (!goalId) return;
@@ -142,6 +173,8 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     );
   }, [goalName, startDate, endDate, selectedDays]);
 
+  const navigatePositionSearch = () => navigate(paths.map.search.getHref());
+
   return (
     <div className="mx-auto h-[812px] w-[375px] bg-white p-4">
       <div className="flex items-center border-b pb-2 text-xl font-bold">
@@ -189,12 +222,30 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
         </label>
         <input
           type="text"
-          className="h-[44px] w-full rounded-[8px] border bg-gray-50 p-[14px_10px] text-sm text-gray-400"
+          value={targetLocation}
+          className="h-[44px] w-full cursor-pointer rounded-[8px] border bg-gray-50 p-[14px_10px] text-sm text-gray-400"
           placeholder="장소를 선택해주세요"
+          readOnly
+          onClick={navigatePositionSearch}
         />
       </div>
-      <div className="mt-[10px] flex h-[120px] w-[335px] items-center justify-center bg-gray-50 text-gray-600">
-        📍 지도 (추후 추가)
+      <div
+        className="mt-[10px] flex h-[140px] w-[335px] items-center justify-center bg-gray-50 text-gray-600"
+        onClick={navigatePositionSearch}
+      >
+        <Map
+          className="size-full"
+          center={center}
+          level={5}
+          onCenterChanged={updateCenterWhenMapMoved}
+        >
+          {position && (
+            <MapMarker
+              image={{ src: containTargetUrl, size: { width: 24, height: 24 } }}
+              position={position}
+            />
+          )}
+        </Map>
       </div>
       <BalanceInfo balancePoint={balancePoint} />
       <SaveButtons

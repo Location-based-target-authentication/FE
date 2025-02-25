@@ -30,7 +30,7 @@ function PlaceList({ placesData, getDistance }: PlaceListProps) {
                   {getDistance(lat, lng)}
                 </div>
               </div>
-              <SettingPopover lat={lat} lng={lng} />
+              <SettingPopover lat={lat} lng={lng} placeName={place_name} />
             </div>
           );
         })

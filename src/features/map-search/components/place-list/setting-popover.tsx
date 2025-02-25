@@ -7,24 +7,32 @@ import {
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
+import { paths } from "@/config/paths";
+
 interface SettingPopoverProps {
   lat: number;
   lng: number;
+  placeName: string;
 }
 
-function SettingPopover({ lat, lng }: SettingPopoverProps) {
+function SettingPopover({ lat, lng, placeName }: SettingPopoverProps) {
   const navigate = useNavigate();
 
-  const handleReturnToFormPage = async (location: {
-    lat: number;
-    lng: number;
-  }) => {
-    if (!location) {
+  const handleReturnToFormPage = async (
+    position: {
+      lat: number;
+      lng: number;
+    },
+    placeName: string
+  ) => {
+    if (!position || !placeName) {
       toast.error("위치 선택을 다시해주세요.");
       return;
     }
 
-    return navigate("/", { state: { location } });
+    return navigate(paths.goal.goal.getHref(), {
+      state: { position, placeName }
+    });
   };
 
   return (
@@ -38,7 +46,7 @@ function SettingPopover({ lat, lng }: SettingPopoverProps) {
             해당 위치로 설정하시겠습니까?
           </h4>
           <button
-            onClick={() => handleReturnToFormPage({ lat, lng })}
+            onClick={() => handleReturnToFormPage({ lat, lng }, placeName)}
             className="w-full rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-green-600"
           >
             확인
