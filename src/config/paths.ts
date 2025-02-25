@@ -18,5 +18,10 @@ export const paths = {
         getHref: () => "/map/certification/success"
       }
     }
+  },
+
+  goal: {
+    path: "/goal",
+    getHref: () => "/goal/"
   }
 } as const;
