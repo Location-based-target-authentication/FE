@@ -8,7 +8,9 @@ import {
 } from "es-toolkit/compat";
 
 // URL
-export const genreateBasePath = (path: string) => `/${path}`;
+export const genreateBasePath = (path: string, version = "v1") => {
+  return join(["api", version, path], "/");
+};
 export const generateURL = (path: string, query = "") => path + "?" + query;
 export const generatePathByBase = (base: string, ...paths: string[]) =>
   join([base, ...paths], "/");
