@@ -1,3 +1,4 @@
+import { POINT_DEDUC } from "@/features/reward/api/path";
 import {
   goalEveryDayCertification,
   goalNotContainRadarCertification,
@@ -21,5 +22,10 @@ export const handlers = [
     await delay(500);
 
     return HttpResponse.json({ message: "success" });
+  }),
+  http.post(`${ENDPOINT_URL}${POINT_DEDUC(1)}`, async () => {
+    await delay(500);
+
+    return HttpResponse.json({ point: 411 });
   })
 ];
