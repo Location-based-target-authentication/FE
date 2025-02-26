@@ -1,8 +1,25 @@
-import { testTodos } from "@/testing/testUtils";
-import { http, HttpResponse } from "msw";
+import {
+  goalEveryDayCertification,
+  goalNotContainRadarCertification,
+  goalNotEveryDayCertification
+} from "@/testing/testUtils";
+import { delay, http, HttpResponse } from "msw";
+
+import { ENDPOINT_URL } from "@/config/envs";
 
 export const handlers = [
-  http.get("http://localhost:3000/todos", () => {
-    return HttpResponse.json(testTodos);
+  http.get(`${ENDPOINT_URL}api/v1/goals/1`, () => {
+    return HttpResponse.json(goalEveryDayCertification);
+  }),
+  http.get(`${ENDPOINT_URL}api/v1/goals/2`, () => {
+    return HttpResponse.json(goalNotEveryDayCertification);
+  }),
+  http.get(`${ENDPOINT_URL}api/v1/goals/3`, () => {
+    return HttpResponse.json(goalNotContainRadarCertification);
+  }),
+  http.post(`${ENDPOINT_URL}api/v1/goals/1/achieve`, async () => {
+    await delay(500);
+
+    return HttpResponse.json({ message: "success" });
   })
 ];

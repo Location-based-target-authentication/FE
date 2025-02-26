@@ -13,7 +13,7 @@ function Todos() {
   const navigate = useNavigate();
 
   const navigateToMap = () => {
-    navigate(paths.map.getHref());
+    navigate(paths.map.search.getHref());
   };
 
   return (

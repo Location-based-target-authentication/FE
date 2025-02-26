@@ -1,4 +1,4 @@
-import Login from "@/features/auth/routes/Login";
+import Login from "@/features/auth/components/Login";
 
 const LoginView = () => {
   return <Login />;

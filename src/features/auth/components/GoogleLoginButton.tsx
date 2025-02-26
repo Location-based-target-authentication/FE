@@ -1,6 +1,14 @@
+import { GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI } from "@/config/envs";
+
 export const GoogleLoginButton = (): JSX.Element => {
   const handleLoginClick = (): void => {
-    const GOOGLE_LOGIN_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${import.meta.env.VITE_GOOGLE_CLIENT_ID}&redirect_uri=http://localhost:3000/google/callback&response_type=code&scope=openid%20profile%20email`;
+    if (!GOOGLE_CLIENT_ID || !GOOGLE_REDIRECT_URI) {
+      console.error("구글 로그인 정보가 없습니다.");
+      return;
+    }
+
+    const GOOGLE_LOGIN_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=openid%20profile%20email`;
+
     window.location.href = GOOGLE_LOGIN_URL;
   };
 
