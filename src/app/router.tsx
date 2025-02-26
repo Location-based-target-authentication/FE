@@ -44,16 +44,20 @@ const createAppRouter = (queryClient: QueryClient) =>
           ErrorBoundary: RootErrorBoundary
         },
         {
-          path: paths.user.myPage.path,
-          element: <MyPageView />
-        },
-        {
-          path: paths.user.account.path,
-          element: <AccountView />
-        },
-        {
           path: paths.map.search.path,
           lazy: () => import("./routes/map/search").then(convert(queryClient))
+        },
+        {
+          path: paths.map.certification.path,
+          lazy: () =>
+            import("./routes/map/certification").then(convert(queryClient))
+        },
+        {
+          path: paths.map.certification.sucess.path,
+          lazy: () =>
+            import("./routes/map/certification/success").then(
+              convert(queryClient)
+            )
         },
         {
           path: "*",
@@ -61,7 +65,6 @@ const createAppRouter = (queryClient: QueryClient) =>
         }
       ]
     },
-
     {
       path: paths.auth.kakaoCallback.path,
       element: <KakaoCallback />
@@ -73,6 +76,14 @@ const createAppRouter = (queryClient: QueryClient) =>
     {
       path: paths.auth.login.path,
       element: <LoginView />
+    },
+    {
+      path: paths.user.myPage.path,
+      element: <MyPageView />
+    },
+    {
+      path: paths.user.account.path,
+      element: <AccountView />
     }
   ]);
 
