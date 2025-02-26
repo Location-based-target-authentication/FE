@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 import { generate_qo_postRewards } from "@/lib/react-query/queryOptions/reward.ts";
 import { generateCoupons } from "./index.const";
+import SuccessToast from "./success-toast";
 
 export default function Reward() {
   const [point, setPoint] = useState(100111);
@@ -14,13 +15,21 @@ export default function Reward() {
     ...generate_qo_postRewards(1),
     onSuccess: (data) => {
       setPoint(data.point);
-      toast.success("신청이 완료되었습니다.", { position: "bottom-center" });
+      toast(<SuccessToast />, {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        className:
+          "flex justify-center items-center bg-transparent shadow-none p-0 w-full"
+      });
     }
   });
 
   const loaledPoint = useMemo(() => `${point.toLocaleString()}p`, [point]);
-  const buttonText = useMemo(() => (isPending ? "" : "교환하기"), [isPending]);
-  const coupons = useMemo(() => generateCoupons(point), [point]);
+  const coupons = useMemo(
+    () => generateCoupons(point, isPending),
+    [point, isPending]
+  );
 
   return (
     <div className="mx-auto w-full max-w-md p-4">
@@ -53,7 +62,7 @@ export default function Reward() {
               className={`${className}`}
               disabled={isDisabled}
             >
-              {buttonText}
+              교환하기
             </button>
           </div>
         ))}

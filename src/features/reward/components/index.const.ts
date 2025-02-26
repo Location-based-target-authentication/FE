@@ -1,7 +1,7 @@
 import coffeeCouponUrl from "@/asset/reward/coffe-coupon.jpeg?url";
 import convenienceStoreCouponUrl from "@/asset/reward/convenience-store-coupon.jpeg?url";
 
-export const generateCoupons = (point: number) => {
+export const generateCoupons = (point: number, isPending: boolean) => {
   const baseClass =
     "absolute bottom-0 left-0 flex h-12 w-full items-center justify-center rounded-b-lg font-semibold text-white";
 
@@ -12,7 +12,7 @@ export const generateCoupons = (point: number) => {
       cost: 5000,
       image: coffeeCouponUrl,
       isDisabled: point < 5000,
-      className: `${baseClass} ${point >= 5000 ? "bg-green-500" : "cursor-not-allowed bg-gray-400"}`
+      className: `${baseClass} ${point >= 5000 && !isPending ? "bg-green-500" : "cursor-not-allowed bg-gray-400"}`
     },
     {
       id: 2,
@@ -20,7 +20,7 @@ export const generateCoupons = (point: number) => {
       cost: 10000,
       image: convenienceStoreCouponUrl,
       isDisabled: point < 10000,
-      className: `${baseClass} ${point >= 10000 ? "bg-green-500" : "cursor-not-allowed bg-gray-400"}`
+      className: `${baseClass} ${point >= 10000 && !isPending ? "bg-green-500" : "cursor-not-allowed bg-gray-400"}`
     }
   ];
 };
