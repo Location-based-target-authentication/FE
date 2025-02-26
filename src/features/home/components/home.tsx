@@ -68,7 +68,7 @@ const HomePage = () => {
 
       <GoalList goalCount={goalCount} transformGoals={transformGoals} />
 
-      <div className="absolute bottom-20 right-3" onClick={navigateToGoalAdd}>
+      <div className="absolute bottom-24 right-3" onClick={navigateToGoalAdd}>
         {targetAddIcon}
       </div>
     </div>

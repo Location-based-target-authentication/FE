@@ -31,17 +31,25 @@ function GoalList({ goalCount, transformGoals }: GoalListProps) {
         }) => (
           <div
             key={id}
-            className={`mb-4 rounded-2xl bg-white p-4 shadow-md ${isTemporarySaved ? "cursor-not-allowed" : "cursor-pointer"}`}
+            className={`mb-4 rounded-2xl bg-white p-4 shadow-md ${isAchieved ? "cursor-not-allowed" : "cursor-pointer"}`}
           >
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-3">
-                <p className="text-xs font-semibold text-green-500">{title}</p>
-                <p>{name}</p>
+                <p
+                  className={`text-xs font-semibold ${isAchieved || isTemporarySaved ? "text-green-200" : "text-green-500"}`}
+                >
+                  {title}
+                </p>
+                <p
+                  className={`${isAchieved || isTemporarySaved ? "text-gray-500" : "text-black"}`}
+                >
+                  {name}
+                </p>
                 <p className="text-xs text-gray-500">{lastRowText}</p>
               </div>
               <button
                 disabled={isAchieved}
-                className={`${isAchieved ? "cursor-not-allowed text-gray-500" : "cursor-pointer text-green-500"} text-xs`}
+                className={`${isAchieved ? "cursor-not-allowed text-gray-300" : "cursor-pointer text-green-500"} text-xs`}
               >
                 {redirectionText}
               </button>
