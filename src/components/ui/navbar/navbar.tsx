@@ -28,7 +28,7 @@ function Navbar() {
   const navbarInfo = generateNavbarInfo(location.pathname);
 
   return (
-    <nav className="z-100 fixed bottom-0 left-1/2 flex w-1/2 -translate-x-1/2 justify-around border-t bg-white py-3 shadow-top">
+    <nav className="absolute bottom-0 left-1/2 z-40 flex w-[375px] -translate-x-1/2 justify-around border-t bg-white py-3 shadow-top">
       {map(navbarInfo, ({ label, activeIcon, notActiveIcon, to, isActvie }) => (
         <NavItem
           key={to}

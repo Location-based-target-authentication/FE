@@ -87,7 +87,7 @@ function MapCertification() {
   );
 
   return (
-    <div className="relative flex h-screen w-full flex-col items-center bg-gray-50">
+    <div className="content-height relative flex w-full flex-col items-center bg-gray-50">
       <GoalsInfo name={name} timeString={timeString} dayString={dayString} />
 
       <div className="relative size-full">
