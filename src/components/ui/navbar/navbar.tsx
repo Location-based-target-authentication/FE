@@ -1,7 +1,9 @@
-import { map } from "es-toolkit/compat";
+import { useMemo } from "react";
+
+import { includes, map } from "es-toolkit/compat";
 import { Link, useLocation } from "react-router";
 
-import { generateNavbarInfo } from "./index.const";
+import { generateNavbarInfo, NOT_VISIBLE_NAVBAR_PAGES } from "./index.const";
 
 interface NavItemProps {
   Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
@@ -27,19 +29,32 @@ function Navbar() {
   const location = useLocation();
   const navbarInfo = generateNavbarInfo(location.pathname);
 
-  return (
-    <nav className="absolute bottom-0 left-1/2 z-40 flex w-[375px] -translate-x-1/2 justify-around border-t bg-white py-3 shadow-top">
-      {map(navbarInfo, ({ label, activeIcon, notActiveIcon, to, isActvie }) => (
-        <NavItem
-          key={to}
-          Icon={isActvie ? activeIcon : notActiveIcon}
-          label={label}
-          active={isActvie}
-          to={to}
-        />
-      ))}
-    </nav>
-  );
+  const isVisibleNavbar = useMemo(() => {
+    return !includes(NOT_VISIBLE_NAVBAR_PAGES, location.pathname);
+  }, [location.pathname]);
+
+  const memoizedNavbar = useMemo(() => {
+    if (!isVisibleNavbar) return null;
+
+    return (
+      <nav className="absolute bottom-0 left-1/2 z-40 flex w-[375px] -translate-x-1/2 justify-around border-t bg-white py-3 shadow-top">
+        {map(
+          navbarInfo,
+          ({ label, activeIcon, notActiveIcon, to, isActvie }) => (
+            <NavItem
+              key={to}
+              Icon={isActvie ? activeIcon : notActiveIcon}
+              label={label}
+              active={isActvie}
+              to={to}
+            />
+          )
+        )}
+      </nav>
+    );
+  }, [isVisibleNavbar, navbarInfo]);
+
+  return memoizedNavbar;
 }
 
 export { Navbar };
