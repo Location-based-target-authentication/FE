@@ -60,6 +60,15 @@ const createAppRouter = (queryClient: QueryClient) =>
             )
         },
         {
+          path: paths.profile.reward.path,
+          lazy: () =>
+            import("./routes/profile/reward").then(convert(queryClient))
+        },
+        {
+          path: paths.goal.path,
+          lazy: () => import("./routes/goal").then(convert(queryClient))
+        },
+        {
           path: "*",
           lazy: () => import("./routes/not-found").then(convert(queryClient))
         }
