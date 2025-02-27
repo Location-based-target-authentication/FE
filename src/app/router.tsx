@@ -2,7 +2,6 @@ import Layout from "@/components/layouts/layout";
 
 import { useMemo } from "react";
 
-
 import KakaoCallback from "@/app/routes/auth/kakao-callback";
 import LoginView from "@/app/routes/auth/login";
 import {
@@ -57,6 +56,10 @@ const createAppRouter = (queryClient: QueryClient) =>
             import("./routes/map/certification/success").then(
               convert(queryClient)
             )
+        },
+        {
+          path: paths.goal.path,
+          lazy: () => import("./routes/goal").then(convert(queryClient))
         },
         {
           path: "*",
