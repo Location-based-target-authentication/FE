@@ -2,10 +2,14 @@ import Layout from "@/components/layouts/layout";
 
 import { useMemo } from "react";
 
+import KakaoCallback from "@/app/routes/auth/kakao-callback";
+import LoginView from "@/app/routes/auth/login";
 import {
   default as AppRoot,
   ErrorBoundary as RootErrorBoundary
 } from "@/app/routes/index.tsx";
+import PrivateRoute from "@/app/routes/PrivateRoute";
+import GoogleCallback from "@/features/auth/routes/GoogleCallback";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router";
 
@@ -28,7 +32,13 @@ const createAppRouter = (queryClient: QueryClient) =>
       children: [
         {
           path: paths.home.path,
-          element: <AppRoot />,
+          element: <PrivateRoute />,
+          children: [
+            {
+              index: true,
+              element: <AppRoot />
+            }
+          ],
           ErrorBoundary: RootErrorBoundary
         },
         {
@@ -56,6 +66,18 @@ const createAppRouter = (queryClient: QueryClient) =>
           lazy: () => import("./routes/not-found").then(convert(queryClient))
         }
       ]
+    },
+    {
+      path: paths.auth.kakaoCallback.path,
+      element: <KakaoCallback />
+    },
+    {
+      path: paths.auth.googleCallback.path,
+      element: <GoogleCallback />
+    },
+    {
+      path: paths.auth.login.path,
+      element: <LoginView />
     }
   ]);
 
