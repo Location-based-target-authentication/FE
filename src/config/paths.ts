@@ -27,6 +27,11 @@ export const paths = {
     }
   },
 
+  goal: {
+    path: "/goal",
+    getHref: () => "/goal"
+  },
+
   auth: {
     login: {
       path: "/auth/login",

@@ -1,5 +1,7 @@
 import HomeDisable from "@/asset/navbar/home-disable.svg?react";
 import Home from "@/asset/navbar/home.svg?react";
+import LocationDisable from "@/asset/navbar/location-disable.svg?react";
+import Location from "@/asset/navbar/location.svg?react";
 import UserDisable from "@/asset/navbar/user-disable.svg?react";
 import User from "@/asset/navbar/user.svg?react";
 
@@ -18,6 +20,13 @@ export const generateNavbarInfo = (locationPath: string) => [
     notActiveIcon: HomeDisable,
     to: "/",
     isActvie: isEqualPath(locationPath, "/")
+  },
+  {
+    label: "목표",
+    activeIcon: Location,
+    notActiveIcon: LocationDisable,
+    to: "/goal",
+    isActvie: isEqualPath(locationPath, "/goal")
   },
   {
     label: "내정보",
