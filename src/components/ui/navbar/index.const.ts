@@ -5,6 +5,10 @@ import Location from "@/asset/navbar/location.svg?react";
 import UserDisable from "@/asset/navbar/user-disable.svg?react";
 import User from "@/asset/navbar/user.svg?react";
 
+import { paths } from "@/config/paths";
+
+export const NOT_VISIBLE_NAVBAR_PAGES = [paths.profile.reward.getHref()];
+
 const isEqualPath = (locationPath: string, path: string) => {
   return locationPath === path;
 };
@@ -28,7 +32,7 @@ export const generateNavbarInfo = (locationPath: string) => [
     label: "내정보",
     activeIcon: User,
     notActiveIcon: UserDisable,
-    to: "/map",
-    isActvie: isEqualPath(locationPath, "/map")
+    to: "/profile",
+    isActvie: isEqualPath(locationPath, "/profile")
   }
 ];

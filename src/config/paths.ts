@@ -20,6 +20,13 @@ export const paths = {
     }
   },
 
+  profile: {
+    reward: {
+      path: "/profile/reward",
+      getHref: () => "/profile/reward"
+    }
+  },
+
   goal: {
     path: "/goal",
     getHref: () => "/goal"
