@@ -1,15 +1,16 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { useMutation } from "@tanstack/react-query";
 import { map } from "es-toolkit/compat";
 import { toast } from "react-toastify";
 
+import { useUserStore } from "@/stores/user";
 import { generate_qo_postRewards } from "@/lib/react-query/queryOptions/reward.ts";
 import { generateCoupons } from "./index.const";
 import SuccessToast from "./success-toast";
 
 export default function Reward() {
-  const [point, setPoint] = useState(100111);
+  const { point, setPoint } = useUserStore();
 
   const { mutate, isPending } = useMutation({
     ...generate_qo_postRewards(1),
