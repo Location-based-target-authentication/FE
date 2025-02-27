@@ -68,7 +68,7 @@ export const handleTokenExpiration = async (
 const requestInterceptor: Interceptor<InternalAxiosRequestConfig> = {
   onFulfilled: (config) => {
     const accessToken = useAuthStore.getState().accessToken;
-    if (!accessToken) {
+    if (!accessToken && !config.url?.includes("auth")) {
       return Promise.reject(new Error("액세스 토큰이 없습니다."));
     }
     config.headers["Authorization"] = `Bearer ${accessToken}`;
