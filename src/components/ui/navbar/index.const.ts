@@ -3,6 +3,10 @@ import Home from "@/asset/navbar/home.svg?react";
 import UserDisable from "@/asset/navbar/user-disable.svg?react";
 import User from "@/asset/navbar/user.svg?react";
 
+import { paths } from "@/config/paths";
+
+export const NOT_VISIBLE_NAVBAR_PAGES = [paths.profile.reward.getHref()];
+
 const isEqualPath = (locationPath: string, path: string) => {
   return locationPath === path;
 };
