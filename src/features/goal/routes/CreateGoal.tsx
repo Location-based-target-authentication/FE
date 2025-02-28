@@ -93,7 +93,11 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
 
   const handleEndDateClick = (): void => {
     navigate(paths.goal.date.path, {
-      state: { mode: "end", goalName, startDate }
+      state: {
+        mode: "end",
+        goalName,
+        startDate
+      }
     });
   };
 
@@ -123,14 +127,14 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
       status === GoalStatus.DRAFT
         ? await createTempSaveGoal(goalData)
         : await createGoal(goalData);
-      navigate(paths.goal.list.path);
+      navigate(paths.goal.root.path);
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleBackButtonClick = (): void => {
-    navigate(paths.goal.list.path);
+    navigate(paths.goal.root.path);
   };
 
   useEffect(() => {

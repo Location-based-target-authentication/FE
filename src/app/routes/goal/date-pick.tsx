@@ -13,6 +13,8 @@ import {
 } from "date-fns";
 import { useLocation, useNavigate } from "react-router";
 
+import { paths } from "@/config/paths";
+
 const DatePick = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -45,11 +47,13 @@ const DatePick = () => {
   const handleConfirm = () => {
     if (!selectedDate) return;
     if (mode === "end") {
-      navigate("/goal", {
+      navigate(paths.goal.create.path, {
         state: { startDate, endDate: selectedDate, goalName }
       });
     } else {
-      navigate("/goal", { state: { startDate: selectedDate, goalName } });
+      navigate(paths.goal.create.path, {
+        state: { startDate: selectedDate, goalName }
+      });
     }
   };
 
