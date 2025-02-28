@@ -20,7 +20,7 @@ const DayPicker: React.FC<DayPickerProps> = ({
           반복요일
         </div>
         <div className="font-regular text-primary-400 flex h-[16px] w-[44px] items-center justify-center whitespace-nowrap text-[14px] leading-[16px] tracking-[-2.5%]">
-          (주&nbsp;{" "}
+          (주&nbsp;
           <span className="text-[#3CC360]"> {selectedDays.length}</span>일)
         </div>
       </div>
