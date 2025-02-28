@@ -44,6 +44,14 @@ export const paths = {
     googleCallback: {
       path: "/auth/callback/google",
       getHref: () => "/auth/callback/google"
+    },
+    agreement: {
+      path: "/auth/agreement",
+      getHref: () => "/auth/agreement"
+    },
+    phoneNumber: {
+      path: "/auth/phoneNumber",
+      getHref: () => "/auth/phoneNumber"
     }
   }
 } as const;

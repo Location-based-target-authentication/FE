@@ -2,8 +2,10 @@ import Layout from "@/components/layouts/layout";
 
 import { useMemo } from "react";
 
+import AgreementView from "@/app/routes/auth/agreement";
 import KakaoCallback from "@/app/routes/auth/kakao-callback";
 import LoginView from "@/app/routes/auth/login";
+import PhoneNumberInputView from "@/app/routes/auth/phone-number";
 import {
   default as AppRoot,
   ErrorBoundary as RootErrorBoundary
@@ -83,6 +85,14 @@ const createAppRouter = (queryClient: QueryClient) =>
     {
       path: paths.auth.login.path,
       element: <LoginView />
+    },
+    {
+      path: paths.auth.agreement.path,
+      element: <AgreementView />
+    },
+    {
+      path: paths.auth.phoneNumber.path,
+      element: <PhoneNumberInputView />
     }
   ]);
 
