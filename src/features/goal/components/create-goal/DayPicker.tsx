@@ -1,4 +1,4 @@
-import { DAYS } from "@/features/goal/components/create-goal/date-pick.const";
+import { DAYS } from "@/features/goal/components/create-goal/goal.constants";
 
 interface DayPickerProps {
   selectedDays: string[];

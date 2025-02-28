@@ -8,6 +8,7 @@ import {
 import BalanceInfo from "@/features/goal/components/create-goal/BalanceInfo";
 import DatePicker from "@/features/goal/components/create-goal/DatePicker";
 import DayPicker from "@/features/goal/components/create-goal/DayPicker";
+import { DAY_MAPPING } from "@/features/goal/components/create-goal/goal.constants";
 import SaveButtons from "@/features/goal/components/create-goal/SaveButtons";
 import { GoalData, GoalStatus } from "@/features/goal/types/goal-create";
 import { getPoint } from "@/features/point/\bapi/point";
@@ -19,15 +20,6 @@ import { paths } from "@/config/paths";
 interface CreateGoalProps {
   goalId?: number;
 }
-const dayMapping: Record<string, string> = {
-  일: "SUN",
-  월: "MON",
-  화: "TUE",
-  수: "WED",
-  목: "THU",
-  금: "FRI",
-  토: "SAT"
-};
 
 const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   const location = useLocation();
@@ -120,7 +112,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
         locationName: targetLocation
       },
       status,
-      days: selectedDays.map((day) => dayMapping[day])
+      days: selectedDays.map((day) => DAY_MAPPING[day])
     };
 
     try {
@@ -172,7 +164,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
         }
         onSelectAllDays={() =>
           setSelectedDays(
-            selectedDays.length === 7 ? [] : Object.keys(dayMapping)
+            selectedDays.length === 7 ? [] : Object.keys(DAY_MAPPING)
           )
         }
       />

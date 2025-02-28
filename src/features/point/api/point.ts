@@ -8,5 +8,5 @@ export function getPoint({
 }: {
   params: { userId: number };
 }): Promise<Point> {
-  return GET({ url: `${BASE_PATH}`, params });
+  return GET({ url: `${BASE_PATH}`, params }); // 확인필요
 }

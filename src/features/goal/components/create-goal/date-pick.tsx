@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { DAYS } from "@/features/goal/components/create-goal/goal.constants";
 import {
   addMonths,
   differenceInDays,
@@ -27,8 +28,6 @@ const DatePick = () => {
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-  const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
   const firstDayOfMonth = startOfMonth(currentMonth);
   const lastDayOfMonth = endOfMonth(currentMonth);
@@ -81,7 +80,7 @@ const DatePick = () => {
       <div className="flex w-[335px] flex-col">
         <div className="flex w-[335px] flex-col">
           <div className="grid h-[44px] w-[335px] grid-cols-7 gap-x-[4.5px] gap-y-[12px] font-medium text-gray-600">
-            {daysOfWeek.map((day) => (
+            {DAYS.map((day) => (
               <div
                 key={day}
                 className="flex w-full items-center justify-center text-[14px] leading-[16px] -tracking-wide"
