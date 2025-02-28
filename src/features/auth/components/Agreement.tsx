@@ -65,7 +65,7 @@ const Agreement = () => {
   };
 
   return (
-    <div className="ml-[20px] mt-[150px] flex h-auto min-h-screen w-[335px] flex-col pb-[74px]">
+    <div className="ml-[20px] mt-[50px] flex h-auto min-h-screen w-[335px] flex-col pb-[74px]">
       <h1 className="mb-[40px] h-[58px] w-[335px] text-[24px] font-semibold leading-[28.8px] -tracking-wide text-gray-900">
         <span className="text-[#3CC360]">윌고</span> 서비스 이용을 위한 <br />
         약관에 동의해주세요

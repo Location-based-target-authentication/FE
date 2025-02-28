@@ -7,7 +7,11 @@ import User from "@/asset/navbar/user.svg?react";
 
 import { paths } from "@/config/paths";
 
-export const NOT_VISIBLE_NAVBAR_PAGES = [paths.profile.reward.getHref()];
+export const NOT_VISIBLE_NAVBAR_PAGES = [
+  paths.profile.reward.getHref(),
+  paths.auth.agreement.getHref(),
+  paths.auth.phoneNumber.getHref()
+];
 
 const isEqualPath = (locationPath: string, path: string) => {
   return locationPath === path;

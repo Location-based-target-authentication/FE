@@ -39,7 +39,7 @@ const PhoneNumber = () => {
 
   return (
     <div className="flex flex-col items-start space-y-6 p-4">
-      <div className="mt-[124px]">
+      <div className="mt-[24px]">
         <h2 className="font-[Pretendard] text-[20px] font-medium leading-[24px] tracking-[-2.5%] text-gray-800">
           리워드 전달을 위해
         </h2>

@@ -71,6 +71,14 @@ const createAppRouter = (queryClient: QueryClient) =>
         {
           path: "*",
           lazy: () => import("./routes/not-found").then(convert(queryClient))
+        },
+        {
+          path: paths.auth.agreement.path,
+          element: <AgreementView />
+        },
+        {
+          path: paths.auth.phoneNumber.path,
+          element: <PhoneNumberInputView />
         }
       ]
     },
@@ -85,14 +93,6 @@ const createAppRouter = (queryClient: QueryClient) =>
     {
       path: paths.auth.login.path,
       element: <LoginView />
-    },
-    {
-      path: paths.auth.agreement.path,
-      element: <AgreementView />
-    },
-    {
-      path: paths.auth.phoneNumber.path,
-      element: <PhoneNumberInputView />
     }
   ]);
 

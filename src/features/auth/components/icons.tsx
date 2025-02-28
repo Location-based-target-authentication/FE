@@ -14,9 +14,9 @@ export const UncheckedAllIcon = () => (
     <path
       d="M9.33331 14L12.8333 17.5L19.8333 10.5"
       stroke="white"
-      stroke-width="2.33333"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
@@ -37,9 +37,9 @@ export const CheckedAllIcon = () => (
     <path
       d="M9.33337 14L12.8334 17.5L19.8334 10.5"
       stroke="white"
-      stroke-width="2.33333"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
@@ -61,9 +61,9 @@ export const UncheckedItemIcon = () => (
     <path
       d="M9.33331 13.9999L12.8333 17.4999L19.8333 10.4999"
       stroke="#E0E0E0"
-      stroke-width="2.33333"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
@@ -85,9 +85,9 @@ export const CheckedItemIcon = () => (
     <path
       d="M9.33337 14L12.8334 17.5L19.8334 10.5"
       stroke="#3CC360"
-      stroke-width="2.33333"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2.33333"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
