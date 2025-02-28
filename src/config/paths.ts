@@ -28,8 +28,18 @@ export const paths = {
   },
 
   goal: {
-    path: "/goal",
-    getHref: () => "/goal"
+    root: {
+      path: "/goal",
+      getHref: () => "/goal"
+    },
+    create: {
+      path: "/goal/create",
+      getHref: () => "/goal/create"
+    },
+    date: {
+      path: "/goal/date",
+      getHref: () => "/goal/date"
+    }
   },
 
   auth: {
@@ -44,22 +54,6 @@ export const paths = {
     googleCallback: {
       path: "/auth/callback/google",
       getHref: () => "/auth/callback/google"
-    }
-  },
-
-  goal: {
-    list: {
-      path: "/goal/list",
-      getHref: () => "/goal/list"
-    },
-
-    goal: {
-      path: "/goal",
-      getHref: () => "/goal"
-    },
-    date: {
-      path: "/goal/date",
-      getHref: () => "/goal/date"
     }
   }
 } as const;

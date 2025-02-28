@@ -65,7 +65,7 @@ const createAppRouter = (queryClient: QueryClient) =>
             import("./routes/profile/reward").then(convert(queryClient))
         },
         {
-          path: paths.goal.path,
+          path: paths.goal.root.path,
           lazy: () => import("./routes/goal").then(convert(queryClient))
         },
         {
@@ -87,7 +87,7 @@ const createAppRouter = (queryClient: QueryClient) =>
       element: <LoginView />
     },
     {
-      path: paths.goal.goal.path,
+      path: paths.goal.create.path,
       element: <CreateGoalView />
     },
     {
