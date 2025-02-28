@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
 import {
-  createGoal,
-  createTempSaveGoal,
-  getTempGoal
+  getTempGoal,
+  postCreateGoal,
+  postCreateTempSaveGoal
 } from "@/features/goal/api/goal";
 import BalanceInfo from "@/features/goal/components/create-goal/BalanceInfo";
 import DatePicker from "@/features/goal/components/create-goal/DatePicker";
@@ -52,7 +52,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   const fetchBalancePoint = useCallback(async (): Promise<void> => {
     try {
       if (userId) {
-        const { point } = await getPoint(userId);
+        const { point } = await getPoint({ params: { userId } });
         setBalancePoint(point);
       }
     } catch (error) {
@@ -68,7 +68,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
 
     const fetchGoalData = async (): Promise<void> => {
       try {
-        const goalData: GoalData = await getTempGoal(goalId);
+        const goalData: GoalData = await getTempGoal({ goalId });
         setGoalName(goalData.goal.name || "");
         setStartDate(
           goalData.goal.startDate ? new Date(goalData.goal.startDate) : null
@@ -125,16 +125,12 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
 
     try {
       status === GoalStatus.DRAFT
-        ? await createTempSaveGoal(goalData)
-        : await createGoal(goalData);
+        ? await postCreateTempSaveGoal({ data: goalData })
+        : await postCreateGoal({ data: goalData });
       navigate(paths.goal.root.path);
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleBackButtonClick = (): void => {
-    navigate(paths.goal.root.path);
   };
 
   useEffect(() => {
@@ -147,13 +143,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   }, [goalName, startDate, endDate, selectedDays]);
 
   return (
-    <div className="mx-auto h-[812px] w-[375px] bg-white p-4">
-      <div className="flex items-center border-b pb-2 text-xl font-bold">
-        <button onClick={handleBackButtonClick} className="mr-2 text-gray-600">
-          &lt;
-        </button>
-        목표 추가
-      </div>
+    <div className="mx-auto h-[calc(100vh-130px)] w-[375px] overflow-auto bg-white p-4">
       <div className="mt-4 h-[86px] w-[335px]">
         <label className="block text-[14px] font-medium leading-[16px] tracking-[-2.5%] text-[#1A1A1A]">
           목표 명
@@ -188,7 +178,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
       />
 
       <div className="mt-[20px] flex h-[66px] w-[335px] flex-col justify-between gap-[6px]">
-        <label className="text-[14px] font-medium leading-[16px] tracking-[-2.5%] text-gray-600">
+        <label className="block text-[14px] font-medium leading-[16px] tracking-[-2.5%]">
           장소 설정
         </label>
         <input

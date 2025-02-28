@@ -14,21 +14,21 @@ export function getGoalsComplete(): R<CompleteGoal[]> {
   return GET({ url: GOALS_COMPLETE });
 }
 
-export function createGoal(data: GoalData) {
+export function postCreateGoal({ data }: { data: GoalData }) {
   return POST({
     url: `${BASE_PATH}`,
-    data: { data }
+    data
   });
 }
 
-export function createTempSaveGoal(data: GoalData) {
+export function postCreateTempSaveGoal({ data }: { data: GoalData }) {
   return POST({
     url: `${BASE_PATH}`,
-    data: { data }
+    data
   });
 }
 
-export function getTempGoal(goalId: number) {
+export function getTempGoal({ goalId }: { goalId: number }) {
   return GET({
     url: `${BASE_PATH}/check/${goalId}`
   });
