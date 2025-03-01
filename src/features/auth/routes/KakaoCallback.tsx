@@ -23,7 +23,7 @@ const KakaoCallback = (): JSX.Element | null => {
         setIsLoading(true);
         const response = await postKakaoLogin({ data: { code } });
 
-        if (!response.ok) {
+        if (response.status < 200 || response.status >= 300) {
           throw new Error("카카오 인증에 실패했습니다.");
         }
 
