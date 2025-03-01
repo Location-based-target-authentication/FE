@@ -3,7 +3,12 @@ import { UseMutationOptions } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 interface UseMutationRewardsOptions
-  extends UseMutationOptions<{ point: number }, AxiosError, void, unknown> {}
+  extends UseMutationOptions<
+    { point: number; status: string },
+    AxiosError,
+    void,
+    unknown
+  > {}
 type GenerateQoPostRewards = (id: number) => UseMutationRewardsOptions;
 export const generate_qo_postRewards: GenerateQoPostRewards = (socialId) => {
   return {

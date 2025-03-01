@@ -15,6 +15,11 @@ export default function Reward() {
   const { mutate, isPending } = useMutation({
     ...generate_qo_postRewards(1),
     onSuccess: (data) => {
+      if (data.status === "error") {
+        toast.error("리워드 신청에 실패했습니다.");
+        return;
+      }
+
       setPoint(data.point);
       toast(<SuccessToast />, {
         position: "bottom-center",
