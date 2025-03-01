@@ -46,20 +46,6 @@ export const paths = {
       getHref: () => "/auth/callback/google"
     }
   },
-  auth: {
-    login: {
-      path: "/auth/login",
-      getHref: () => "/auth/login"
-    },
-    kakaoCallback: {
-      path: "/auth/callback/kakao",
-      getHref: () => "/auth/callback/kakao"
-    },
-    googleCallback: {
-      path: "/auth/callback/google",
-      getHref: () => "/auth/callback/google"
-    }
-  },
 
   user: {
     myPage: {

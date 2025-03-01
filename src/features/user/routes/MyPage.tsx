@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { getUserInfo, logout } from "@/features/user/api/user";
+import { getUserInfo, postLogout } from "@/features/user/api/user";
 import { UserInfo } from "@/features/user/types/user-info";
 import { useNavigate } from "react-router";
 
@@ -33,7 +33,7 @@ const MyPage: React.FC = () => {
     if (!userId) return;
 
     try {
-      await logout({ pathParam: userId });
+      await postLogout({ pathParam: userId });
       navigate(paths.home.path);
     } catch (error) {
       console.error("로그아웃 실패:", error);
