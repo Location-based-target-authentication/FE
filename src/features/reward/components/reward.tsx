@@ -10,10 +10,10 @@ import { generateCoupons } from "./index.const";
 import SuccessToast from "./success-toast";
 
 export default function Reward() {
-  const { point, setPoint } = useUserStore();
+  const { point, setPoint, userId } = useUserStore();
 
   const { mutate, isPending } = useMutation({
-    ...generate_qo_postRewards(1),
+    ...generate_qo_postRewards(userId),
     onSuccess: (data) => {
       setPoint(data.point);
       toast(<SuccessToast />, {

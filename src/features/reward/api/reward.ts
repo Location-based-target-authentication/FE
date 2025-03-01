@@ -5,9 +5,9 @@ import type { Point } from "../types";
 import { POINT_DEDUC, POINTS } from "./path";
 
 export function postRewards({
-  pathParams: { socialId }
-}: RoOnlyPathParamsType<{ socialId: string }>): R<{ point: number }> {
-  return POST({ url: POINT_DEDUC(socialId) });
+  pathParams: { userId }
+}: RoOnlyPathParamsType<{ userId: string }>): R<{ point: number }> {
+  return POST({ url: POINT_DEDUC(userId) });
 }
 
 export function getPoint({
