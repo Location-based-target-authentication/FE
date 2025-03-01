@@ -34,7 +34,7 @@ function PlaceList({
   };
 
   return (
-    <div className="mt-4 flex h-[30%] w-full flex-col gap-3 overflow-x-hidden overflow-y-scroll rounded-lg bg-white p-4 shadow-md">
+    <div className="mt-4 flex h-[30%] w-full flex-col gap-3 overflow-x-hidden overflow-y-scroll rounded-lg bg-white p-2 shadow-md">
       {placesData.length === 0 ? (
         <div className="flex h-full flex-col items-center justify-center py-10 text-gray-500">
           <p className="text-sm">검색 결과가 없습니다.</p>
@@ -46,18 +46,18 @@ function PlaceList({
             return (
               <div
                 key={`${placeName} ${roadAddressName}`}
-                className="flex cursor-pointer items-center justify-between rounded-lg border p-3 shadow-sm"
+                className="flex cursor-pointer items-center justify-between rounded-lg p-2 shadow-sm"
                 onClick={() => moveToSelectedPosition({ lat, lng })}
               >
                 <div>
                   <div className="mb-1 whitespace-pre-line break-words text-sm font-semibold">
                     {placeName}
                   </div>
-                  <div className="flex items-center gap-1">
-                    <div className="text-black-400 text-xs">
+                  <div className="flex w-[240px] items-center">
+                    <div className="text-black-400 w-[40px] text-xs">
                       {getDistance(lat, lng)}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="w-[150px] truncate text-xs text-gray-500">
                       {roadAddressName}
                     </div>
                     <div
@@ -68,7 +68,7 @@ function PlaceList({
                     >
                       {isVisibleAddressName[idx] ? <ArrowUp /> : <ArrwoDown />}
                       {isVisibleAddressName[idx] && (
-                        <div className="absolute left-0 top-full z-10 mt-1 whitespace-nowrap rounded-lg bg-green-100 p-3 shadow-lg">
+                        <div className="absolute -left-20 top-full z-10 mt-1 whitespace-nowrap rounded-lg bg-green-100 p-3 shadow-lg">
                           <div className="text-xs text-gray-500">
                             {addressName}
                           </div>
