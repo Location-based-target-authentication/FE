@@ -33,21 +33,31 @@ export const generate_qo_postGoalsAchieve: GenerateQoPostGoalsAchieve = (
 };
 
 interface UseQueryGoalsCheckOptions
-  extends UseQueryOptions<ProgressGoal[], AxiosError, ProgressGoal[]> {}
+  extends UseQueryOptions<ProgressGoal[], AxiosError, ProgressGoal[]> {
+  DELETE_KEY?: [string];
+}
 type GenerateQoGetGoalsCheck = () => UseQueryGoalsCheckOptions;
-export const generate_qo_getGoalsCheck: GenerateQoGetGoalsCheck = () => {
-  return {
+export const generate_qo_getGoalsCheck = (() => {
+  const options: UseQueryGoalsCheckOptions = {
     queryKey: [GOALS_CHECK],
     queryFn: () => getGoalsCheck().then((data) => data)
   };
-};
+
+  return options;
+}) as GenerateQoGetGoalsCheck & { DELETE_KEY: () => [string] };
+
+generate_qo_getGoalsCheck.DELETE_KEY = () => [GOALS_CHECK];
 
 interface UseQueryGoalsCompleteOptions
   extends UseQueryOptions<CompleteGoal[], AxiosError, CompleteGoal[]> {}
 type GenerateQoGetGoalsComplete = () => UseQueryGoalsCompleteOptions;
-export const generate_qo_getGoalsComplete: GenerateQoGetGoalsComplete = () => {
-  return {
+export const generate_qo_getGoalsComplete = (() => {
+  const options: UseQueryGoalsCompleteOptions = {
     queryKey: [GOALS_COMPLETE],
     queryFn: () => getGoalsComplete().then((data) => data)
   };
-};
+
+  return options;
+}) as GenerateQoGetGoalsComplete & { DELETE_KEY: () => [string] };
+
+generate_qo_getGoalsComplete.DELETE_KEY = () => [GOALS_COMPLETE];
