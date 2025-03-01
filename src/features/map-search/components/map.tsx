@@ -4,7 +4,7 @@ import containTargetUrl from "@/asset/map/contain-target.svg?url";
 import Gps from "@/asset/map/gps.svg?react";
 import positionIconUrl from "@/asset/map/position.svg?url";
 import { getFormattedDistance } from "@/utils/map";
-import { map } from "es-toolkit/compat";
+import { map, slice } from "es-toolkit/compat";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 
 import useKakaoPlaces from "@/hooks/useKakaoMapService";
@@ -98,7 +98,7 @@ function KakaoMap() {
           lat: Number(y)
         })
       );
-      setPlacesData(data);
+      setPlacesData(slice(data, 0, 10));
     });
   }, [keyword, placesService, serviceStatus]);
 
