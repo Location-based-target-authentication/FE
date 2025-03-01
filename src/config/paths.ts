@@ -67,7 +67,7 @@ export const paths = {
       getHref: () => "/user/my-page"
     },
     account: {
-      path: "user/account",
+      path: "/user/account",
       getHref: () => "/user/account"
     }
   }
