@@ -1,12 +1,10 @@
 import { useState } from "react";
 
+import CheckedAllIcon from "@/asset/agreement/checked-all.svg?url";
+import CheckedItemIcon from "@/asset/agreement/checked-item.svg?url";
+import UncheckedAllIcon from "@/asset/agreement/unchecked-all.svg?url";
+import UncheckedItemIcon from "@/asset/agreement/unchecked-item.svg?url";
 import { postTermsAgree } from "@/features/auth/api/auth";
-import {
-  CheckedAllIcon,
-  CheckedItemIcon,
-  UncheckedAllIcon,
-  UncheckedItemIcon
-} from "@/features/auth/components/icons";
 import { useNavigate } from "react-router";
 
 import { useAuthStore } from "@/stores/auth-store";
@@ -23,33 +21,51 @@ const AgreementCheckbox = ({
       onClick={onChange}
       style={{ cursor: "pointer", display: "inline-block" }}
     >
-      {checked ? <CheckedIcon /> : <UncheckedIcon />}
+      <img
+        src={checked ? CheckedIcon : UncheckedIcon}
+        alt="Checkbox Icon"
+        width={28}
+        height={28}
+      />
     </div>
   );
 };
 
 const Agreement = () => {
   const navigate = useNavigate();
+  const userId = useAuthStore((state) => state.userId);
 
-  const [isAllChecked, setIsAllChecked] = useState(false);
-  const [isTermsChecked, setIsTermsChecked] = useState(false);
-  const [isPrivacyChecked, setIsPrivacyChecked] = useState(false);
+  const [checkState, setCheckState] = useState({
+    all: false,
+    terms: false,
+    privacy: false
+  });
 
   const handleAllCheck = () => {
-    const newChecked = !isAllChecked;
-    setIsAllChecked(newChecked);
-    setIsTermsChecked(newChecked);
-    setIsPrivacyChecked(newChecked);
+    setCheckState((prev) => {
+      const newChecked = !prev.all;
+      return {
+        all: newChecked,
+        terms: newChecked,
+        privacy: newChecked
+      };
+    });
   };
+  const handleSingleCheck = (key: "terms" | "privacy") => {
+    setCheckState((prev) => {
+      const newState = {
+        ...prev,
+        [key]: !prev[key]
+      };
 
-  const handleTermsCheck = () => setIsTermsChecked((prev) => !prev);
-  const handlePrivacyCheck = () => setIsPrivacyChecked((prev) => !prev);
+      newState.all = newState.terms && newState.privacy;
 
-  const isNextEnabled = isTermsChecked && isPrivacyChecked;
+      return newState;
+    });
+  };
 
   const handleSubmit = async () => {
     try {
-      const userId = useAuthStore((state) => state.userId);
       const response = await postTermsAgree({
         data: { userId }
       });
@@ -74,7 +90,7 @@ const Agreement = () => {
       <div className="flex h-auto w-[335px] flex-col">
         <div className="flex h-[58px] items-center gap-[6px]">
           <AgreementCheckbox
-            checked={isAllChecked}
+            checked={checkState.all}
             onChange={handleAllCheck}
             CheckedIcon={CheckedAllIcon}
             UncheckedIcon={UncheckedAllIcon}
@@ -90,8 +106,8 @@ const Agreement = () => {
           <div className="flex h-[28px] items-center justify-between gap-[6px]">
             <div className="flex items-center gap-[6px]">
               <AgreementCheckbox
-                checked={isTermsChecked}
-                onChange={handleTermsCheck}
+                checked={checkState.terms}
+                onChange={() => handleSingleCheck("terms")}
                 CheckedIcon={CheckedItemIcon}
                 UncheckedIcon={UncheckedItemIcon}
               />
@@ -114,8 +130,8 @@ const Agreement = () => {
           <div className="flex h-[28px] items-center justify-between gap-[6px]">
             <div className="flex items-center gap-[6px]">
               <AgreementCheckbox
-                checked={isPrivacyChecked}
-                onChange={handlePrivacyCheck}
+                checked={checkState.privacy}
+                onChange={() => handleSingleCheck("privacy")}
                 CheckedIcon={CheckedItemIcon}
                 UncheckedIcon={UncheckedItemIcon}
               />
@@ -138,10 +154,10 @@ const Agreement = () => {
       </div>
 
       <button
-        disabled={!isNextEnabled}
+        disabled={!checkState.all}
         onClick={handleSubmit}
         className={`fixed bottom-6 ml-[20px] flex h-[56px] w-[335px] items-center justify-center rounded-[8px] py-[10px] text-[16px] font-semibold leading-[20px] ${
-          isNextEnabled
+          !checkState.all
             ? "cursor-pointer bg-[#3CC360] text-white"
             : "cursor-not-allowed bg-gray-300 text-gray-500"
         }`}

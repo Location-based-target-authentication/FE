@@ -14,11 +14,7 @@ const PhoneNumber = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setPhoneNumber(input);
-    if (input.length === 8) {
-      setIsButtonEnabled(true);
-    } else {
-      setIsButtonEnabled(false);
-    }
+    setIsButtonEnabled(input.length === 8);
   };
 
   const handleSubmit = async () => {
