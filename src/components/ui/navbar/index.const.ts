@@ -10,7 +10,9 @@ import { paths } from "@/config/paths";
 export const NOT_VISIBLE_NAVBAR_PAGES = [
   paths.profile.reward.getHref(),
   paths.auth.agreement.getHref(),
-  paths.auth.phoneNumber.getHref()
+  paths.auth.phoneNumber.getHref(),
+  paths.map.search.getHref(),
+  paths.map.certification.getHref()
 ];
 
 const isEqualPath = (locationPath: string, path: string) => {
