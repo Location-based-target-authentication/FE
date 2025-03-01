@@ -31,7 +31,7 @@ const KakaoCallback = (): JSX.Element | null => {
 
         setTokens(accessToken, refreshToken);
 
-        navigate(paths.goal.path);
+        navigate(paths.home.path);
       } catch (error) {
         console.error(error);
         setIsError(true);
