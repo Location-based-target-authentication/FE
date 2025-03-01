@@ -1,3 +1,3 @@
 export type Point = {
-  point: number;
+  totalPoints: number;
 };

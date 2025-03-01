@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   getTempGoal,
@@ -11,9 +11,10 @@ import DayPicker from "@/features/goal/components/create-goal/DayPicker";
 import { DAY_MAPPING } from "@/features/goal/components/create-goal/goal.constants";
 import SaveButtons from "@/features/goal/components/create-goal/SaveButtons";
 import { GoalData, GoalStatus } from "@/features/goal/types/goal-create";
-import { getPoint } from "@/features/point/\bapi/point";
+import { getPoint } from "@/features/point/api/point";
 import { useLocation, useNavigate } from "react-router";
 
+import { Nullable } from "@/types/common";
 import { useAuthStore } from "@/stores/auth-store";
 import { paths } from "@/config/paths";
 
@@ -30,45 +31,51 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     location.state?.goalName || ""
   );
 
-  const [startDate, setStartDate] = useState<Date | null>(
-    location.state?.startDate || null
+  const [startDate, setStartDate] = useState<Nullable<Date>>(
+    location.state?.startDate ? new Date(location.state.startDate) : null
   );
-  const [endDate, setEndDate] = useState<Date | null>(
-    location.state?.endDate || null
+  const [endDate, setEndDate] = useState<Nullable<Date>>(
+    location.state?.endDate ? new Date(location.state.endDate) : null
   );
   const [targetLocation, setTargetLocation] = useState<string>("");
   const [balancePoint, setBalancePoint] = useState<number>(0);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const [isFormValid, setIsFormValid] = useState<boolean>(false);
+  const isFormValid = useMemo(() => {
+    return (
+      goalName.trim().length >= 2 &&
+      !!startDate &&
+      !!endDate &&
+      selectedDays.length > 0
+    );
+  }, [goalName, startDate, endDate, selectedDays]);
 
   const fetchBalancePoint = useCallback(async (): Promise<void> => {
+    if (!userId) return;
     try {
-      if (userId) {
-        const { point } = await getPoint({ params: { userId } });
-        setBalancePoint(point);
-      }
+      const { totalPoints } = await getPoint({ userId });
+      setBalancePoint(totalPoints);
     } catch (error) {
       console.error("포인트 불러오기 실패:", error);
     }
   }, [userId]);
+
   useEffect(() => {
+    if (!userId) return;
     fetchBalancePoint();
-  }, [fetchBalancePoint]);
+  }, [fetchBalancePoint, userId]);
 
   useEffect(() => {
     if (!goalId) return;
 
     const fetchGoalData = async (): Promise<void> => {
       try {
-        const goalData: GoalData = await getTempGoal({ goalId });
-        setGoalName(goalData.goal.name || "");
-        setStartDate(
-          goalData.goal.startDate ? new Date(goalData.goal.startDate) : null
-        );
-        setEndDate(
-          goalData.goal.endDate ? new Date(goalData.goal.endDate) : null
-        );
-        setTargetLocation(goalData.goal.locationName || "");
+        const { goal } = await getTempGoal({ goalId });
+        const { name = "", startDate, endDate, locationName = "" } = goal; // ✅ goal 내부 값도 구조 분해!
+
+        setGoalName(name);
+        setStartDate(startDate ? new Date(startDate) : null);
+        setEndDate(endDate ? new Date(endDate) : null);
+        setTargetLocation(locationName);
       } catch (error) {
         console.error("임시 목표 데이터 불러오기 실패:", error);
       }
@@ -77,18 +84,12 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     fetchGoalData();
   }, [goalId]);
 
-  const handleDateClick = (): void => {
-    navigate(paths.goal.date.path, {
-      state: { goalName }
-    });
-  };
-
-  const handleEndDateClick = (): void => {
+  const handleDateClick = (mode: "start" | "end"): void => {
     navigate(paths.goal.date.path, {
       state: {
-        mode: "end",
+        mode,
         goalName,
-        startDate
+        ...(mode === "end" && { startDate })
       }
     });
   };
@@ -125,15 +126,6 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     }
   };
 
-  useEffect(() => {
-    setIsFormValid(
-      goalName.trim().length >= 2 &&
-        !!startDate &&
-        !!endDate &&
-        selectedDays.length > 0
-    );
-  }, [goalName, startDate, endDate, selectedDays]);
-
   return (
     <div className="mx-auto h-[calc(100vh-130px)] w-[375px] overflow-auto bg-white p-4">
       <div className="mt-4 h-[86px] w-[335px]">
@@ -151,8 +143,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
       <DatePicker
         startDate={startDate}
         endDate={endDate}
-        onStartDateClick={handleDateClick}
-        onEndDateClick={handleEndDateClick}
+        onDateClick={handleDateClick}
       />
 
       <DayPicker

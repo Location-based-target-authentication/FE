@@ -28,8 +28,8 @@ export function postCreateTempSaveGoal({ data }: { data: GoalData }) {
   });
 }
 
-export function getTempGoal({ goalId }: { goalId: number }) {
+export function getTempGoal(pathParam: { goalId: number }) {
   return GET({
-    url: `${BASE_PATH}/check/${goalId}`
+    url: `${BASE_PATH}/check/${pathParam.goalId}`
   });
 }

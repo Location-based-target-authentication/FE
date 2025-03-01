@@ -3,15 +3,13 @@ import { format } from "date-fns";
 interface DatePickerProps {
   startDate: Date | null;
   endDate: Date | null;
-  onStartDateClick: () => void;
-  onEndDateClick: () => void;
+  onDateClick: (mode: "start" | "end") => void;
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({
   startDate,
   endDate,
-  onStartDateClick,
-  onEndDateClick
+  onDateClick
 }) => (
   <div className="h-[86px] w-[335px]">
     <label className="block text-[14px] font-medium leading-[16px] tracking-[-2.5%] text-[#1A1A1A]">
@@ -22,7 +20,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
         className={`h-[44px] w-[150px] rounded-[8px] p-[10px] text-[14px] ${
           startDate ? "text-black" : "text-gray-400"
         } flex items-center gap-2 bg-gray-50`}
-        onClick={onStartDateClick}
+        onClick={() => onDateClick("start")}
       >
         <svg
           width="18"
@@ -45,7 +43,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
         className={`h-[44px] w-[150px] rounded-[8px] p-[10px] text-[14px] ${
           endDate ? "text-black" : "text-gray-400"
         } flex items-center gap-2 bg-gray-50`}
-        onClick={onEndDateClick}
+        onClick={() => onDateClick("end")}
       >
         <svg
           width="18"
