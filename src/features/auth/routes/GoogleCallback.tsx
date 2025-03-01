@@ -7,9 +7,11 @@ import { postGoogleLogin } from "@/features/auth/api/auth";
 import { useNavigate, useSearchParams } from "react-router";
 
 import { useAuthStore } from "@/stores/auth-store";
+import { useUserStore } from "@/stores/user";
 import { paths } from "@/config/paths";
 
 const GoogleCallback = (): JSX.Element | null => {
+  const { setUserId } = useUserStore();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const setTokens = useAuthStore((state) => state.setTokens);
@@ -25,9 +27,10 @@ const GoogleCallback = (): JSX.Element | null => {
           throw new Error("구글 인증에 실패했습니다.");
         }
 
-        const { accessToken, refreshToken } = response.data;
+        const { accessToken, refreshToken, id } = response.data;
 
         setTokens(accessToken, refreshToken);
+        setUserId(id);
 
         navigate(paths.home.path);
       } catch (error) {
@@ -37,7 +40,7 @@ const GoogleCallback = (): JSX.Element | null => {
         setIsLoading(false);
       }
     },
-    [navigate, setTokens]
+    [navigate, setTokens, setUserId]
   );
 
   useEffect(() => {

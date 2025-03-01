@@ -6,13 +6,13 @@ import { AxiosError } from "axios";
 
 interface UseQueryGoalsOptions
   extends UseQueryOptions<Goals[], AxiosError, Goals[]> {}
-type GenerateQoGetGoals = () => UseQueryGoalsOptions;
+type GenerateQoGetGoals = (userId: number) => UseQueryGoalsOptions;
 
-export const generate_qo_getGoals: GenerateQoGetGoals = () => {
+export const generate_qo_getGoals: GenerateQoGetGoals = (userId) => {
   return {
     queryKey: [BASE_PATH],
     queryFn: () =>
-      getGoals().then((data) => {
+      getGoals({ pathParams: { userId } }).then((data) => {
         return data;
       })
   };

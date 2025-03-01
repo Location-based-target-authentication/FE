@@ -1,13 +1,13 @@
-export type WeekDay = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
+export type STATUS = "DRAF" | "ACTIVE" | "COMPLETE";
 
 export interface Goals {
   id: number;
-  name: string;
+  goalName: string;
   startDate: string;
   endDate: string;
-  days: WeekDay[];
-  isTemporarySaved: boolean;
-  isAchieved: boolean;
+  dayOfWeek: string;
+  status: STATUS;
+  achievedToday: boolean;
 }
 
 export type TransformedGoals = Goals & {
