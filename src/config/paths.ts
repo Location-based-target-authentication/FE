@@ -19,6 +19,24 @@ export const paths = {
       }
     }
   },
+
+  profile: {
+    reward: {
+      path: "/profile/reward",
+      getHref: () => "/profile/reward"
+    }
+  },
+
+  goal: {
+    path: "/goal",
+    getHref: () => "/goal",
+
+    create: {
+      path: "/goal/create",
+      getHref: () => "/goal/create"
+    }
+  },
+
   auth: {
     login: {
       path: "/auth/login",
