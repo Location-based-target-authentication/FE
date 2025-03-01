@@ -6,7 +6,7 @@ import ActvieAddIcon from "@/asset/common/plus-actvie.svg?react";
 import InactiveAddIcon from "@/asset/common/plus-inactive.svg?react";
 import { useQuery } from "@tanstack/react-query";
 import { map } from "es-toolkit/compat";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 import { useUserStore } from "@/stores/user";
 import { paths } from "@/config/paths";
@@ -15,6 +15,7 @@ import GoalList from "./goal-list";
 import { generatDdateText, generateDayText } from "./index.const";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const { userId } = useUserStore();
   const { data: goals = [] } = useQuery(generate_qo_getGoals(userId));
 
@@ -48,10 +49,14 @@ const HomePage = () => {
             ? "목표등록을 마무리하고 바로 시작해보세요!"
             : `${generatDdateText(item.startDate, item.endDate)} ${generateDayText(item.dayOfWeek)}`;
         const buttonText = `${item.status === "DRAF" ? "완성하기" : "인증하기"} >`;
-        const redirectionUrl =
-          item.status === "DRAF"
-            ? paths.goal.create.getHref()
-            : paths.map.certification.getHref();
+        const redirectionCallback = () => {
+          const url =
+            item.status === "DRAF"
+              ? paths.goal.create.getHref()
+              : paths.map.certification.getHref();
+
+          navigate(url, { state: { goalId: item.id, userId } });
+        };
 
         return {
           ...item,
@@ -59,10 +64,10 @@ const HomePage = () => {
           name: item.goalName,
           lastRowText,
           buttonText,
-          redirectionUrl
+          redirectionCallback
         };
       }),
-    [goals]
+    [goals, navigate, userId]
   );
 
   return (

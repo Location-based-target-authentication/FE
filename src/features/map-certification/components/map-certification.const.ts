@@ -1,11 +1,11 @@
 export const generateInitialGoalsData = () => ({
   id: 0,
-  name: "",
+  goalName: "",
   startDate: "",
   endDate: "",
   latitude: 33.450701,
   longitude: 126.570667,
-  days: []
+  dayOfWeek: ""
 });
 
 export const DAYS_STRING_MAP = new Map([

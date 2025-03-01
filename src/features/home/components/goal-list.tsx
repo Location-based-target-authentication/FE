@@ -1,5 +1,4 @@
 import { map } from "es-toolkit/compat";
-import { Link } from "react-router";
 
 import type { TransformedGoals } from "../types";
 
@@ -29,7 +28,7 @@ function GoalList({ goalCount, transformGoals }: GoalListProps) {
           achievedToday,
           status,
           buttonText,
-          redirectionUrl
+          redirectionCallback
         }) => (
           <div
             key={id}
@@ -49,14 +48,14 @@ function GoalList({ goalCount, transformGoals }: GoalListProps) {
                 </p>
                 <p className="text-xs text-gray-500">{lastRowText}</p>
               </div>
-              <Link to={redirectionUrl}>
-                <button
-                  disabled={achievedToday}
-                  className={`${achievedToday ? "cursor-not-allowed text-gray-300" : "cursor-pointer text-green-500"} text-xs`}
-                >
-                  {buttonText}
-                </button>
-              </Link>
+
+              <button
+                disabled={achievedToday}
+                className={`${achievedToday ? "cursor-not-allowed text-gray-300" : "cursor-pointer text-green-500"} text-xs`}
+                onClick={redirectionCallback}
+              >
+                {buttonText}
+              </button>
             </div>
           </div>
         )

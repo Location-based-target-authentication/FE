@@ -14,5 +14,5 @@ export type TransformedGoals = Goals & {
   title: string;
   lastRowText: string;
   buttonText: string;
-  redirectionUrl: string;
+  redirectionCallback: () => void;
 };

@@ -8,7 +8,7 @@ import { getDistance } from "@/utils/map";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { join, map, replace } from "es-toolkit/compat";
 import { Circle, Map, MapMarker } from "react-kakao-maps-sdk";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 import {
   generate_qo_getGoals,
@@ -27,21 +27,29 @@ const DISTANCE_DIFFRENCE = 20;
 function MapCertification() {
   // Hooks
   const navigate = useNavigate();
+  const location = useLocation();
+  const { userId, goalId } = location.state || {};
+
   const { center, position, setCenterToMyPosition, updateCenterWhenMapMoved } =
     useUserLocation();
   const {
     data: {
-      name,
+      goalName: name,
       startDate,
       endDate,
-      days,
+      dayOfWeek: days,
       latitude: serverLatitude,
       longitude: serverLongitude
     } = generateInitialGoalsData()
   } = useQuery(generate_qo_getGoals(1));
 
   const { mutate, isPending } = useMutation({
-    ...generate_qo_postGoalsAchieve(1),
+    ...generate_qo_postGoalsAchieve({
+      goalId,
+      userId,
+      latitude: position.lat,
+      longitude: position.lng
+    }),
     onSuccess: (data) => {
       /** @todo 홈 페이지에 사용도되는 데이터 쿼리 무효화 필요, 응답값으로 point 받아 성공 페이지로 전달 */
 
@@ -68,8 +76,9 @@ function MapCertification() {
   }, [serverLatitude, serverLongitude, position]);
 
   const dayString = useMemo(() => {
-    const transformDays = map(days, (day) => DAYS_STRING_MAP.get(day));
-    const day = days.length === 7 ? "매일" : join(transformDays, ", ");
+    const daysArr = days.split(",");
+    const transformDays = map(daysArr, (day) => DAYS_STRING_MAP.get(day));
+    const day = daysArr.length === 7 ? "매일" : join(transformDays, ", ");
 
     return day;
   }, [days]);
