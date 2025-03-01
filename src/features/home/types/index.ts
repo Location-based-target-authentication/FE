@@ -13,5 +13,6 @@ export interface Goals {
 export type TransformedGoals = Goals & {
   title: string;
   lastRowText: string;
-  redirectionText: string;
+  buttonText: string;
+  redirectionUrl: string;
 };

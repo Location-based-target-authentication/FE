@@ -6,7 +6,9 @@ import ActvieAddIcon from "@/asset/common/plus-actvie.svg?react";
 import InactiveAddIcon from "@/asset/common/plus-inactive.svg?react";
 import { useQuery } from "@tanstack/react-query";
 import { map } from "es-toolkit/compat";
+import { Link } from "react-router";
 
+import { paths } from "@/config/paths";
 import { generate_qo_getGoals } from "@/lib/react-query/queryOptions/home";
 import GoalList from "./goal-list";
 import { generatDdateText, generateDayText } from "./index.const";
@@ -42,25 +44,22 @@ const HomePage = () => {
         const lastRowText = item.isTemporarySaved
           ? "목표등록을 마무리하고 바로 시작해보세요!"
           : `${generatDdateText(item.startDate, item.endDate)} ${generateDayText(item.days)}`;
-        const redirectionText = `${item.isTemporarySaved ? "완성하기" : "인증하기"} >`;
+        const buttonText = `${item.isTemporarySaved ? "완성하기" : "인증하기"} >`;
+        const redirectionUrl = item.isTemporarySaved
+          ? paths.goal.create.getHref()
+          : paths.map.certification.getHref();
 
         return {
           ...item,
           title: `${item.isTemporarySaved ? "임시저장" : "진행중"} 목표`,
           name: item.name,
           lastRowText,
-          redirectionText
+          buttonText,
+          redirectionUrl
         };
       }),
     [goals]
   );
-
-  const navigateToGoalAdd = () => {
-    if (isGoalLimitReached) return;
-
-    /** @todo 목표 추가 페이지로 리다이렉션 */
-    // navigate("/goal-add");
-  };
 
   return (
     <div className="relative min-h-screen w-full bg-gray-100">
@@ -68,9 +67,12 @@ const HomePage = () => {
 
       <GoalList goalCount={goalCount} transformGoals={transformGoals} />
 
-      <div className="absolute bottom-24 right-3" onClick={navigateToGoalAdd}>
+      <Link
+        to={paths.goal.create.getHref()}
+        className="absolute bottom-24 right-3"
+      >
         {targetAddIcon}
-      </div>
+      </Link>
     </div>
   );
 };
