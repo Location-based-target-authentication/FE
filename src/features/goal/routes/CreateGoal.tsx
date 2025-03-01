@@ -13,6 +13,7 @@ import SaveButtons from "@/features/goal/components/create-goal/SaveButtons";
 import { GoalData, GoalStatus } from "@/features/goal/types/goal-create";
 import { getPoint } from "@/features/point/api/point";
 import { useLocation, useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 import { Nullable } from "@/types/common";
 import { useAuthStore } from "@/stores/auth-store";
@@ -99,7 +100,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
 
     if (status === GoalStatus.ACTIVE) {
       if (!goalName.trim() || !startDate || !endDate || !targetLocation) {
-        alert("모든 필수 항목을 입력해주세요.");
+        toast.error("모든 필수 항목을 입력해주세요.");
         return;
       }
     }
