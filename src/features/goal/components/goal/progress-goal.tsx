@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { join, map, slice } from "es-toolkit/compat";
 
+import { useUserStore } from "@/stores/user";
 import { generate_qo_getGoalsCheck } from "@/lib/react-query/queryOptions/goals";
 import type { CertificationInfo } from "../../types";
 import {
@@ -15,28 +16,28 @@ import {
 
 function ProgressGoal() {
   const todayString = generateTodyString();
+  const { userId } = useUserStore();
 
-  const { data: progressGoals = [] } = useQuery(generate_qo_getGoalsCheck());
+  const { data: progressGoals = [] } = useQuery(
+    generate_qo_getGoalsCheck(userId)
+  );
 
   const certificationInfoMaps = useMemo(() => {
     const generateMap = (certificationInfo: CertificationInfo[]) => {
       return new Map(
-        map(certificationInfo, ({ date, isCertification }) => [
-          date,
-          isCertification
-        ])
+        map(certificationInfo, ({ date, verified }) => [date, verified])
       );
     };
 
-    return map(progressGoals, ({ certificationInfo }) =>
-      generateMap(certificationInfo)
+    return map(progressGoals, ({ dateAuthentication }) =>
+      generateMap(dateAuthentication)
     );
   }, [progressGoals]);
 
   const transformedProgressGoals = useMemo(
     () =>
       map(progressGoals, (goal, index) => {
-        const transFormViewDays = map(goal.viewDays, (viewDay) => {
+        const transFormViewDays = map(goal.calender, (viewDay) => {
           const isCertificationInfo = certificationInfoMaps[index].has(viewDay);
 
           if (!isCertificationInfo) {
@@ -56,7 +57,8 @@ function ProgressGoal() {
             : generateNonCertificationItem({ viewDay, day, isToday });
         });
         const dateString = `${generateDateString(goal.startDate)} ~ ${generateDateString(goal.endDate)}`;
-        const days = goal.days.length === 7 ? "매일" : join(goal.days, ",");
+        const daysArr = goal.dayOfWeek.split(",");
+        const days = daysArr.length === 7 ? "매일" : join(daysArr, ",");
         const lastWeekDate = slice(transFormViewDays, 0, 7);
         const thiwWeekDate = slice(transFormViewDays, -7);
 
@@ -73,7 +75,7 @@ function ProgressGoal() {
 
   return transformedProgressGoals.length > 0 ? (
     transformedProgressGoals.map(
-      ({ id, name, dateString, days, goalDaycnt, allDays }, idx) => (
+      ({ id, name, dateString, days, targetCount, allDays }, idx) => (
         <div
           key={id}
           className="mb-2 flex flex-col gap-2 rounded-lg border p-4"
@@ -85,7 +87,7 @@ function ProgressGoal() {
 
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-500">{dateString}</span>
-            <span className="text-xs text-green-500">{goalDaycnt}일</span>
+            <span className="text-xs text-green-500">{targetCount}일</span>
             <span className="text-xs text-gray-500">{days}</span>
           </div>
 

@@ -1,26 +1,29 @@
-import type { WeekDay } from "@/types/date";
+export type STATUS = "DRAF" | "ACTIVE" | "COMPLETE";
 
 export interface CertificationInfo {
   date: string;
-  isCertification: boolean;
+  verified: boolean;
 }
 
 export interface ProgressGoal {
   id: number;
+  userId: number;
   name: string;
+  status: STATUS;
   startDate: string;
   endDate: string;
-  goalDaycnt: number;
-  days: WeekDay[];
-  viewDays: string[];
-  certificationInfo: CertificationInfo[];
+  targetCount: number;
+  dayOfWeek: string;
+  calender: string[];
+  dateAuthentication: CertificationInfo[];
 }
 
 export interface CompleteGoal {
   id: number;
   name: string;
-  achivePercent: number;
   startDate: string;
   endDate: string;
-  days: WeekDay[];
+  dayOfWeek: string;
+  targetCount: number;
+  achievedCount: number;
 }

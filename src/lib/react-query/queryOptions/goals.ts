@@ -49,20 +49,25 @@ export const generate_qo_postGoalsAchieve: GenerateQoPostGoalsAchieve = ({
 
 interface UseQueryGoalsCheckOptions
   extends UseQueryOptions<ProgressGoal[], AxiosError, ProgressGoal[]> {}
-type GenerateQoGetGoalsCheck = () => UseQueryGoalsCheckOptions;
-export const generate_qo_getGoalsCheck: GenerateQoGetGoalsCheck = () => {
+type GenerateQoGetGoalsCheck = (userId: number) => UseQueryGoalsCheckOptions;
+export const generate_qo_getGoalsCheck: GenerateQoGetGoalsCheck = (userId) => {
   return {
     queryKey: [GOALS_CHECK],
-    queryFn: () => getGoalsCheck().then((data) => data)
+    queryFn: () => getGoalsCheck({ data: { userId } }).then((data) => data)
   };
 };
 
 interface UseQueryGoalsCompleteOptions
   extends UseQueryOptions<CompleteGoal[], AxiosError, CompleteGoal[]> {}
-type GenerateQoGetGoalsComplete = () => UseQueryGoalsCompleteOptions;
-export const generate_qo_getGoalsComplete: GenerateQoGetGoalsComplete = () => {
+type GenerateQoGetGoalsComplete = (
+  userId: number
+) => UseQueryGoalsCompleteOptions;
+export const generate_qo_getGoalsComplete: GenerateQoGetGoalsComplete = (
+  userId
+) => {
   return {
     queryKey: [GOALS_COMPLETE],
-    queryFn: () => getGoalsComplete().then((data) => data)
+    queryFn: () =>
+      getGoalsComplete({ pathParams: { userId } }).then((data) => data)
   };
 };
