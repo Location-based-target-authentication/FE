@@ -33,8 +33,7 @@ const GoogleCallback = (): JSX.Element | null => {
         setTokens(accessToken, refreshToken);
         setUserName(username);
 
-        const { totalPoints } = await getPoint(socialId);
-
+        const { totalPoints } = await getPoint({ pathParams: { socialId } });
         setPoint(totalPoints);
 
         navigate(paths.home.path);

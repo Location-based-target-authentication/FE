@@ -61,7 +61,9 @@ export const handleTokenExpiration = async (
     axios.defaults.headers.common["Authorization"] =
       `Bearer ${response.data.accessToken}`;
 
-    const { totalPoints } = await getPoint(response.data.socialId);
+    const { totalPoints } = await getPoint({
+      pathParams: { socialId: response.data.socialId }
+    });
     useUserStore.setState({ point: totalPoints });
 
     return axios.request(config);
