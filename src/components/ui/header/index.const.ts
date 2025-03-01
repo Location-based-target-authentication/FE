@@ -29,7 +29,9 @@ export const generateKeyword = (point: number) => {
   else return "reward";
 };
 
-export const generateIcon = (keyword: "coffee" | "convenienceStore") => {
+export const generateIcon = (
+  keyword: "coffee" | "convenienceStore" | "reward"
+) => {
   if (keyword === "coffee") return CoffeIcon;
   else if (keyword === "convenienceStore") return Coupon;
   else return Coupon;
