@@ -27,7 +27,7 @@ const GoogleCallback = (): JSX.Element | null => {
           throw new Error("구글 인증에 실패했습니다.");
         }
 
-        const { accessToken, refreshToken } = response.data;
+        const { accessToken, refreshToken } = response;
 
         setTokens(accessToken, refreshToken);
 
