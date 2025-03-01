@@ -4,6 +4,19 @@ import homeBackGroundFirst from "@/asset/home/home-background-first.png?url";
 import homeBackGroundSecond from "@/asset/home/home-background-second.png?url";
 import homeBackGroundThird from "@/asset/home/home-background-third.png?url";
 
+import { paths } from "@/config/paths";
+
+export const NOT_VISIBLE_HEADER_PAGES = [
+  paths.map.search.getHref(),
+  paths.home.getHref()
+];
+
+export const HEADER_TITLE_MAP = new Map([
+  [paths.map.certification.getHref(), "목표인증"],
+  [paths.goal.getHref(), "목표"],
+  [paths.profile.reward.getHref(), "리워드 신청"]
+]);
+
 export const backgroundImages = [
   homeBackGroundFirst,
   homeBackGroundSecond,
