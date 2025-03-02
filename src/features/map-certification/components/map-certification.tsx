@@ -17,6 +17,7 @@ import {
   generate_qo_getGoalsComplete,
   generate_qo_postGoalsAchieve
 } from "@/lib/react-query/queryOptions/goals";
+import { generate_qo_getGoals as generate_qo_home } from "@/lib/react-query/queryOptions/home.ts";
 import useUserLocation from "@/hooks/useUserLocation";
 import CertificationButton from "./certification-button";
 import GoalsInfo from "./goals-info";
@@ -46,7 +47,7 @@ function MapCertification() {
       latitude: serverLatitude,
       longitude: serverLongitude
     } = generateInitialGoalsData()
-  } = useQuery(generate_qo_getGoals(1));
+  } = useQuery(generate_qo_getGoals(userId));
 
   const { mutate, isPending } = useMutation({
     ...generate_qo_postGoalsAchieve({
@@ -56,17 +57,17 @@ function MapCertification() {
       longitude: position.lng
     }),
     onSuccess: (data) => {
-      const progressGoalKey = generate_qo_getGoalsCheck.DELETE_KEY();
-      const completeGoalKey = generate_qo_getGoalsComplete.DELETE_KEY();
+      const progressGoalKey = generate_qo_getGoalsCheck.DELETE_KEY(userId);
+      const completeGoalKey = generate_qo_getGoalsComplete.DELETE_KEY(userId);
+      const homeKey = generate_qo_home.DELETE_KEY(userId);
 
       Promise.all([
         client.invalidateQueries({ queryKey: progressGoalKey }),
-        client.invalidateQueries({ queryKey: completeGoalKey })
-        // client.invalidateQueries({ queryKey: ["home"] }) // 홈페이지 데이터 무효화
+        client.invalidateQueries({ queryKey: completeGoalKey }),
+        client.invalidateQueries({ queryKey: homeKey })
       ]);
 
       addPoint(data.point);
-
       navigate("/map/certification/success", {
         state: { name, point: data.point }
       });

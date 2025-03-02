@@ -8,12 +8,16 @@ interface UseQueryGoalsOptions
   extends UseQueryOptions<Goals[], AxiosError, Goals[]> {}
 type GenerateQoGetGoals = (userId: string) => UseQueryGoalsOptions;
 
-export const generate_qo_getGoals: GenerateQoGetGoals = (userId) => {
-  return {
-    queryKey: [BASE_PATH],
+export const generate_qo_getGoals = ((userId) => {
+  const options: UseQueryGoalsOptions = {
+    queryKey: [BASE_PATH, userId],
     queryFn: () =>
       getGoals({ pathParams: { userId } }).then((data) => {
         return data;
       })
   };
-};
+
+  return options;
+}) as GenerateQoGetGoals & { DELETE_KEY: (userId: string) => string[] };
+
+generate_qo_getGoals.DELETE_KEY = (userId) => [BASE_PATH, userId];
