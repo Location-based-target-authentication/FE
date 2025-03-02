@@ -8,7 +8,10 @@ import { Progress } from "@/components/ui/progress";
 import { useEffect, useMemo, useState } from "react";
 
 import InfoIcon from "@/asset/common/info.svg?react";
+import { Link } from "react-router";
 
+import { useUserStore } from "@/stores/user";
+import { paths } from "@/config/paths";
 import {
   backgroundImages,
   generateIcon,
@@ -16,37 +19,49 @@ import {
   generateProgressPercent
 } from "./index.const";
 
-/** @todo 전역 값 사용, 관련 데이터 전역 값으로 수정 */
-const fakePoint1 = 550;
-
 function ProfileHeader() {
-  /** @todo 전역 상태 정의(사용자명, 포인트) **/
+  const { userName, point } = useUserStore();
   const [bgImage, setBgImage] = useState("");
 
-  /** @todo 전역 상태 사용(포인트) **/
   const rewarndInfo = useMemo(() => {
-    const keyword = generateKeyword(fakePoint1);
+    const keyword = generateKeyword(point);
 
     const Icon = generateIcon(keyword);
-    const progressPercent = generateProgressPercent(fakePoint1);
+    const progressPercent = generateProgressPercent(point);
     const currentPointText = (
       <>
-        현재 포인트 <span className="text-green-300">{fakePoint1}p</span>
+        현재 포인트 <span className="text-green-300">{point}p</span>
       </>
     );
-    const targetPointText = (
-      <>
-        커피쿠폰까지 <span className="text-green-300">{fakePoint1}p</span>
-      </>
-    );
+    const generateTagetPointText = () => {
+      if (keyword === "coffee") {
+        return (
+          <>
+            커피쿠폰까지 <span className="text-green-300">{point}p</span>
+          </>
+        );
+      } else if (keyword === "convenienceStore") {
+        return (
+          <>
+            편의점쿠폰까지 <span className="text-green-300">{point}p</span>
+          </>
+        );
+      } else {
+        return (
+          <Link to={paths.profile.reward.getHref()}>
+            <span className="text-green-300">리워드를 수령해주세요.</span>
+          </Link>
+        );
+      }
+    };
 
     return {
       icon: <Icon />,
       progressPercent,
       currentPointText,
-      targetPointText
+      targetPointText: generateTagetPointText()
     };
-  }, []);
+  }, [point]);
 
   useEffect(() => {
     const randomBg =
@@ -76,8 +91,8 @@ function ProfileHeader() {
 
       <div>
         <p className="text-xl">
-          {/* @todo 전역 Username 사용 */}
-          안녕하세요! <span className="font-bold text-green-300">홍길동</span>님
+          안녕하세요!
+          <span className="font-bold text-green-300">{userName}</span>님
         </p>
         <p className="text-sm">오늘도 일단 가볼까요?</p>
       </div>

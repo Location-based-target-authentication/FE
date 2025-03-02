@@ -11,7 +11,6 @@ function MapCertificationSuccess() {
   } = location;
 
   const navigateToHome = () => {
-    /** @todo 인증 페이지의 인증하기 버튼 기반 쿼리 무효화했기 떄문에 홈페이지 이동 시 최신 데이터가 렌더링되어야함 */
     const homePath = paths.home;
 
     navigate(homePath.getHref());

@@ -27,8 +27,8 @@ export const backgroundImages = [
 ];
 
 export const generateKeyword = (point: number) => {
-  if (point <= 500) return "coffee";
-  else if (point > 500) return "convenienceStore";
+  if (point <= 5000) return "coffee";
+  else if (point > 5000 && point < 10000) return "convenienceStore";
   else return "reward";
 };
 
@@ -41,7 +41,7 @@ export const generateIcon = (
 };
 
 export const generateProgressPercent = (point: number) => {
-  if (point <= 500) return (point / 500) * 100;
-  else if (point > 500) return (point / 1000) * 100;
+  if (point <= 5000) return (point / 5000) * 100;
+  else if (point > 5000 && point < 10000) return (point / 5000) * 100;
   else return 100;
 };
