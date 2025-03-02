@@ -49,7 +49,7 @@ export const generate_qo_postGoalsAchieve: GenerateQoPostGoalsAchieve = ({
 
 interface UseQueryGoalsCheckOptions
   extends UseQueryOptions<ProgressGoal[], AxiosError, ProgressGoal[]> {}
-type GenerateQoGetGoalsCheck = (userId: number) => UseQueryGoalsCheckOptions;
+type GenerateQoGetGoalsCheck = (userId: string) => UseQueryGoalsCheckOptions;
 export const generate_qo_getGoalsCheck: GenerateQoGetGoalsCheck = (userId) => {
   return {
     queryKey: [GOALS_CHECK],
@@ -60,7 +60,7 @@ export const generate_qo_getGoalsCheck: GenerateQoGetGoalsCheck = (userId) => {
 interface UseQueryGoalsCompleteOptions
   extends UseQueryOptions<CompleteGoal[], AxiosError, CompleteGoal[]> {}
 type GenerateQoGetGoalsComplete = (
-  userId: number
+  userId: string
 ) => UseQueryGoalsCompleteOptions;
 export const generate_qo_getGoalsComplete: GenerateQoGetGoalsComplete = (
   userId

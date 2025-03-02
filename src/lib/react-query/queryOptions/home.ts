@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 
 interface UseQueryGoalsOptions
   extends UseQueryOptions<Goals[], AxiosError, Goals[]> {}
-type GenerateQoGetGoals = (userId: number) => UseQueryGoalsOptions;
+type GenerateQoGetGoals = (userId: string) => UseQueryGoalsOptions;
 
 export const generate_qo_getGoals: GenerateQoGetGoals = (userId) => {
   return {
