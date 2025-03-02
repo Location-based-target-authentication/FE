@@ -21,13 +21,13 @@ const GoogleCallback = (): JSX.Element | null => {
     async (code: string): Promise<void> => {
       try {
         const response = await postGoogleLogin({ data: { code } });
-        if (!response.ok) {
+        if (response.status < 200 || response.status >= 300) {
           throw new Error("구글 인증에 실패했습니다.");
         }
 
-        const { accessToken, refreshToken } = response.data;
+        const { accessToken, refreshToken, userId } = response.data;
 
-        setTokens(accessToken, refreshToken);
+        setTokens(accessToken, refreshToken, userId);
 
         navigate(paths.home.path);
       } catch (error) {

@@ -87,7 +87,7 @@ function MapCertification() {
   );
 
   return (
-    <div className="relative flex h-screen w-full flex-col items-center bg-gray-50">
+    <div className="content-height relative flex w-full flex-col items-center bg-gray-50">
       <GoalsInfo name={name} timeString={timeString} dayString={dayString} />
 
       <div className="relative size-full">
@@ -120,7 +120,7 @@ function MapCertification() {
           />
         </Map>
         <button
-          className="absolute bottom-6 right-4 z-10 flex size-[40px] cursor-pointer items-center justify-center rounded-full bg-white shadow-md"
+          className="absolute bottom-32 left-4 z-10 flex size-[40px] cursor-pointer items-center justify-center rounded-full bg-white shadow-md"
           onClick={setCenterToMyPosition}
         >
           <Gps />

@@ -28,8 +28,18 @@ export const paths = {
   },
 
   goal: {
-    path: "/goal",
-    getHref: () => "/goal"
+    root: {
+      path: "/goal",
+      getHref: () => "/goal"
+    },
+    create: {
+      path: "/goal/create",
+      getHref: () => "/goal/create"
+    },
+    date: {
+      path: "/goal/date",
+      getHref: () => "/goal/date"
+    }
   },
 
   auth: {

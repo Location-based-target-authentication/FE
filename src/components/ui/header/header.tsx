@@ -28,7 +28,7 @@ function Header() {
     if (!isVisibleHeader) return null;
 
     return (
-      <div className="relative flex h-[56px] w-full items-center justify-center bg-white p-4">
+      <div className="relative z-40 flex h-[56px] w-full items-center justify-center bg-white p-4">
         <button
           onClick={goBack}
           className="absolute left-4 flex items-center justify-center"

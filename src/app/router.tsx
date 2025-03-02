@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import KakaoCallback from "@/app/routes/auth/kakao-callback";
 import LoginView from "@/app/routes/auth/login";
+import CreateGoalView from "@/app/routes/goal/create-goal";
 import {
   default as AppRoot,
   ErrorBoundary as RootErrorBoundary
@@ -12,6 +13,7 @@ import PrivateRoute from "@/app/routes/PrivateRoute";
 import AccountView from "@/app/routes/user/account";
 import MyPageView from "@/app/routes/user/my-page";
 import GoogleCallback from "@/features/auth/routes/GoogleCallback";
+import DatePickView from "@/features/goal/components/create-goal/date-pick";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router";
 
@@ -65,12 +67,20 @@ const createAppRouter = (queryClient: QueryClient) =>
             import("./routes/profile/reward").then(convert(queryClient))
         },
         {
-          path: paths.goal.path,
+          path: paths.goal.root.path,
           lazy: () => import("./routes/goal").then(convert(queryClient))
         },
         {
           path: "*",
           lazy: () => import("./routes/not-found").then(convert(queryClient))
+        },
+        {
+          path: paths.goal.create.path,
+          element: <CreateGoalView />
+        },
+        {
+          path: paths.goal.date.path,
+          element: <DatePickView />
         }
       ]
     },
@@ -93,6 +103,10 @@ const createAppRouter = (queryClient: QueryClient) =>
     {
       path: paths.user.account.path,
       element: <AccountView />
+    },
+    {
+      path: "*",
+      lazy: () => import("./routes/not-found").then(convert(queryClient))
     }
   ]);
 
