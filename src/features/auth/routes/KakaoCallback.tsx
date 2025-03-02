@@ -12,7 +12,7 @@ import { useUserStore } from "@/stores/user";
 import { paths } from "@/config/paths";
 
 const KakaoCallback = (): JSX.Element | null => {
-  const { setUserName, setPoint } = useUserStore();
+  const { setUserName, setPoint, setUserId } = useUserStore();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const setTokens = useAuthStore((state) => state.setTokens);
@@ -30,15 +30,19 @@ const KakaoCallback = (): JSX.Element | null => {
           throw new Error("카카오 인증에 실패했습니다.");
         }
 
-        const { accessToken, refreshToken, username, userId } = response.data;
+        const { accessToken, refreshToken, username, id } = response.data;
 
-        setTokens(accessToken, refreshToken, userId);
+        console.log(response.data);
+
+        setTokens(accessToken, refreshToken, id);
         setUserName(username);
+        setUserId(id);
 
-        const { totalPoints } = await getPoint({ pathParams: { userId } });
+        const { totalPoints } = await getPoint({ pathParams: { userId: id } });
         setPoint(totalPoints);
 
         navigate(paths.home.path);
+        // navigate(paths.auth.agreement.path);
       } catch (error) {
         console.error(error);
         setIsError(true);
@@ -46,7 +50,7 @@ const KakaoCallback = (): JSX.Element | null => {
         setIsLoading(false);
       }
     },
-    [navigate, setTokens, setUserName, setPoint]
+    [navigate, setTokens, setUserName, setPoint, setUserId]
   );
 
   useEffect(() => {

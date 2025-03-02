@@ -5,7 +5,12 @@ interface CertificationButtonProps {
   buttonDisabled: boolean;
   isContainRadar: boolean;
   isPending: boolean;
-  mutate: UseMutateFunction<{ point: number }, AxiosError, void, unknown>;
+  mutate: UseMutateFunction<
+    { totalPoints: number; bonusPoints: number },
+    AxiosError,
+    void,
+    unknown
+  >;
 }
 
 function CertificationButton({

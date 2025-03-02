@@ -3,20 +3,26 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { join, map } from "es-toolkit/compat";
 
+import { useUserStore } from "@/stores/user";
 import { generate_qo_getGoalsComplete } from "@/lib/react-query/queryOptions/goals";
 import { generateDateString } from "./index.const";
 
 function CompleteGoal() {
+  const { userId } = useUserStore();
   const { data: completedGoals = [] } = useQuery(
-    generate_qo_getGoalsComplete()
+    generate_qo_getGoalsComplete(userId)
   );
 
   const transformedCompletedGoals = useMemo(
     () =>
       map(completedGoals, (goal) => {
         const dateString = `${generateDateString(goal.startDate)} ~ ${generateDateString(goal.endDate)}`;
-        const days = goal.days.length === 7 ? "매일" : join(goal.days, ",");
-        const achivePercentString = `${goal.achivePercent}% 달성`;
+        const daysArr = goal.dayOfWeek.split(",");
+        const days = daysArr.length === 7 ? "매일" : join(daysArr, ",");
+        const achivePercent = Math.floor(
+          (goal.achievedCount / goal.targetCount) * 100
+        );
+        const achivePercentString = `${achivePercent}% 달성`;
 
         return { ...goal, dateString, days, achivePercentString };
       }),

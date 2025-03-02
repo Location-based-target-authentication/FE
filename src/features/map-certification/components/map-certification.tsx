@@ -8,7 +8,7 @@ import { getDistance } from "@/utils/map";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { join, map, replace } from "es-toolkit/compat";
 import { Circle, Map, MapMarker } from "react-kakao-maps-sdk";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 import { useUserStore } from "@/stores/user";
 import {
@@ -17,6 +17,7 @@ import {
   generate_qo_getGoalsComplete,
   generate_qo_postGoalsAchieve
 } from "@/lib/react-query/queryOptions/goals";
+import { generate_qo_getGoals as generate_qo_home } from "@/lib/react-query/queryOptions/home.ts";
 import useUserLocation from "@/hooks/useUserLocation";
 import CertificationButton from "./certification-button";
 import GoalsInfo from "./goals-info";
@@ -31,7 +32,9 @@ function MapCertification() {
   // Hooks
   const { addPoint } = useUserStore();
   const navigate = useNavigate();
+  const location = useLocation();
   const client = useQueryClient();
+  const { userId, goalId } = location.state || {};
 
   const { center, position, setCenterToMyPosition, updateCenterWhenMapMoved } =
     useUserLocation();
@@ -40,34 +43,40 @@ function MapCertification() {
       name,
       startDate,
       endDate,
-      days,
+      dayOfWeek: days,
       latitude: serverLatitude,
       longitude: serverLongitude
     } = generateInitialGoalsData()
-  } = useQuery(generate_qo_getGoals(1));
+  } = useQuery(generate_qo_getGoals(goalId));
 
   const { mutate, isPending } = useMutation({
-    ...generate_qo_postGoalsAchieve(1),
+    ...generate_qo_postGoalsAchieve({
+      goalId,
+      userId,
+      latitude: position.lat,
+      longitude: position.lng
+    }),
     onSuccess: (data) => {
-      const progressGoalKey = generate_qo_getGoalsCheck.DELETE_KEY();
-      const completeGoalKey = generate_qo_getGoalsComplete.DELETE_KEY();
+      const progressGoalKey = generate_qo_getGoalsCheck.DELETE_KEY(userId);
+      const completeGoalKey = generate_qo_getGoalsComplete.DELETE_KEY(userId);
+      const homeKey = generate_qo_home.DELETE_KEY(userId);
 
       Promise.all([
         client.invalidateQueries({ queryKey: progressGoalKey }),
-        client.invalidateQueries({ queryKey: completeGoalKey })
-        // client.invalidateQueries({ queryKey: ["home"] }) // 홈페이지 데이터 무효화
+        client.invalidateQueries({ queryKey: completeGoalKey }),
+        client.invalidateQueries({ queryKey: homeKey })
       ]);
 
-      addPoint(data.point);
-
+      addPoint(data.totalPoints);
       navigate("/map/certification/success", {
-        state: { name, point: data.point }
+        state: { name, point: data.bonusPoints }
       });
     }
   });
 
   // useMemos
   const isContainRadar = useMemo(() => {
+    console.log(position.lat, position.lng, serverLatitude, serverLongitude);
     if (!serverLatitude || !serverLongitude) return false;
 
     const distance =
@@ -83,8 +92,9 @@ function MapCertification() {
   }, [serverLatitude, serverLongitude, position]);
 
   const dayString = useMemo(() => {
-    const transformDays = map(days, (day) => DAYS_STRING_MAP.get(day));
-    const day = days.length === 7 ? "매일" : join(transformDays, ", ");
+    const daysArr = days.split(",");
+    const transformDays = map(daysArr, (day) => DAYS_STRING_MAP.get(day));
+    const day = daysArr.length === 7 ? "매일" : join(transformDays, ", ");
 
     return day;
   }, [days]);

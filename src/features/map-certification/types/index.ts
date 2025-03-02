@@ -1,11 +1,12 @@
-type WeekDay = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
+export type STATUS = "DRAF" | "ACTIVE" | "COMPLETE";
 
-export interface Goals {
-  id: number;
+export interface GoalDetail {
   name: string;
   startDate: string;
   endDate: string;
   latitude: number;
   longitude: number;
-  days: WeekDay[];
+  dayOfWeek: string;
+  status: STATUS;
+  achievedToday: boolean;
 }

@@ -1,8 +1,11 @@
 import { R } from "@/types/common";
 import { GET } from "@/lib/axios";
+import { RoOnlyPathParamsType } from "@/lib/axios/utils";
 import { Goals } from "../types";
-import { BASE_PATH } from "./paths";
+import { HOME_PATH } from "./paths";
 
-export function getGoals(): R<Goals[]> {
-  return GET({ url: BASE_PATH });
+export function getGoals({
+  pathParams: { userId }
+}: RoOnlyPathParamsType<{ userId: number }>): R<Goals[]> {
+  return GET({ url: HOME_PATH(userId) });
 }

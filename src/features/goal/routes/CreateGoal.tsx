@@ -13,14 +13,18 @@ import { DAY_MAPPING } from "@/features/goal/components/create-goal/goal.constan
 import SaveButtons from "@/features/goal/components/create-goal/SaveButtons";
 import { GoalData, GoalStatus } from "@/features/goal/types/goal-create";
 import { getPoint } from "@/features/point/api/point";
-import { debounce } from "es-toolkit";
+import { useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { debounce, isNull } from "es-toolkit";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 import { Nullable } from "@/types/common";
 import { useAuthStore } from "@/stores/auth-store";
+import { useUserStore } from "@/stores/user";
 import { paths } from "@/config/paths";
+import { generate_qo_getGoals as generate_qo_home } from "@/lib/react-query/queryOptions/home.ts";
 
 interface CreateGoalProps {
   goalId?: number;
@@ -29,7 +33,9 @@ interface CreateGoalProps {
 const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const userId = useAuthStore((state) => state.userId);
+  const client = useQueryClient();
+  const { userId } = useAuthStore();
+  const { setPoint } = useUserStore();
 
   const [goalName, setGoalName] = useState<string>(
     location.state?.goalName || ""
@@ -45,7 +51,9 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   const [balancePoint, setBalancePoint] = useState<number>(0);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [center, setCenter] = useState({ lat: 33.450701, lng: 126.570667 });
-  const [position, setPosition] = useState(null);
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
 
   const isFormValid = useMemo(() => {
     return (
@@ -57,8 +65,8 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   }, [goalName, startDate, endDate, selectedDays]);
 
   const fetchBalancePoint = useCallback(async (): Promise<void> => {
-    if (!userId) return;
     try {
+      if (!userId) return;
       const { totalPoints } = await getPoint({ userId });
       setBalancePoint(totalPoints);
     } catch (error) {
@@ -78,11 +86,25 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   );
 
   useEffect(() => {
-    if (location.state) {
+    if (isNull(location.state)) return;
+
+    console.log(location.state);
+
+    if (location.state.position && location.state.placeName) {
       const { position, placeName } = location.state;
       setTargetLocation(placeName);
       setPosition(position);
       setCenter(position);
+
+      const goalInfo = JSON.parse(localStorage.getItem("goalInfo") ?? "{}");
+
+      if (goalInfo === "{}") return;
+
+      const { goalName, startDate, endDate, selectedDays } = goalInfo;
+      setGoalName(goalName);
+      setStartDate(startDate ? new Date(startDate) : null);
+      setEndDate(endDate ? new Date(endDate) : null);
+      setSelectedDays(selectedDays);
     } else {
       navigator.geolocation.getCurrentPosition(
         ({ coords: { latitude, longitude } }) => {
@@ -138,28 +160,44 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     }
 
     const goalData: GoalData = {
-      goal: {
-        userId,
-        name: goalName,
-        startDate: startDate ? startDate.toISOString() : null,
-        endDate: endDate ? endDate.toISOString() : null,
-        locationName: targetLocation
-      },
+      userId,
+      name: goalName,
+      startDate: startDate ? format(startDate, "yyyy-MM-dd") : null,
+      endDate: endDate ? format(endDate, "yyyy-MM-dd") : null,
+      locationName: targetLocation,
       status,
-      days: selectedDays.map((day) => DAY_MAPPING[day])
+      latitude: position?.lat ?? 0,
+      longitude: position?.lng ?? 0,
+      selectedDays: selectedDays.map((day) => DAY_MAPPING[day])
     };
 
     try {
       status === GoalStatus.DRAFT
         ? await postCreateTempSaveGoal({ data: goalData })
         : await postCreateGoal({ data: goalData });
-      navigate(paths.goal.root.path);
+
+      setPoint(useUserStore.getState().point - 200);
+      const homeKey = generate_qo_home.DELETE_KEY(userId);
+      client.invalidateQueries({ queryKey: homeKey });
+
+      navigate(paths.home.path);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const navigatePositionSearch = () => navigate(paths.map.search.getHref());
+  const navigatePositionSearch = () => {
+    navigate(paths.map.search.getHref());
+    localStorage.setItem(
+      "goalInfo",
+      JSON.stringify({
+        goalName,
+        startDate,
+        endDate,
+        selectedDays
+      })
+    );
+  };
 
   return (
     <div className="mx-auto h-[calc(100vh-130px)] w-[375px] overflow-auto bg-white p-4">

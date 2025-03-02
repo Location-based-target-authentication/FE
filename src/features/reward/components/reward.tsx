@@ -15,6 +15,11 @@ export default function Reward() {
   const { mutate, isPending } = useMutation({
     ...generate_qo_postRewards(userId),
     onSuccess: (data) => {
+      if (data.status === "error") {
+        toast.error("리워드 신청에 실패했습니다.");
+        return;
+      }
+
       setPoint(data.point);
       toast(<SuccessToast />, {
         position: "bottom-center",
@@ -25,6 +30,18 @@ export default function Reward() {
       });
     }
   });
+
+  const applyReward = ({
+    points,
+    pointType,
+    description
+  }: {
+    points: number;
+    pointType: string;
+    description: string;
+  }) => {
+    mutate({ points, pointType, description });
+  };
 
   const loaledPoint = useMemo(() => `${point.toLocaleString()}p`, [point]);
   const coupons = useMemo(
@@ -44,29 +61,41 @@ export default function Reward() {
       </p>
 
       <div className="mt-4 space-y-4">
-        {map(coupons, ({ id, image, name, isDisabled, className }) => (
-          <div
-            key={id}
-            className="relative flex items-center gap-4 overflow-hidden rounded-xl"
-          >
+        {map(
+          coupons,
+          ({
+            id,
+            image,
+            name,
+            isDisabled,
+            className,
+            points,
+            pointType,
+            description
+          }) => (
             <div
-              className="h-36 w-full rounded-lg bg-cover bg-center after:absolute after:inset-0 after:bg-black/50 after:content-['']"
-              style={{ backgroundImage: `url(${image})` }}
-            />
-
-            <p className="absolute inset-x-0 top-1/4 flex justify-center text-white">
-              {name}
-            </p>
-
-            <button
-              onClick={() => mutate()}
-              className={`${className}`}
-              disabled={isDisabled}
+              key={id}
+              className="relative flex items-center gap-4 overflow-hidden rounded-xl"
             >
-              교환하기
-            </button>
-          </div>
-        ))}
+              <div
+                className="h-36 w-full rounded-lg bg-cover bg-center after:absolute after:inset-0 after:bg-black/50 after:content-['']"
+                style={{ backgroundImage: `url(${image})` }}
+              />
+
+              <p className="absolute inset-x-0 top-1/4 flex justify-center text-white">
+                {name}
+              </p>
+
+              <button
+                onClick={() => applyReward({ points, pointType, description })}
+                className={`${className}`}
+                disabled={isDisabled}
+              >
+                교환하기
+              </button>
+            </div>
+          )
+        )}
       </div>
     </div>
   );

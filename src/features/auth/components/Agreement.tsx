@@ -5,6 +5,7 @@ import CheckedItemIcon from "@/asset/agreement/checked-item.svg?url";
 import UncheckedAllIcon from "@/asset/agreement/unchecked-all.svg?url";
 import UncheckedItemIcon from "@/asset/agreement/unchecked-item.svg?url";
 import { postTermsAgree } from "@/features/auth/api/auth";
+import { getUserInfo } from "@/features/user/api/user";
 import { useNavigate } from "react-router";
 
 import { useAuthStore } from "@/stores/auth-store";
@@ -68,11 +69,11 @@ const Agreement = () => {
     if (!userId) return;
 
     try {
-      const response = await postTermsAgree({
-        data: { userId }
-      });
+      await postTermsAgree({ userId });
 
-      if (response.data.success) {
+      const { phoneNumber } = await getUserInfo({ pathParam: userId });
+
+      if (!phoneNumber) {
         navigate(paths.auth.phoneNumber.path);
       } else {
         throw new Error("약관 동의에 실패했습니다.");
@@ -159,7 +160,7 @@ const Agreement = () => {
         disabled={!checkState.all}
         onClick={handleSubmit}
         className={`fixed bottom-6 ml-[20px] flex h-[56px] w-[335px] items-center justify-center rounded-[8px] py-[10px] text-[16px] font-semibold leading-[20px] ${
-          !checkState.all
+          checkState.all
             ? "cursor-pointer bg-[#3CC360] text-white"
             : "cursor-not-allowed bg-gray-300 text-gray-500"
         }`}

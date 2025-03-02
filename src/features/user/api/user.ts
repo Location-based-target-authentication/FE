@@ -1,10 +1,10 @@
-import { BASE_PATH } from "@/features/auth/api/paths";
+import { BASE_PATH } from "@/features/user/api/paths";
 
 import { DELETE, GET, POST } from "@/lib/axios";
 
 export function getUserInfo({ pathParam }: { pathParam: number }) {
   return GET({
-    url: `${BASE_PATH}?userId=${pathParam}`
+    url: `${BASE_PATH}/${pathParam}/check`
   });
 }
 

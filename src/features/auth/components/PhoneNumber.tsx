@@ -22,8 +22,7 @@ const PhoneNumber = () => {
       const response = await postPhoneNumber({
         data: { phoneNumber }
       });
-
-      if (response.data.success) {
+      if (response.message === "전화번호가 성공적으로 저장됨") {
         navigate(paths.home.path);
       } else {
         throw new Error("약관 동의에 실패했습니다.");

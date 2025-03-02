@@ -12,7 +12,7 @@ import { useUserStore } from "@/stores/user";
 import { paths } from "@/config/paths";
 
 const GoogleCallback = (): JSX.Element | null => {
-  const { setUserName, setPoint } = useUserStore();
+  const { setUserName, setPoint, setUserId } = useUserStore();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const setTokens = useAuthStore((state) => state.setTokens);
@@ -28,10 +28,12 @@ const GoogleCallback = (): JSX.Element | null => {
           throw new Error("구글 인증에 실패했습니다.");
         }
 
-        const { accessToken, refreshToken, username, userId } = response.data;
+        const { accessToken, refreshToken, username, id, userId } =
+          response.data;
 
-        setTokens(accessToken, refreshToken, userId);
+        setTokens(accessToken, refreshToken, id);
         setUserName(username);
+        setUserId(userId);
 
         const { totalPoints } = await getPoint({ pathParams: { userId } });
         setPoint(totalPoints);
@@ -44,7 +46,7 @@ const GoogleCallback = (): JSX.Element | null => {
         setIsLoading(false);
       }
     },
-    [navigate, setTokens, setUserName, setPoint]
+    [navigate, setTokens, setUserName, setPoint, setUserId]
   );
 
   useEffect(() => {

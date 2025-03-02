@@ -1,17 +1,24 @@
 import type { R } from "@/types/common";
 import { GET, POST } from "@/lib/axios";
-import type { RoOnlyPathParamsType } from "@/lib/axios/utils";
-import type { Goals } from "../types";
-import { GOALS, GOALS_ACHIEVE } from "./paths";
+import type {
+  RoDataAndPathParamsType,
+  RoOnlyPathParamsType
+} from "@/lib/axios/utils";
+import type { GoalDetail } from "../types";
+import { GOALS_ACHIEVE, GOALS_DETAIL } from "./paths";
 
 export function getGoals({
-  pathParams: { id }
-}: RoOnlyPathParamsType<{ id: number }>): R<Goals> {
-  return GET({ url: GOALS(id) });
+  pathParams: { goalId }
+}: RoOnlyPathParamsType<{ goalId: number }>): R<GoalDetail> {
+  return GET({ url: GOALS_DETAIL(goalId) });
 }
 
 export function postGoalsAchieve({
-  pathParams: { id }
-}: RoOnlyPathParamsType<{ id: number }>): R<{ point: number }> {
-  return POST({ url: GOALS_ACHIEVE(id) });
+  pathParams: { goalId },
+  data
+}: RoDataAndPathParamsType<
+  { userId: number; latitude: number; longitude: number },
+  { goalId: number }
+>): R<{ totalPoints: number; bonusPoints: number }> {
+  return POST({ url: GOALS_ACHIEVE(goalId), data });
 }

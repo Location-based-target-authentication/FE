@@ -1,5 +1,4 @@
 import { map } from "es-toolkit/compat";
-import { Link } from "react-router";
 
 import type { TransformedGoals } from "../types";
 
@@ -22,41 +21,41 @@ function GoalList({ goalCount, transformGoals }: GoalListProps) {
       {map(
         transformGoals,
         ({
-          id,
+          goalId,
           title,
-          name,
+          goalName,
           lastRowText,
-          isAchieved,
-          isTemporarySaved,
+          achievedToday,
+          status,
           buttonText,
-          redirectionUrl
+          redirectionCallback
         }) => (
           <div
-            key={id}
-            className={`mb-4 rounded-2xl bg-white p-4 shadow-md ${isAchieved ? "cursor-not-allowed" : "cursor-pointer"}`}
+            key={goalId}
+            className={`mb-4 rounded-2xl bg-white p-4 shadow-md ${achievedToday ? "cursor-not-allowed" : "cursor-pointer"}`}
           >
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-3">
                 <p
-                  className={`text-xs font-semibold ${isAchieved || isTemporarySaved ? "text-green-200" : "text-green-500"}`}
+                  className={`text-xs font-semibold ${achievedToday || status === "DRAFT" ? "text-green-200" : "text-green-500"}`}
                 >
                   {title}
                 </p>
                 <p
-                  className={`${isAchieved || isTemporarySaved ? "text-gray-500" : "text-black"}`}
+                  className={`${achievedToday || status === "DRAFT" ? "text-gray-500" : "text-black"}`}
                 >
-                  {name}
+                  {goalName}
                 </p>
                 <p className="text-xs text-gray-500">{lastRowText}</p>
               </div>
-              <Link to={redirectionUrl}>
-                <button
-                  disabled={isAchieved}
-                  className={`${isAchieved ? "cursor-not-allowed text-gray-300" : "cursor-pointer text-green-500"} text-xs`}
-                >
-                  {buttonText}
-                </button>
-              </Link>
+
+              <button
+                disabled={achievedToday}
+                className={`${achievedToday ? "cursor-not-allowed text-gray-300" : "cursor-pointer text-green-500"} text-xs`}
+                onClick={redirectionCallback}
+              >
+                {buttonText}
+              </button>
             </div>
           </div>
         )
