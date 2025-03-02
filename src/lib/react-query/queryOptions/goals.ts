@@ -50,24 +50,30 @@ export const generate_qo_postGoalsAchieve: GenerateQoPostGoalsAchieve = ({
 interface UseQueryGoalsCheckOptions
   extends UseQueryOptions<ProgressGoal[], AxiosError, ProgressGoal[]> {}
 type GenerateQoGetGoalsCheck = (userId: string) => UseQueryGoalsCheckOptions;
-export const generate_qo_getGoalsCheck: GenerateQoGetGoalsCheck = (userId) => {
-  return {
-    queryKey: [GOALS_CHECK],
+export const generate_qo_getGoalsCheck = ((userId) => {
+  const options: UseQueryGoalsCheckOptions = {
+    queryKey: [GOALS_CHECK, userId],
     queryFn: () => getGoalsCheck({ data: { userId } }).then((data) => data)
   };
-};
+
+  return options;
+}) as GenerateQoGetGoalsCheck & { DELETE_KEY: (userId: string) => string[] };
+
+generate_qo_getGoalsCheck.DELETE_KEY = (userId) => [GOALS_CHECK, userId];
 
 interface UseQueryGoalsCompleteOptions
   extends UseQueryOptions<CompleteGoal[], AxiosError, CompleteGoal[]> {}
 type GenerateQoGetGoalsComplete = (
   userId: string
 ) => UseQueryGoalsCompleteOptions;
-export const generate_qo_getGoalsComplete: GenerateQoGetGoalsComplete = (
-  userId
-) => {
-  return {
-    queryKey: [GOALS_COMPLETE],
+export const generate_qo_getGoalsComplete = ((userId) => {
+  const options: UseQueryGoalsCompleteOptions = {
+    queryKey: [GOALS_COMPLETE(userId)],
     queryFn: () =>
       getGoalsComplete({ pathParams: { userId } }).then((data) => data)
   };
-};
+
+  return options;
+}) as GenerateQoGetGoalsComplete & { DELETE_KEY: (userId: string) => string[] };
+
+generate_qo_getGoalsComplete.DELETE_KEY = (userId) => [GOALS_COMPLETE(userId)];

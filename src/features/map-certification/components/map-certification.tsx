@@ -5,13 +5,16 @@ import Gps from "@/asset/map/gps.svg?react";
 import notContainTargetUrl from "@/asset/map/not-contain-target.svg?url";
 import positionIconUrl from "@/asset/map/position.svg?url";
 import { getDistance } from "@/utils/map";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { join, map, replace } from "es-toolkit/compat";
 import { Circle, Map, MapMarker } from "react-kakao-maps-sdk";
 import { useLocation, useNavigate } from "react-router";
 
+import { useUserStore } from "@/stores/user";
 import {
   generate_qo_getGoals,
+  generate_qo_getGoalsCheck,
+  generate_qo_getGoalsComplete,
   generate_qo_postGoalsAchieve
 } from "@/lib/react-query/queryOptions/goals";
 import useUserLocation from "@/hooks/useUserLocation";
@@ -26,8 +29,10 @@ const DISTANCE_DIFFRENCE = 20;
 
 function MapCertification() {
   // Hooks
+  const { addPoint } = useUserStore();
   const navigate = useNavigate();
   const location = useLocation();
+  const client = useQueryClient();
   const { userId, goalId } = location.state || {};
 
   const { center, position, setCenterToMyPosition, updateCenterWhenMapMoved } =
@@ -51,7 +56,16 @@ function MapCertification() {
       longitude: position.lng
     }),
     onSuccess: (data) => {
-      /** @todo 홈 페이지에 사용도되는 데이터 쿼리 무효화 필요, 응답값으로 point 받아 성공 페이지로 전달 */
+      const progressGoalKey = generate_qo_getGoalsCheck.DELETE_KEY();
+      const completeGoalKey = generate_qo_getGoalsComplete.DELETE_KEY();
+
+      Promise.all([
+        client.invalidateQueries({ queryKey: progressGoalKey }),
+        client.invalidateQueries({ queryKey: completeGoalKey })
+        // client.invalidateQueries({ queryKey: ["home"] }) // 홈페이지 데이터 무효화
+      ]);
+
+      addPoint(data.point);
 
       navigate("/map/certification/success", {
         state: { name, point: data.point }
