@@ -4,12 +4,15 @@ import { Spinner } from "@/components/ui/spinner";
 import { useCallback, useEffect, useState } from "react";
 
 import { postKakaoLogin } from "@/features/auth/api/auth";
+import { getPoint } from "@/features/reward/api/reward";
 import { useNavigate, useSearchParams } from "react-router";
 
 import { useAuthStore } from "@/stores/auth-store";
+import { useUserStore } from "@/stores/user";
 import { paths } from "@/config/paths";
 
 const KakaoCallback = (): JSX.Element | null => {
+  const { setUserName, setPoint } = useUserStore();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const setTokens = useAuthStore((state) => state.setTokens);
@@ -27,9 +30,13 @@ const KakaoCallback = (): JSX.Element | null => {
           throw new Error("카카오 인증에 실패했습니다.");
         }
 
-        const { accessToken, refreshToken, userId } = response.data;
+        const { accessToken, refreshToken, username, userId } = response.data;
 
         setTokens(accessToken, refreshToken, userId);
+        setUserName(username);
+
+        const { totalPoints } = await getPoint({ pathParams: { userId } });
+        setPoint(totalPoints);
 
         navigate(paths.home.path);
       } catch (error) {
@@ -39,7 +46,7 @@ const KakaoCallback = (): JSX.Element | null => {
         setIsLoading(false);
       }
     },
-    [navigate, setTokens]
+    [navigate, setTokens, setUserName, setPoint]
   );
 
   useEffect(() => {

@@ -4,9 +4,9 @@ import { AxiosError } from "axios";
 
 interface UseMutationRewardsOptions
   extends UseMutationOptions<{ point: number }, AxiosError, void, unknown> {}
-type GenerateQoPostRewards = (id: number) => UseMutationRewardsOptions;
-export const generate_qo_postRewards: GenerateQoPostRewards = (socialId) => {
+type GenerateQoPostRewards = (userId: string) => UseMutationRewardsOptions;
+export const generate_qo_postRewards: GenerateQoPostRewards = (userId) => {
   return {
-    mutationFn: () => postRewards({ pathParams: { socialId } })
+    mutationFn: () => postRewards({ pathParams: { userId } })
   };
 };

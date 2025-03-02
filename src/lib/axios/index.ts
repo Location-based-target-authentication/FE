@@ -1,4 +1,5 @@
 import { postRefreshAccessToken } from "@/features/auth/api/auth";
+import { getPoint } from "@/features/reward/api/reward";
 import type {
   AxiosRequestConfig,
   AxiosResponse,
@@ -10,6 +11,7 @@ import { get, isArray } from "es-toolkit/compat";
 
 import { Nullable } from "@/types/common";
 import { useAuthStore } from "@/stores/auth-store";
+import { useUserStore } from "@/stores/user";
 import { ENDPOINT_URL, MEDIUM_REQUEST_TIMEOUT } from "@/config/envs";
 import { paths } from "@/config/paths";
 import { generateQueryParams } from "@/lib/axios/utils";
@@ -58,6 +60,12 @@ export const handleTokenExpiration = async (
 
     axios.defaults.headers.common["Authorization"] =
       `Bearer ${response.data.accessToken}`;
+
+    const { totalPoints } = await getPoint({
+      pathParams: { userId: response.data.userId }
+    });
+    useUserStore.setState({ point: totalPoints });
+
     return axios.request(config);
   } catch (error) {
     window.location.href = paths.auth.login.path;

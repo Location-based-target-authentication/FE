@@ -1,10 +1,17 @@
 import type { R } from "@/types/common";
-import { POST } from "@/lib/axios";
+import { GET, POST } from "@/lib/axios";
 import type { RoOnlyPathParamsType } from "@/lib/axios/utils";
-import { POINT_DEDUC } from "./path";
+import type { Point } from "../types";
+import { POINT_DEDUC, POINTS } from "./path";
 
 export function postRewards({
-  pathParams: { socialId }
-}: RoOnlyPathParamsType<{ socialId: number }>): R<{ point: number }> {
-  return POST({ url: POINT_DEDUC(socialId) });
+  pathParams: { userId }
+}: RoOnlyPathParamsType<{ userId: string }>): R<{ point: number }> {
+  return POST({ url: POINT_DEDUC(userId) });
+}
+
+export function getPoint({
+  pathParams: { userId }
+}: RoOnlyPathParamsType<{ userId: string }>): R<Point> {
+  return GET({ url: POINTS(userId) });
 }
