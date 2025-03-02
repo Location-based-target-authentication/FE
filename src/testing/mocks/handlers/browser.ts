@@ -4,13 +4,17 @@ import {
   goalCompleteDatas,
   goalEveryDayCertification,
   goalNotContainRadarCertification,
-  goalNotEveryDayCertification
+  goalNotEveryDayCertification,
+  testGoals1
 } from "@/testing/testUtils";
 import { delay, http, HttpResponse } from "msw";
 
 import { ENDPOINT_URL } from "@/config/envs";
 
 export const handlers = [
+  http.get(`${ENDPOINT_URL}api/v1/goals`, () => {
+    return HttpResponse.json(testGoals1);
+  }),
   http.get(`${ENDPOINT_URL}api/v1/goals/1`, () => {
     return HttpResponse.json(goalEveryDayCertification);
   }),
@@ -31,7 +35,7 @@ export const handlers = [
 
     return HttpResponse.json({ message: "success" });
   }),
-  http.post(`${ENDPOINT_URL}${POINT_DEDUC(1)}`, async () => {
+  http.post(`${ENDPOINT_URL}${POINT_DEDUC("1")}`, async () => {
     await delay(500);
 
     return HttpResponse.json({ point: 10000 });

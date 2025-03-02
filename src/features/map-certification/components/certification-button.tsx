@@ -16,7 +16,7 @@ function CertificationButton({
 }: CertificationButtonProps) {
   return (
     <button
-      className={`absolute bottom-4 left-1/2 z-30 flex w-[70%] max-w-md -translate-x-1/2 justify-center rounded-lg p-4 text-lg font-semibold shadow-md ${!isContainRadar ? "cursor-not-allowed bg-gray-300 text-gray-500" : "cursor-pointer bg-green-500 text-white"}`}
+      className={`absolute bottom-12 left-1/2 z-30 flex w-[95%] max-w-md -translate-x-1/2 justify-center rounded-lg p-4 text-lg font-semibold shadow-md ${!isContainRadar ? "cursor-not-allowed bg-gray-300 text-gray-500" : "cursor-pointer bg-green-500 text-white"}`}
       disabled={buttonDisabled}
       onClick={() => mutate()}
     >

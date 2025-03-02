@@ -1,0 +1,239 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+import containTargetUrl from "@/asset/map/contain-target.svg?url";
+import {
+  getTempGoal,
+  postCreateGoal,
+  postCreateTempSaveGoal
+} from "@/features/goal/api/goal";
+import BalanceInfo from "@/features/goal/components/create-goal/BalanceInfo";
+import DatePicker from "@/features/goal/components/create-goal/DatePicker";
+import DayPicker from "@/features/goal/components/create-goal/DayPicker";
+import { DAY_MAPPING } from "@/features/goal/components/create-goal/goal.constants";
+import SaveButtons from "@/features/goal/components/create-goal/SaveButtons";
+import { GoalData, GoalStatus } from "@/features/goal/types/goal-create";
+import { getPoint } from "@/features/point/api/point";
+import { debounce } from "es-toolkit";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { useLocation, useNavigate } from "react-router";
+import { toast } from "react-toastify";
+
+import { Nullable } from "@/types/common";
+import { useAuthStore } from "@/stores/auth-store";
+import { paths } from "@/config/paths";
+
+interface CreateGoalProps {
+  goalId?: number;
+}
+
+const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const userId = useAuthStore((state) => state.userId);
+
+  const [goalName, setGoalName] = useState<string>(
+    location.state?.goalName || ""
+  );
+
+  const [startDate, setStartDate] = useState<Nullable<Date>>(
+    location.state?.startDate ? new Date(location.state.startDate) : null
+  );
+  const [endDate, setEndDate] = useState<Nullable<Date>>(
+    location.state?.endDate ? new Date(location.state.endDate) : null
+  );
+  const [targetLocation, setTargetLocation] = useState<string>("");
+  const [balancePoint, setBalancePoint] = useState<number>(0);
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [center, setCenter] = useState({ lat: 33.450701, lng: 126.570667 });
+  const [position, setPosition] = useState(null);
+
+  const isFormValid = useMemo(() => {
+    return (
+      goalName.trim().length >= 2 &&
+      !!startDate &&
+      !!endDate &&
+      selectedDays.length > 0
+    );
+  }, [goalName, startDate, endDate, selectedDays]);
+
+  const fetchBalancePoint = useCallback(async (): Promise<void> => {
+    if (!userId) return;
+    try {
+      const { totalPoints } = await getPoint({ userId });
+      setBalancePoint(totalPoints);
+    } catch (error) {
+      console.error("포인트 불러오기 실패:", error);
+    }
+  }, [userId]);
+
+  const updateCenterWhenMapMoved = useMemo(
+    () =>
+      debounce((map: kakao.maps.Map) => {
+        setCenter({
+          lat: map.getCenter().getLat(),
+          lng: map.getCenter().getLng()
+        });
+      }, 500),
+    []
+  );
+
+  useEffect(() => {
+    if (location.state) {
+      const { position, placeName } = location.state;
+      setTargetLocation(placeName);
+      setPosition(position);
+      setCenter(position);
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        ({ coords: { latitude, longitude } }) => {
+          setCenter({ lat: latitude, lng: longitude });
+        }
+      );
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    if (!userId) return;
+    fetchBalancePoint();
+  }, [fetchBalancePoint, userId]);
+
+  useEffect(() => {
+    if (!goalId) return;
+
+    const fetchGoalData = async (): Promise<void> => {
+      try {
+        const { goal } = await getTempGoal({ goalId });
+        const { name = "", startDate, endDate, locationName = "" } = goal; // ✅ goal 내부 값도 구조 분해!
+
+        setGoalName(name);
+        setStartDate(startDate ? new Date(startDate) : null);
+        setEndDate(endDate ? new Date(endDate) : null);
+        setTargetLocation(locationName);
+      } catch (error) {
+        console.error("임시 목표 데이터 불러오기 실패:", error);
+      }
+    };
+
+    fetchGoalData();
+  }, [goalId]);
+
+  const handleDateClick = (mode: "start" | "end"): void => {
+    navigate(paths.goal.date.path, {
+      state: {
+        mode,
+        goalName,
+        ...(mode === "end" && { startDate })
+      }
+    });
+  };
+
+  const handleSaveWithStatus = async (status: GoalStatus): Promise<void> => {
+    if (!userId) return;
+
+    if (status === GoalStatus.ACTIVE) {
+      if (!goalName.trim() || !startDate || !endDate || !targetLocation) {
+        toast.error("모든 필수 항목을 입력해주세요.");
+        return;
+      }
+    }
+
+    const goalData: GoalData = {
+      goal: {
+        userId,
+        name: goalName,
+        startDate: startDate ? startDate.toISOString() : null,
+        endDate: endDate ? endDate.toISOString() : null,
+        locationName: targetLocation
+      },
+      status,
+      days: selectedDays.map((day) => DAY_MAPPING[day])
+    };
+
+    try {
+      status === GoalStatus.DRAFT
+        ? await postCreateTempSaveGoal({ data: goalData })
+        : await postCreateGoal({ data: goalData });
+      navigate(paths.goal.root.path);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const navigatePositionSearch = () => navigate(paths.map.search.getHref());
+
+  return (
+    <div className="mx-auto h-[calc(100vh-130px)] w-[375px] overflow-auto bg-white p-4">
+      <div className="mt-4 h-[86px] w-[335px]">
+        <label className="block text-[14px] font-medium leading-[16px] tracking-[-2.5%] text-[#1A1A1A]">
+          목표 명
+        </label>
+        <input
+          type="text"
+          className="mt-[6px] h-[44px] w-[335px] rounded-[8px] bg-gray-50 p-[14px_10px] placeholder:text-[14px] placeholder:font-medium placeholder:leading-[16px] placeholder:tracking-[-2.5%] placeholder:text-[#A0A0A0]"
+          value={goalName}
+          onChange={(e) => setGoalName(e.target.value)}
+          placeholder="최소 2자이상~20자까지 입력해 주세요."
+        />
+      </div>
+      <DatePicker
+        startDate={startDate}
+        endDate={endDate}
+        onDateClick={handleDateClick}
+      />
+
+      <DayPicker
+        selectedDays={selectedDays}
+        onToggleDay={(day) =>
+          setSelectedDays((prev) =>
+            prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+          )
+        }
+        onSelectAllDays={() =>
+          setSelectedDays(
+            selectedDays.length === 7 ? [] : Object.keys(DAY_MAPPING)
+          )
+        }
+      />
+
+      <div className="mt-[20px] flex h-[66px] w-[335px] flex-col justify-between gap-[6px]">
+        <label className="block text-[14px] font-medium leading-[16px] tracking-[-2.5%]">
+          장소 설정
+        </label>
+        <input
+          type="text"
+          value={targetLocation}
+          className="h-[44px] w-full cursor-pointer rounded-[8px] border bg-gray-50 p-[14px_10px] text-sm text-gray-400"
+          placeholder="장소를 선택해주세요"
+          readOnly
+          onClick={navigatePositionSearch}
+        />
+      </div>
+      <div
+        className="mt-[10px] flex h-[140px] w-[335px] items-center justify-center bg-gray-50 text-gray-600"
+        onClick={navigatePositionSearch}
+      >
+        <Map
+          className="size-full"
+          center={center}
+          level={5}
+          onCenterChanged={updateCenterWhenMapMoved}
+        >
+          {position && (
+            <MapMarker
+              image={{ src: containTargetUrl, size: { width: 24, height: 24 } }}
+              position={position}
+            />
+          )}
+        </Map>
+      </div>
+      <BalanceInfo balancePoint={balancePoint} />
+      <SaveButtons
+        onTempSave={() => handleSaveWithStatus(GoalStatus.DRAFT)}
+        onSave={() => handleSaveWithStatus(GoalStatus.ACTIVE)}
+        isFormValid={isFormValid}
+      />
+    </div>
+  );
+};
+
+export default CreateGoal;
