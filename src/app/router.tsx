@@ -10,6 +10,8 @@ import {
   ErrorBoundary as RootErrorBoundary
 } from "@/app/routes/index.tsx";
 import PrivateRoute from "@/app/routes/PrivateRoute";
+import AccountView from "@/app/routes/user/account";
+import MyPageView from "@/app/routes/user/my-page";
 import GoogleCallback from "@/features/auth/routes/GoogleCallback";
 import DatePickView from "@/features/goal/components/create-goal/date-pick";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
@@ -93,6 +95,14 @@ const createAppRouter = (queryClient: QueryClient) =>
     {
       path: paths.auth.login.path,
       element: <LoginView />
+    },
+    {
+      path: paths.user.myPage.path,
+      element: <MyPageView />
+    },
+    {
+      path: paths.user.account.path,
+      element: <AccountView />
     },
     {
       path: "*",
