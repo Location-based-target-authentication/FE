@@ -154,7 +154,6 @@ axios.interceptors.response.use(
   responseInterceptor.onRejected
 );
 
-//
 const curringMethod =
   (method: Method) =>
   async ({
