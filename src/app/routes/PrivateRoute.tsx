@@ -8,7 +8,6 @@ import { paths } from "@/config/paths";
 const PrivateRoute = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore((state) => state);
-  console.log("로그인 상태 확인:", isAuthenticated);
 
   useEffect(() => {
     if (!isAuthenticated) {

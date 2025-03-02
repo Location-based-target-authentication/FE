@@ -21,7 +21,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "jest --coverage=false --watchAll=false",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "lint-staged": {
     "**/*.{ts,tsx,mdx}": [
@@ -41,6 +41,7 @@
     "es-toolkit": "^1.31.0",
     "lucide-react": "^0.473.0",
     "react": "^18.3.1",
+    "react-calendar": "^5.1.0",
     "react-dom": "^18.3.1",
     "react-error-boundary": "^5.0.0",
     "react-helmet-async": "^2.0.5",

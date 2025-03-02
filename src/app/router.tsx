@@ -48,6 +48,18 @@ const createAppRouter = (queryClient: QueryClient) =>
           ErrorBoundary: RootErrorBoundary
         },
         {
+          path: paths.auth.kakaoCallback.path,
+          element: <KakaoCallback />
+        },
+        {
+          path: paths.auth.googleCallback.path,
+          element: <GoogleCallback />
+        },
+        {
+          path: paths.auth.login.path,
+          element: <LoginView />
+        },
+        {
           path: paths.map.search.path,
           lazy: () => import("./routes/map/search").then(convert(queryClient))
         },
@@ -73,10 +85,6 @@ const createAppRouter = (queryClient: QueryClient) =>
           lazy: () => import("./routes/goal").then(convert(queryClient))
         },
         {
-          path: "*",
-          lazy: () => import("./routes/not-found").then(convert(queryClient))
-        },
-        {
           path: paths.auth.agreement.path,
           element: <AgreementView />
         },
@@ -91,32 +99,20 @@ const createAppRouter = (queryClient: QueryClient) =>
         {
           path: paths.goal.date.path,
           element: <DatePickView />
+        },
+        {
+          path: paths.user.myPage.path,
+          element: <MyPageView />
+        },
+        {
+          path: paths.user.account.path,
+          element: <AccountView />
+        },
+        {
+          path: "*",
+          lazy: () => import("./routes/not-found").then(convert(queryClient))
         }
       ]
-    },
-    {
-      path: paths.auth.kakaoCallback.path,
-      element: <KakaoCallback />
-    },
-    {
-      path: paths.auth.googleCallback.path,
-      element: <GoogleCallback />
-    },
-    {
-      path: paths.auth.login.path,
-      element: <LoginView />
-    },
-    {
-      path: paths.user.myPage.path,
-      element: <MyPageView />
-    },
-    {
-      path: paths.user.account.path,
-      element: <AccountView />
-    },
-    {
-      path: "*",
-      lazy: () => import("./routes/not-found").then(convert(queryClient))
     }
   ]);
 

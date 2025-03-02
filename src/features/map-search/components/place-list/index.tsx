@@ -77,7 +77,7 @@ function PlaceList({
                     </div>
                   </div>
                 </div>
-                <SettingPopover lat={lat} lng={lng} />
+                <SettingPopover lat={lat} lng={lng} placeName={placeName} />
               </div>
             );
           }
