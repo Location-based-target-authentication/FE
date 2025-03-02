@@ -17,3 +17,11 @@ export function postRefreshAccessToken({
 }) {
   return POST({ url: `${BASE_PATH}/refresh`, data });
 }
+
+export function postPhoneNumber({ data }: { data: { phoneNumber: string } }) {
+  return POST({ url: `${BASE_PATH}/user/phone`, data });
+}
+
+export function postTermsAgree({ data }: { data: { userId: number } }) {
+  return POST({ url: `/terms/agree`, data });
+}

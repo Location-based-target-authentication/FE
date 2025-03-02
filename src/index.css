@@ -64,6 +64,7 @@
     @apply bg-background text-foreground;
     max-width: 375px;
     margin: 0 auto;
+    font-family: "Pretendard", sans-serif;
   }
   .content-height {
     @apply h-[calc(100vh-60px)] overflow-auto;
