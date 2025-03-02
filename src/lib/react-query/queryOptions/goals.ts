@@ -73,7 +73,7 @@ generate_qo_getGoalsCheck.DELETE_KEY = (userId) => [GOALS_CHECK, userId];
 interface UseQueryGoalsCompleteOptions
   extends UseQueryOptions<CompleteGoal[], AxiosError, CompleteGoal[]> {}
 type GenerateQoGetGoalsComplete = (
-  userId: string
+  userId: number
 ) => UseQueryGoalsCompleteOptions;
 export const generate_qo_getGoalsComplete = ((userId) => {
   const options: UseQueryGoalsCompleteOptions = {
@@ -83,6 +83,6 @@ export const generate_qo_getGoalsComplete = ((userId) => {
   };
 
   return options;
-}) as GenerateQoGetGoalsComplete & { DELETE_KEY: (userId: string) => string[] };
+}) as GenerateQoGetGoalsComplete & { DELETE_KEY: (userId: number) => string[] };
 
 generate_qo_getGoalsComplete.DELETE_KEY = (userId) => [GOALS_COMPLETE(userId)];

@@ -15,7 +15,7 @@ interface UseMutationRewardsOptions
     RewardData,
     unknown
   > {}
-type GenerateQoPostRewards = (userId: string) => UseMutationRewardsOptions;
+type GenerateQoPostRewards = (userId: number) => UseMutationRewardsOptions;
 export const generate_qo_postRewards: GenerateQoPostRewards = (userId) => {
   return {
     mutationFn: (data: RewardData) =>

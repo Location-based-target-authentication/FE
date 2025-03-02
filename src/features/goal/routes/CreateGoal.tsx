@@ -51,7 +51,9 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   const [balancePoint, setBalancePoint] = useState<number>(0);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [center, setCenter] = useState({ lat: 33.450701, lng: 126.570667 });
-  const [position, setPosition] = useState(null);
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
 
   const isFormValid = useMemo(() => {
     return (
@@ -164,8 +166,8 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
       endDate: endDate ? format(endDate, "yyyy-MM-dd") : null,
       locationName: targetLocation,
       status,
-      latitude: position?.lat,
-      longitude: position?.lng,
+      latitude: position?.lat ?? 0,
+      longitude: position?.lng ?? 0,
       selectedDays: selectedDays.map((day) => DAY_MAPPING[day])
     };
 

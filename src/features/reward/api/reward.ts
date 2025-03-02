@@ -12,7 +12,7 @@ export function postRewards({
   data
 }: RoDataAndPathParamsType<
   { points: number; pointType: string; description: string },
-  { userId: string }
+  { userId: number }
 >): R<{
   point: number;
   status: string;
@@ -22,6 +22,6 @@ export function postRewards({
 
 export function getPoint({
   pathParams: { userId }
-}: RoOnlyPathParamsType<{ userId: string }>): R<Point> {
+}: RoOnlyPathParamsType<{ userId: number }>): R<Point> {
   return GET({ url: POINTS(userId) });
 }

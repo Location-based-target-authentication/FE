@@ -15,7 +15,7 @@ export function getGoalsCheck({
 
 export function getGoalsComplete({
   pathParams: { userId }
-}: RoOnlyPathParamsType<{ userId: string }>): R<CompleteGoal[]> {
+}: RoOnlyPathParamsType<{ userId: number }>): R<CompleteGoal[]> {
   return GET({ url: GOALS_COMPLETE(userId) });
 }
 

@@ -2,7 +2,8 @@ import { generatePathByBase, genreateBasePath } from "@/lib/axios/utils";
 
 export const BASE_PATH = genreateBasePath("points", "v1");
 
-export const POINTS = (userId: string) => generatePathByBase(BASE_PATH, userId);
+export const POINTS = (userId: number) =>
+  generatePathByBase(BASE_PATH, String(userId));
 
-export const POINT_DEDUC = (userId: string) =>
-  generatePathByBase(BASE_PATH, userId, "deduc");
+export const POINT_DEDUC = (userId: number) =>
+  generatePathByBase(BASE_PATH, String(userId), "deduc");
