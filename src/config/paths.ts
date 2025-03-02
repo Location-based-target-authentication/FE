@@ -28,12 +28,17 @@ export const paths = {
   },
 
   goal: {
-    path: "/goal",
-    getHref: () => "/goal",
-
+    root: {
+      path: "/goal",
+      getHref: () => "/goal"
+    },
     create: {
       path: "/goal/create",
       getHref: () => "/goal/create"
+    },
+    date: {
+      path: "/goal/date",
+      getHref: () => "/goal/date"
     }
   },
 
@@ -57,6 +62,17 @@ export const paths = {
     phoneNumber: {
       path: "/auth/phoneNumber",
       getHref: () => "/auth/phoneNumber"
+    }
+  },
+
+  user: {
+    myPage: {
+      path: "/user/my-page",
+      getHref: () => "/user/my-page"
+    },
+    account: {
+      path: "/user/account",
+      getHref: () => "/user/account"
     }
   }
 } as const;
