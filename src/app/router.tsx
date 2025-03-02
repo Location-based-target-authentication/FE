@@ -2,8 +2,10 @@ import Layout from "@/components/layouts/layout";
 
 import { useMemo } from "react";
 
+import AgreementView from "@/app/routes/auth/agreement";
 import KakaoCallback from "@/app/routes/auth/kakao-callback";
 import LoginView from "@/app/routes/auth/login";
+import PhoneNumberInputView from "@/app/routes/auth/phone-number";
 import CreateGoalView from "@/app/routes/goal/create-goal";
 import {
   default as AppRoot,
@@ -81,6 +83,14 @@ const createAppRouter = (queryClient: QueryClient) =>
         {
           path: paths.goal.root.path,
           lazy: () => import("./routes/goal").then(convert(queryClient))
+        },
+        {
+          path: paths.auth.agreement.path,
+          element: <AgreementView />
+        },
+        {
+          path: paths.auth.phoneNumber.path,
+          element: <PhoneNumberInputView />
         },
         {
           path: paths.goal.create.path,
