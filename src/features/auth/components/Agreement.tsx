@@ -65,6 +65,8 @@ const Agreement = () => {
   };
 
   const handleSubmit = async () => {
+    if (!userId) return;
+
     try {
       const response = await postTermsAgree({
         data: { userId }
