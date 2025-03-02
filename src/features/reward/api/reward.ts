@@ -11,7 +11,7 @@ export function postRewards({
 }
 
 export function getPoint({
-  pathParams: { socialId }
-}: RoOnlyPathParamsType<{ socialId: string }>): R<Point> {
-  return GET({ url: POINTS(socialId) });
+  pathParams: { userId }
+}: RoOnlyPathParamsType<{ userId: string }>): R<Point> {
+  return GET({ url: POINTS(userId) });
 }
