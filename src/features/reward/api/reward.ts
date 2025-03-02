@@ -4,11 +4,14 @@ import type { RoDataAndPathParamsType } from "@/lib/axios/utils";
 import { POINT_DEDUC } from "./path";
 
 export function postRewards({
-  pathParams: { socialId },
+  pathParams: { userId },
   data
-}: RoDataAndPathParamsType<{ pointType: string }, { socialId: number }>): R<{
+}: RoDataAndPathParamsType<
+  { points: number; pointType: string; description: string },
+  { userId: number }
+>): R<{
   point: number;
   status: string;
 }> {
-  return POST({ url: POINT_DEDUC(socialId), data });
+  return POST({ url: POINT_DEDUC(userId), data });
 }

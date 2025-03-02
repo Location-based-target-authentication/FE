@@ -2,16 +2,23 @@ import { postRewards } from "@/features/reward/api/reward";
 import { UseMutationOptions } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
+interface RewardData {
+  points: number;
+  pointType: string;
+  description: string;
+}
+
 interface UseMutationRewardsOptions
   extends UseMutationOptions<
     { point: number; status: string },
     AxiosError,
-    void,
+    RewardData,
     unknown
   > {}
-type GenerateQoPostRewards = (id: number) => UseMutationRewardsOptions;
-export const generate_qo_postRewards: GenerateQoPostRewards = (socialId) => {
+type GenerateQoPostRewards = (userId: number) => UseMutationRewardsOptions;
+export const generate_qo_postRewards: GenerateQoPostRewards = (userId) => {
   return {
-    mutationFn: () => postRewards({ pathParams: { socialId } })
+    mutationFn: (data: RewardData) =>
+      postRewards({ pathParams: { userId }, data })
   };
 };

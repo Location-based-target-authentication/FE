@@ -9,18 +9,22 @@ export const generateCoupons = (point: number, isPending: boolean) => {
     {
       id: 1,
       name: "스타벅스 쿠폰(5,000p 소모)",
-      cost: 5000,
+      points: 5000,
       image: coffeeCouponUrl,
       isDisabled: point < 5000,
-      className: `${baseClass} ${point >= 5000 && !isPending ? "bg-green-500" : "cursor-not-allowed bg-gray-400"}`
+      className: `${baseClass} ${point >= 5000 && !isPending ? "bg-green-500" : "cursor-not-allowed bg-gray-400"}`,
+      pointType: "GIFT_STARBUCKS",
+      description: "스타벅스 기프티콘 지급"
     },
     {
       id: 2,
       name: "편의점 1만원 쿠폰(10,000p 소모)",
-      cost: 10000,
+      points: 10000,
       image: convenienceStoreCouponUrl,
       isDisabled: point < 10000,
-      className: `${baseClass} ${point >= 10000 && !isPending ? "bg-green-500" : "cursor-not-allowed bg-gray-400"}`
+      className: `${baseClass} ${point >= 10000 && !isPending ? "bg-green-500" : "cursor-not-allowed bg-gray-400"}`,
+      pointType: "GIFT_COUPON",
+      description: "CU 기프티콘 지급"
     }
   ];
 };
