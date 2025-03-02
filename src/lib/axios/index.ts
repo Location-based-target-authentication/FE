@@ -62,7 +62,7 @@ export const handleTokenExpiration = async (
       `Bearer ${response.data.accessToken}`;
 
     const { totalPoints } = await getPoint({
-      pathParams: { socialId: response.data.socialId }
+      pathParams: { userId: response.data.userId }
     });
     useUserStore.setState({ point: totalPoints });
 
