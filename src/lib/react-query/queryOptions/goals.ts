@@ -14,13 +14,22 @@ type GenerateQoGetGoals = (goalId: number) => UseQueryGoalsOptions;
 export const generate_qo_getGoals: GenerateQoGetGoals = (goalId) => {
   return {
     queryKey: [GOALS_DETAIL(goalId)],
-    queryFn: () => getGoals({ pathParams: { goalId } }).then((data) => data),
+    queryFn: () =>
+      getGoals({ pathParams: { goalId } }).then((data) => {
+        console.log(data, "목표 인증 데이터");
+        return data;
+      }),
     staleTime: simpleGenerateSecond([[10, "s"]])
   };
 };
 
 interface UseMutationGoalsAchieveOptions
-  extends UseMutationOptions<{ point: number }, AxiosError, void, unknown> {}
+  extends UseMutationOptions<
+    { totalPoints: number; bonusPoints: number },
+    AxiosError,
+    void,
+    unknown
+  > {}
 type GenerateQoPostGoalsAchieve = ({
   goalId,
   userId,
@@ -49,11 +58,11 @@ export const generate_qo_postGoalsAchieve: GenerateQoPostGoalsAchieve = ({
 
 interface UseQueryGoalsCheckOptions
   extends UseQueryOptions<ProgressGoal[], AxiosError, ProgressGoal[]> {}
-type GenerateQoGetGoalsCheck = (userId: string) => UseQueryGoalsCheckOptions;
+type GenerateQoGetGoalsCheck = (userId: number) => UseQueryGoalsCheckOptions;
 export const generate_qo_getGoalsCheck = ((userId) => {
   const options: UseQueryGoalsCheckOptions = {
     queryKey: [GOALS_CHECK, userId],
-    queryFn: () => getGoalsCheck({ data: { userId } }).then((data) => data)
+    queryFn: () => getGoalsCheck({ query: { userId } }).then((data) => data)
   };
 
   return options;

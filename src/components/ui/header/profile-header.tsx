@@ -37,13 +37,14 @@ function ProfileHeader() {
       if (keyword === "coffee") {
         return (
           <>
-            커피쿠폰까지 <span className="text-green-300">{point}p</span>
+            커피쿠폰까지 <span className="text-green-300">{5000 - point}p</span>
           </>
         );
       } else if (keyword === "convenienceStore") {
         return (
           <>
-            편의점쿠폰까지 <span className="text-green-300">{point}p</span>
+            편의점쿠폰까지{" "}
+            <span className="text-green-300">{10000 - point}p</span>
           </>
         );
       } else {

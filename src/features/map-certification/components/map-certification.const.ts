@@ -1,6 +1,6 @@
 export const generateInitialGoalsData = () => ({
   id: 0,
-  goalName: "",
+  name: "",
   startDate: "",
   endDate: "",
   latitude: 33.450701,

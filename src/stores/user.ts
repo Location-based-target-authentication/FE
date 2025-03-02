@@ -3,8 +3,8 @@ import { create } from "zustand";
 interface UserState {
   userName: string;
   point: number;
-  userId: string;
-  setUserId: (userId: string) => void;
+  userId: number;
+  setUserId: (userId: number) => void;
   setPoint: (point: number) => void;
   addPoint: (addPoint: number) => void;
   setUserName: (userName: string) => void;
@@ -13,7 +13,7 @@ interface UserState {
 export const useUserStore = create<UserState>((set) => ({
   userName: "",
   point: 0,
-  userId: "0",
+  userId: 0,
   setUserId: (userId) => set({ userId }),
   setPoint: (point) => set({ point }),
   addPoint: (addPoint: number) =>

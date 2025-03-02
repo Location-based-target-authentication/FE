@@ -100,7 +100,7 @@ const AccountPage: React.FC = () => {
             휴대폰 번호
           </p>
           <p className="mt-[16px] h-[14px] w-[87px] whitespace-nowrap text-[14px] font-normal leading-[16px] -tracking-wide text-black">
-            {userInfo?.phone}
+            {userInfo?.phoneNumber}
           </p>
         </div>
       </div>

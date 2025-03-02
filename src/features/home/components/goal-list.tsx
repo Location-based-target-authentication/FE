@@ -21,7 +21,7 @@ function GoalList({ goalCount, transformGoals }: GoalListProps) {
       {map(
         transformGoals,
         ({
-          id,
+          goalId,
           title,
           goalName,
           lastRowText,
@@ -31,18 +31,18 @@ function GoalList({ goalCount, transformGoals }: GoalListProps) {
           redirectionCallback
         }) => (
           <div
-            key={id}
+            key={goalId}
             className={`mb-4 rounded-2xl bg-white p-4 shadow-md ${achievedToday ? "cursor-not-allowed" : "cursor-pointer"}`}
           >
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-3">
                 <p
-                  className={`text-xs font-semibold ${achievedToday || status === "DRAF" ? "text-green-200" : "text-green-500"}`}
+                  className={`text-xs font-semibold ${achievedToday || status === "DRAFT" ? "text-green-200" : "text-green-500"}`}
                 >
                   {title}
                 </p>
                 <p
-                  className={`${achievedToday || status === "DRAF" ? "text-gray-500" : "text-black"}`}
+                  className={`${achievedToday || status === "DRAFT" ? "text-gray-500" : "text-black"}`}
                 >
                   {goalName}
                 </p>

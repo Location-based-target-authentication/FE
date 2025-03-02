@@ -1,7 +1,7 @@
-export type STATUS = "DRAF" | "ACTIVE" | "COMPLETE";
+export type STATUS = "DRAFT" | "ACTIVE" | "COMPLETE";
 
 export interface Goals {
-  id: number;
+  goalId: number;
   goalName: string;
   startDate: string;
   endDate: string;

@@ -4,13 +4,13 @@ export enum GoalStatus {
 }
 
 export type GoalData = {
-  goal: {
-    userId: number;
-    name: string;
-    startDate: string | null;
-    endDate: string | null;
-    locationName: string;
-  };
+  userId: number;
+  name: string;
+  startDate: string | null;
+  endDate: string | null;
+  latitude: number;
+  longitude: number;
+  locationName: string;
   status: GoalStatus;
-  days: string[];
+  selectedDays: string[];
 };

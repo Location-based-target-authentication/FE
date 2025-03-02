@@ -6,6 +6,6 @@ import { HOME_PATH } from "./paths";
 
 export function getGoals({
   pathParams: { userId }
-}: RoOnlyPathParamsType<{ userId: string }>): R<Goals[]> {
+}: RoOnlyPathParamsType<{ userId: number }>): R<Goals[]> {
   return GET({ url: HOME_PATH(userId) });
 }

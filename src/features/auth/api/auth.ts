@@ -22,6 +22,6 @@ export function postPhoneNumber({ data }: { data: { phoneNumber: string } }) {
   return POST({ url: `${BASE_PATH}/user/phone`, data });
 }
 
-export function postTermsAgree({ data }: { data: { userId: number } }) {
-  return POST({ url: `/terms/agree`, data });
+export function postTermsAgree(pathParam: { userId: number }) {
+  return POST({ url: `/api/v1/terms/agree/${pathParam.userId}` });
 }

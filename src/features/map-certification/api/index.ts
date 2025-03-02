@@ -19,6 +19,6 @@ export function postGoalsAchieve({
 }: RoDataAndPathParamsType<
   { userId: number; latitude: number; longitude: number },
   { goalId: number }
->): R<{ point: number }> {
+>): R<{ totalPoints: number; bonusPoints: number }> {
   return POST({ url: GOALS_ACHIEVE(goalId), data });
 }

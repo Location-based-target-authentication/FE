@@ -87,14 +87,23 @@ const requestInterceptor: Interceptor<InternalAxiosRequestConfig> = {
 
 const responseInterceptor: Interceptor<AxiosResponse> = {
   onFulfilled: (config) => {
-    if (
-      config.data &&
-      config.headers["content-type"]?.toString().includes("application/json")
-    ) {
-      try {
-        config.data = JSON.parse(config.data);
-      } catch {
-        throw new Error("Axios Parse Error");
+    const isJson = config.headers["content-type"]?.includes("application/json");
+
+    if (isJson) {
+      if (
+        config.data &&
+        config.headers["content-type"]?.toString().includes("application/json")
+      ) {
+        try {
+          if (config.data === "목표 생성 성공") return config;
+          if (typeof config.data === "string") {
+            config.data = JSON.parse(config.data);
+          } else if (typeof config.data !== "object") {
+            throw new Error("Invalid JSON response");
+          }
+        } catch {
+          throw new Error("Axios Parse Error");
+        }
       }
     }
 

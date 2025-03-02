@@ -45,22 +45,22 @@ const HomePage = () => {
     () =>
       map(goals, (item) => {
         const lastRowText =
-          item.status === "DRAF"
+          item.status === "DRAFT"
             ? "목표등록을 마무리하고 바로 시작해보세요!"
             : `${generatDdateText(item.startDate, item.endDate)} ${generateDayText(item.dayOfWeek)}`;
-        const buttonText = `${item.status === "DRAF" ? "완성하기" : "인증하기"} >`;
+        const buttonText = `${item.status === "DRAFT" ? "완성하기" : "인증하기"} >`;
         const redirectionCallback = () => {
           const url =
-            item.status === "DRAF"
+            item.status === "DRAFT"
               ? paths.goal.create.getHref()
               : paths.map.certification.getHref();
 
-          navigate(url, { state: { goalId: item.id, userId } });
+          navigate(url, { state: { goalId: item.goalId, userId } });
         };
 
         return {
           ...item,
-          title: `${item.status === "DRAF" ? "임시저장" : "진행중"} 목표`,
+          title: `${item.status === "DRAFT" ? "임시저장" : "진행중"} 목표`,
           name: item.goalName,
           lastRowText,
           buttonText,

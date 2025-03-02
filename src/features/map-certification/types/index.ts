@@ -1,7 +1,7 @@
 export type STATUS = "DRAF" | "ACTIVE" | "COMPLETE";
 
 export interface GoalDetail {
-  goalName: string;
+  name: string;
   startDate: string;
   endDate: string;
   latitude: number;

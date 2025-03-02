@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 
 interface UseQueryGoalsOptions
   extends UseQueryOptions<Goals[], AxiosError, Goals[]> {}
-type GenerateQoGetGoals = (userId: string) => UseQueryGoalsOptions;
+type GenerateQoGetGoals = (userId: number) => UseQueryGoalsOptions;
 
 export const generate_qo_getGoals = ((userId) => {
   const options: UseQueryGoalsOptions = {
@@ -18,6 +18,6 @@ export const generate_qo_getGoals = ((userId) => {
   };
 
   return options;
-}) as GenerateQoGetGoals & { DELETE_KEY: (userId: string) => string[] };
+}) as GenerateQoGetGoals & { DELETE_KEY: (userId: number) => [string, number] };
 
 generate_qo_getGoals.DELETE_KEY = (userId) => [BASE_PATH, userId];

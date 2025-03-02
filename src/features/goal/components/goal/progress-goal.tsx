@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import { DAYS_STRING_MAP } from "@/features/map-certification/components/map-certification.const.ts";
 import { useQuery } from "@tanstack/react-query";
 import { join, map, slice } from "es-toolkit/compat";
 
@@ -37,6 +38,7 @@ function ProgressGoal() {
   const transformedProgressGoals = useMemo(
     () =>
       map(progressGoals, (goal, index) => {
+        console.log(progressGoals);
         const transFormViewDays = map(goal.calender, (viewDay) => {
           const isCertificationInfo = certificationInfoMaps[index].has(viewDay);
 
@@ -57,7 +59,9 @@ function ProgressGoal() {
             : generateNonCertificationItem({ viewDay, day, isToday });
         });
         const dateString = `${generateDateString(goal.startDate)} ~ ${generateDateString(goal.endDate)}`;
-        const daysArr = goal.dayOfWeek.split(",");
+        const daysArr = map(goal.dayOfWeek.split(","), (day) =>
+          DAYS_STRING_MAP.get(day)
+        );
         const days = daysArr.length === 7 ? "매일" : join(daysArr, ",");
         const lastWeekDate = slice(transFormViewDays, 0, 7);
         const thiwWeekDate = slice(transFormViewDays, -7);

@@ -5,7 +5,7 @@ export enum SocialType {
 
 export type UserInfo = {
   name: string;
-  phone: string;
+  phoneNumber: string;
   email?: string;
   socialType: SocialType;
   points: number;

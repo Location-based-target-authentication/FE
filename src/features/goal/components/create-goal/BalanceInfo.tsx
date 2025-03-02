@@ -15,13 +15,13 @@ const BalanceInfo: React.FC<BalanceInfoProps> = ({ balancePoint }) => (
         </span>
       </span>
     </div>
-    <div className="ml-auto mt-0 flex items-center text-gray-400">
+    <div className="ml-auto mt-0 flex items-center gap-5 text-gray-400">
       <span className="text-[12px] font-normal leading-[14px] tracking-[-2.5%]">
         보유 포인트
       </span>
-      <div className="flex items-end gap-1">
+      <div className="flex items-end gap-5">
         <span className="w-[30px] text-right text-[12px] font-semibold leading-[14px] tracking-[-2.5%]">
-          {balancePoint}
+          {balancePoint.toLocaleString()}
         </span>
         <span className="w-[6px] text-right text-[10px] font-normal leading-[12px] tracking-[-2.5%]">
           p

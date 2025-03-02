@@ -42,6 +42,6 @@ export const generateIcon = (
 
 export const generateProgressPercent = (point: number) => {
   if (point <= 5000) return (point / 5000) * 100;
-  else if (point > 5000 && point < 10000) return (point / 5000) * 100;
+  else if (point > 5000 && point < 10000) return (point / 10000) * 100;
   else return 100;
 };

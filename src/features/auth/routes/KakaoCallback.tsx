@@ -30,16 +30,19 @@ const KakaoCallback = (): JSX.Element | null => {
           throw new Error("카카오 인증에 실패했습니다.");
         }
 
-        const { accessToken, refreshToken, username, userId } = response.data;
+        const { accessToken, refreshToken, username, id } = response.data;
 
-        setTokens(accessToken, refreshToken, userId);
+        console.log(response.data);
+
+        setTokens(accessToken, refreshToken, id);
         setUserName(username);
-        setUserId(userId);
+        setUserId(id);
 
-        const { totalPoints } = await getPoint({ pathParams: { userId } });
+        const { totalPoints } = await getPoint({ pathParams: { userId: id } });
         setPoint(totalPoints);
 
         navigate(paths.home.path);
+        // navigate(paths.auth.agreement.path);
       } catch (error) {
         console.error(error);
         setIsError(true);

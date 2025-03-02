@@ -12,7 +12,8 @@ export const NOT_VISIBLE_NAVBAR_PAGES = [
   paths.auth.agreement.getHref(),
   paths.auth.phoneNumber.getHref(),
   paths.map.search.getHref(),
-  paths.map.certification.getHref()
+  paths.map.certification.getHref(),
+  paths.auth.login.getHref()
 ];
 
 const isEqualPath = (locationPath: string, path: string) => {
@@ -38,7 +39,7 @@ export const generateNavbarInfo = (locationPath: string) => [
     label: "내정보",
     activeIcon: User,
     notActiveIcon: UserDisable,
-    to: "/profile",
-    isActvie: isEqualPath(locationPath, "/profile")
+    to: "/user/my-page",
+    isActvie: isEqualPath(locationPath, "/user/my-page")
   }
 ];

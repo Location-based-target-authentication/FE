@@ -40,14 +40,14 @@ function MapCertification() {
     useUserLocation();
   const {
     data: {
-      goalName: name,
+      name,
       startDate,
       endDate,
       dayOfWeek: days,
       latitude: serverLatitude,
       longitude: serverLongitude
     } = generateInitialGoalsData()
-  } = useQuery(generate_qo_getGoals(userId));
+  } = useQuery(generate_qo_getGoals(goalId));
 
   const { mutate, isPending } = useMutation({
     ...generate_qo_postGoalsAchieve({
@@ -67,15 +67,16 @@ function MapCertification() {
         client.invalidateQueries({ queryKey: homeKey })
       ]);
 
-      addPoint(data.point);
+      addPoint(data.totalPoints);
       navigate("/map/certification/success", {
-        state: { name, point: data.point }
+        state: { name, point: data.bonusPoints }
       });
     }
   });
 
   // useMemos
   const isContainRadar = useMemo(() => {
+    console.log(position.lat, position.lng, serverLatitude, serverLongitude);
     if (!serverLatitude || !serverLongitude) return false;
 
     const distance =
