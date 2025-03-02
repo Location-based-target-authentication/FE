@@ -8,6 +8,37 @@ export const paths = {
     search: {
       path: "/map/search",
       getHref: () => "/map/search"
+    },
+    certification: {
+      path: "/map/certification",
+      getHref: () => "/map/certification",
+
+      sucess: {
+        path: "/map/certification/success",
+        getHref: () => "/map/certification/success"
+      }
+    }
+  },
+
+  profile: {
+    reward: {
+      path: "/profile/reward",
+      getHref: () => "/profile/reward"
+    }
+  },
+
+  goal: {
+    root: {
+      path: "/goal",
+      getHref: () => "/goal"
+    },
+    create: {
+      path: "/goal/create",
+      getHref: () => "/goal/create"
+    },
+    date: {
+      path: "/goal/date",
+      getHref: () => "/goal/date"
     }
   },
 
@@ -26,19 +57,14 @@ export const paths = {
     }
   },
 
-  goal: {
-    list: {
-      path: "/goal/list",
-      getHref: () => "/goal/list"
+  user: {
+    myPage: {
+      path: "/user/my-page",
+      getHref: () => "/user/my-page"
     },
-
-    goal: {
-      path: "/goal",
-      getHref: () => "/goal"
-    },
-    date: {
-      path: "/goal/date",
-      getHref: () => "/goal/date"
+    account: {
+      path: "/user/account",
+      getHref: () => "/user/account"
     }
   }
 } as const;

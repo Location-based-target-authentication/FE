@@ -2,35 +2,29 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import containTargetUrl from "@/asset/map/contain-target.svg?url";
 import {
-  createGoal,
-  createTempSaveGoal,
-  getTempGoal
+  getTempGoal,
+  postCreateGoal,
+  postCreateTempSaveGoal
 } from "@/features/goal/api/goal";
 import BalanceInfo from "@/features/goal/components/create-goal/BalanceInfo";
 import DatePicker from "@/features/goal/components/create-goal/DatePicker";
 import DayPicker from "@/features/goal/components/create-goal/DayPicker";
+import { DAY_MAPPING } from "@/features/goal/components/create-goal/goal.constants";
 import SaveButtons from "@/features/goal/components/create-goal/SaveButtons";
 import { GoalData, GoalStatus } from "@/features/goal/types/goal-create";
-import { getPoint } from "@/features/point/\bapi/point";
+import { getPoint } from "@/features/point/api/point";
 import { debounce } from "es-toolkit";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { useLocation, useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
+import { Nullable } from "@/types/common";
 import { useAuthStore } from "@/stores/auth-store";
 import { paths } from "@/config/paths";
 
 interface CreateGoalProps {
   goalId?: number;
 }
-const dayMapping: Record<string, string> = {
-  일: "SUN",
-  월: "MON",
-  화: "TUE",
-  수: "WED",
-  목: "THU",
-  금: "FRI",
-  토: "SAT"
-};
 
 const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   const location = useLocation();
@@ -41,32 +35,36 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     location.state?.goalName || ""
   );
 
-  const [startDate, setStartDate] = useState<Date | null>(
-    location.state?.startDate || null
+  const [startDate, setStartDate] = useState<Nullable<Date>>(
+    location.state?.startDate ? new Date(location.state.startDate) : null
   );
-  const [endDate, setEndDate] = useState<Date | null>(
-    location.state?.endDate || null
+  const [endDate, setEndDate] = useState<Nullable<Date>>(
+    location.state?.endDate ? new Date(location.state.endDate) : null
   );
   const [targetLocation, setTargetLocation] = useState<string>("");
   const [balancePoint, setBalancePoint] = useState<number>(0);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [center, setCenter] = useState({ lat: 33.450701, lng: 126.570667 });
   const [position, setPosition] = useState(null);
 
+  const isFormValid = useMemo(() => {
+    return (
+      goalName.trim().length >= 2 &&
+      !!startDate &&
+      !!endDate &&
+      selectedDays.length > 0
+    );
+  }, [goalName, startDate, endDate, selectedDays]);
+
   const fetchBalancePoint = useCallback(async (): Promise<void> => {
+    if (!userId) return;
     try {
-      if (userId) {
-        const { point } = await getPoint(userId);
-        setBalancePoint(point);
-      }
+      const { totalPoints } = await getPoint({ userId });
+      setBalancePoint(totalPoints);
     } catch (error) {
       console.error("포인트 불러오기 실패:", error);
     }
   }, [userId]);
-  useEffect(() => {
-    fetchBalancePoint();
-  }, [fetchBalancePoint]);
 
   const updateCenterWhenMapMoved = useMemo(
     () =>
@@ -95,19 +93,22 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   }, [location.state]);
 
   useEffect(() => {
+    if (!userId) return;
+    fetchBalancePoint();
+  }, [fetchBalancePoint, userId]);
+
+  useEffect(() => {
     if (!goalId) return;
 
     const fetchGoalData = async (): Promise<void> => {
       try {
-        const goalData: GoalData = await getTempGoal(goalId);
-        setGoalName(goalData.goal.name || "");
-        setStartDate(
-          goalData.goal.startDate ? new Date(goalData.goal.startDate) : null
-        );
-        setEndDate(
-          goalData.goal.endDate ? new Date(goalData.goal.endDate) : null
-        );
-        setTargetLocation(goalData.goal.locationName || "");
+        const { goal } = await getTempGoal({ goalId });
+        const { name = "", startDate, endDate, locationName = "" } = goal; // ✅ goal 내부 값도 구조 분해!
+
+        setGoalName(name);
+        setStartDate(startDate ? new Date(startDate) : null);
+        setEndDate(endDate ? new Date(endDate) : null);
+        setTargetLocation(locationName);
       } catch (error) {
         console.error("임시 목표 데이터 불러오기 실패:", error);
       }
@@ -116,15 +117,13 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     fetchGoalData();
   }, [goalId]);
 
-  const handleDateClick = (): void => {
+  const handleDateClick = (mode: "start" | "end"): void => {
     navigate(paths.goal.date.path, {
-      state: { goalName }
-    });
-  };
-
-  const handleEndDateClick = (): void => {
-    navigate(paths.goal.date.path, {
-      state: { mode: "end", goalName, startDate }
+      state: {
+        mode,
+        goalName,
+        ...(mode === "end" && { startDate })
+      }
     });
   };
 
@@ -133,7 +132,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
 
     if (status === GoalStatus.ACTIVE) {
       if (!goalName.trim() || !startDate || !endDate || !targetLocation) {
-        alert("모든 필수 항목을 입력해주세요.");
+        toast.error("모든 필수 항목을 입력해주세요.");
         return;
       }
     }
@@ -147,42 +146,23 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
         locationName: targetLocation
       },
       status,
-      days: selectedDays.map((day) => dayMapping[day])
+      days: selectedDays.map((day) => DAY_MAPPING[day])
     };
 
     try {
       status === GoalStatus.DRAFT
-        ? await createTempSaveGoal(goalData)
-        : await createGoal(goalData);
-      navigate(paths.goal.list.path);
+        ? await postCreateTempSaveGoal({ data: goalData })
+        : await postCreateGoal({ data: goalData });
+      navigate(paths.goal.root.path);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleBackButtonClick = (): void => {
-    navigate(paths.goal.list.path);
-  };
-
-  useEffect(() => {
-    setIsFormValid(
-      goalName.trim().length >= 2 &&
-        !!startDate &&
-        !!endDate &&
-        selectedDays.length > 0
-    );
-  }, [goalName, startDate, endDate, selectedDays]);
-
   const navigatePositionSearch = () => navigate(paths.map.search.getHref());
 
   return (
-    <div className="mx-auto h-[812px] w-[375px] bg-white p-4">
-      <div className="flex items-center border-b pb-2 text-xl font-bold">
-        <button onClick={handleBackButtonClick} className="mr-2 text-gray-600">
-          &lt;
-        </button>
-        목표 추가
-      </div>
+    <div className="mx-auto h-[calc(100vh-130px)] w-[375px] overflow-auto bg-white p-4">
       <div className="mt-4 h-[86px] w-[335px]">
         <label className="block text-[14px] font-medium leading-[16px] tracking-[-2.5%] text-[#1A1A1A]">
           목표 명
@@ -198,8 +178,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
       <DatePicker
         startDate={startDate}
         endDate={endDate}
-        onStartDateClick={handleDateClick}
-        onEndDateClick={handleEndDateClick}
+        onDateClick={handleDateClick}
       />
 
       <DayPicker
@@ -211,13 +190,13 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
         }
         onSelectAllDays={() =>
           setSelectedDays(
-            selectedDays.length === 7 ? [] : Object.keys(dayMapping)
+            selectedDays.length === 7 ? [] : Object.keys(DAY_MAPPING)
           )
         }
       />
 
       <div className="mt-[20px] flex h-[66px] w-[335px] flex-col justify-between gap-[6px]">
-        <label className="text-[14px] font-medium leading-[16px] tracking-[-2.5%] text-gray-600">
+        <label className="block text-[14px] font-medium leading-[16px] tracking-[-2.5%]">
           장소 설정
         </label>
         <input

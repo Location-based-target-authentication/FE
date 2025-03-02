@@ -1,3 +1,4 @@
+import { Header } from "@/components/ui/header/header";
 import { Navbar } from "@/components/ui/navbar/navbar";
 
 import { Outlet } from "react-router";
@@ -9,6 +10,7 @@ interface Props extends HasChildren {}
 function Layout({ children }: Props) {
   return (
     <>
+      <Header />
       {children}
       <Navbar />
       <Outlet />

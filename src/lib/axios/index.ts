@@ -1,4 +1,4 @@
-import { refreshAccessToken } from "@/features/auth/api/auth";
+import { postRefreshAccessToken } from "@/features/auth/api/auth";
 import type {
   AxiosRequestConfig,
   AxiosResponse,
@@ -50,7 +50,7 @@ export const handleTokenExpiration = async (
   config: AxiosRequestConfig
 ): Promise<AxiosResponse> => {
   try {
-    const response = await refreshAccessToken(refreshToken);
+    const response = await postRefreshAccessToken({ data: { refreshToken } });
     useAuthStore.setState({
       accessToken: response.data.accessToken,
       refreshToken: response.data.refreshToken
@@ -68,12 +68,13 @@ export const handleTokenExpiration = async (
 const requestInterceptor: Interceptor<InternalAxiosRequestConfig> = {
   onFulfilled: (config) => {
     const accessToken = useAuthStore.getState().accessToken;
-    if (accessToken) {
-      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    if (!accessToken && !config.url?.includes("auth")) {
+      return Promise.reject(new Error("액세스 토큰이 없습니다."));
     }
+    config.headers["Authorization"] = `Bearer ${accessToken}`;
     return config;
   },
-  onRejected: (error) => error
+  onRejected: (error) => Promise.reject(error)
 };
 
 const responseInterceptor: Interceptor<AxiosResponse> = {

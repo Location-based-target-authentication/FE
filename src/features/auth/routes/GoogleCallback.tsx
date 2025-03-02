@@ -3,7 +3,7 @@ import { Spinner } from "@/components/ui/spinner";
 
 import { useCallback, useEffect, useState } from "react";
 
-import { googleLogin } from "@/features/auth/api/auth";
+import { postGoogleLogin } from "@/features/auth/api/auth";
 import { useNavigate, useSearchParams } from "react-router";
 
 import { useAuthStore } from "@/stores/auth-store";
@@ -14,27 +14,27 @@ const GoogleCallback = (): JSX.Element | null => {
   const navigate = useNavigate();
   const setTokens = useAuthStore((state) => state.setTokens);
 
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [isloading, setIsLoading] = useState<boolean>(true);
 
   const handleGoogleLogin = useCallback(
     async (code: string): Promise<void> => {
       try {
-        const response = await googleLogin(code);
-        if (!response.ok) {
+        const response = await postGoogleLogin({ data: { code } });
+        if (response.status < 200 || response.status >= 300) {
           throw new Error("구글 인증에 실패했습니다.");
         }
 
-        const { accessToken, refreshToken } = response.data;
+        const { accessToken, refreshToken, userId } = response.data;
 
-        setTokens(accessToken, refreshToken);
+        setTokens(accessToken, refreshToken, userId);
 
         navigate(paths.home.path);
       } catch (error) {
         console.error(error);
-        setError("로그인 처리 중 문제가 발생했습니다.");
+        setIsError(true);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     },
     [navigate, setTokens]
@@ -47,14 +47,14 @@ const GoogleCallback = (): JSX.Element | null => {
       handleGoogleLogin(code);
     } else {
       console.error("Authorization code not found.");
-      setError("구글 인증 코드가 존재하지 않습니다.");
-      setLoading(false);
+      setIsError(true);
+      setIsLoading(false);
       navigate(paths.auth.login.path);
     }
   }, [searchParams, handleGoogleLogin, navigate]);
 
-  if (error) return <MainErrorFallback errorMessage={error} />;
-  if (loading)
+  if (isError) return <MainErrorFallback />;
+  if (isloading)
     return (
       <div className="flex h-screen w-screen items-center justify-center">
         <Spinner size="lg" variant="primary" />

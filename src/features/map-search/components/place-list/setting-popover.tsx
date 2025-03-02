@@ -30,14 +30,17 @@ function SettingPopover({ lat, lng, placeName }: SettingPopoverProps) {
       return;
     }
 
-    return navigate(paths.goal.goal.getHref(), {
+    return navigate(paths.goal.create.getHref(), {
       state: { position, placeName }
     });
   };
 
   return (
     <Popover>
-      <PopoverTrigger className="max-w-[100px] truncate rounded-full border border-green-500 px-3 py-1 text-xs text-green-500">
+      <PopoverTrigger
+        className="max-w-[80px] truncate rounded-md border border-green-500 px-2 py-[2px] text-[10px] text-green-500"
+        onClick={(e) => e.stopPropagation()}
+      >
         목표 설정
       </PopoverTrigger>
       <PopoverContent className="w-64 rounded-lg border border-gray-200 bg-white p-4 shadow-lg">

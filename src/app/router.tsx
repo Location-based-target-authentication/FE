@@ -2,20 +2,22 @@ import Layout from "@/components/layouts/layout";
 
 import { useMemo } from "react";
 
-import DatePickView from "@/app/routes/goal/date-pick";
+import KakaoCallback from "@/app/routes/auth/kakao-callback";
+import LoginView from "@/app/routes/auth/login";
+import CreateGoalView from "@/app/routes/goal/create-goal";
 import {
   default as AppRoot,
   ErrorBoundary as RootErrorBoundary
 } from "@/app/routes/index.tsx";
+import PrivateRoute from "@/app/routes/PrivateRoute";
+import AccountView from "@/app/routes/user/account";
+import MyPageView from "@/app/routes/user/my-page";
 import GoogleCallback from "@/features/auth/routes/GoogleCallback";
-import KakaoCallback from "@/features/auth/routes/KakaoCallback";
+import DatePickView from "@/features/goal/components/create-goal/date-pick";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router";
 
 import { paths } from "@/config/paths";
-import LoginView from "./routes/auth/login";
-import CreateGoalView from "./routes/goal/create-goal";
-import PrivateRoute from "./routes/PrivateRoute";
 
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;
@@ -56,7 +58,32 @@ const createAppRouter = (queryClient: QueryClient) =>
           element: <LoginView />
         },
         {
-          path: paths.goal.goal.path,
+          path: paths.map.search.path,
+          lazy: () => import("./routes/map/search").then(convert(queryClient))
+        },
+        {
+          path: paths.map.certification.path,
+          lazy: () =>
+            import("./routes/map/certification").then(convert(queryClient))
+        },
+        {
+          path: paths.map.certification.sucess.path,
+          lazy: () =>
+            import("./routes/map/certification/success").then(
+              convert(queryClient)
+            )
+        },
+        {
+          path: paths.profile.reward.path,
+          lazy: () =>
+            import("./routes/profile/reward").then(convert(queryClient))
+        },
+        {
+          path: paths.goal.root.path,
+          lazy: () => import("./routes/goal").then(convert(queryClient))
+        },
+        {
+          path: paths.goal.create.path,
           element: <CreateGoalView />
         },
         {
@@ -64,8 +91,12 @@ const createAppRouter = (queryClient: QueryClient) =>
           element: <DatePickView />
         },
         {
-          path: paths.map.search.path,
-          lazy: () => import("./routes/map/search").then(convert(queryClient))
+          path: paths.user.myPage.path,
+          element: <MyPageView />
+        },
+        {
+          path: paths.user.account.path,
+          element: <AccountView />
         },
         {
           path: "*",
