@@ -67,7 +67,6 @@ const AccountPage: React.FC = () => {
   };
 
   const phoneNumber = useMemo(() => {
-    console.log(userInfo);
     if (!userInfo?.phoneNumber) return "";
 
     return `010${userInfo.phoneNumber}`
