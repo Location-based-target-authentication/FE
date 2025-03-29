@@ -28,7 +28,7 @@ const GoogleCallback = (): JSX.Element | null => {
           throw new Error("구글 인증에 실패했습니다.");
         }
 
-        const { accessToken, refreshToken, username, id, userId } =
+        const { accessToken, refreshToken, username, id, userId, phoneNumber } =
           response.data;
 
         setTokens(accessToken, refreshToken, id);
@@ -38,7 +38,9 @@ const GoogleCallback = (): JSX.Element | null => {
         const { totalPoints } = await getPoint({ pathParams: { userId } });
         setPoint(totalPoints);
 
-        navigate(paths.home.path);
+        phoneNumber
+          ? navigate(paths.home.path)
+          : navigate(paths.auth.agreement.path);
       } catch (error) {
         console.error(error);
         setIsError(true);

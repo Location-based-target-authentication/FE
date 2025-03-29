@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { deleteUser } from "@/features/user/api/user";
 import { SocialType, UserInfo } from "@/features/user/types/user-info";
@@ -66,13 +66,16 @@ const AccountPage: React.FC = () => {
     }
   };
 
+  const phoneNumber = useMemo(() => {
+    if (!userInfo?.phoneNumber) return "";
+
+    return `010${userInfo.phoneNumber}`
+      .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
+      .replace(/-{1,2}$/g, "");
+  }, [userInfo]);
+
   return (
     <div className="h-[812px] w-[375px]">
-      <div className="mb-5 flex items-center space-x-4">
-        <button onClick={() => navigate(-1)}></button>
-        <h2 className="text-2xl font-bold">계정 관리</h2>
-      </div>
-
       <div className="h-[90px] w-[375px] border-b border-[#E0E0E0] px-[20px] pt-[20px]">
         <div className="h-[18px] w-[41px]">
           <p className="text-[16px] font-medium leading-[18px] -tracking-wide text-black">
@@ -100,7 +103,7 @@ const AccountPage: React.FC = () => {
             휴대폰 번호
           </p>
           <p className="mt-[16px] h-[14px] w-[87px] whitespace-nowrap text-[14px] font-normal leading-[16px] -tracking-wide text-black">
-            {userInfo?.phoneNumber}
+            {phoneNumber}
           </p>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { DAYS_STRING_MAP } from "@/features/map-certification/components/map-certification.const.ts";
 import { useQuery } from "@tanstack/react-query";
-import { join, map, slice } from "es-toolkit/compat";
+import { filter, join, map, slice } from "es-toolkit/compat";
 
 import { useUserStore } from "@/stores/user";
 import { generate_qo_getGoalsCheck } from "@/lib/react-query/queryOptions/goals";
@@ -23,22 +23,29 @@ function ProgressGoal() {
     generate_qo_getGoalsCheck(userId)
   );
 
+  const activeProgressGoals = useMemo(
+    () => filter(progressGoals, ({ status }) => status === "ACTIVE"),
+    [progressGoals]
+  );
+
   const certificationInfoMaps = useMemo(() => {
     const generateMap = (certificationInfo: CertificationInfo[]) => {
       return new Map(
-        map(certificationInfo, ({ date, verified }) => [date, verified])
+        map(certificationInfo, ({ achievedAt, achievedSuccess }) => [
+          achievedAt,
+          achievedSuccess
+        ])
       );
     };
 
-    return map(progressGoals, ({ dateAuthentication }) =>
+    return map(activeProgressGoals, ({ dateAuthentication }) =>
       generateMap(dateAuthentication)
     );
-  }, [progressGoals]);
+  }, [activeProgressGoals]);
 
   const transformedProgressGoals = useMemo(
     () =>
-      map(progressGoals, (goal, index) => {
-        console.log(progressGoals);
+      map(activeProgressGoals, (goal, index) => {
         const transFormViewDays = map(goal.calender, (viewDay) => {
           const isCertificationInfo = certificationInfoMaps[index].has(viewDay);
 
@@ -59,7 +66,7 @@ function ProgressGoal() {
             : generateNonCertificationItem({ viewDay, day, isToday });
         });
         const dateString = `${generateDateString(goal.startDate)} ~ ${generateDateString(goal.endDate)}`;
-        const daysArr = map(goal.dayOfWeek.split(","), (day) =>
+        const daysArr = map((goal.dayOfWeek || "").split(","), (day) =>
           DAYS_STRING_MAP.get(day)
         );
         const days = daysArr.length === 7 ? "매일" : join(daysArr, ",");
@@ -74,7 +81,7 @@ function ProgressGoal() {
         };
       }),
 
-    [progressGoals, certificationInfoMaps, todayString]
+    [activeProgressGoals, certificationInfoMaps, todayString]
   );
 
   return transformedProgressGoals.length > 0 ? (

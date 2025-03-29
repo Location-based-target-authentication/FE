@@ -2,7 +2,7 @@ import { BASE_PATH } from "@/features/goal/api/path";
 import { GoalData } from "@/features/goal/types/goal-create";
 
 import type { R } from "@/types/common.ts";
-import { GET, POST } from "@/lib/axios";
+import { GET, PATCH, POST } from "@/lib/axios";
 import { RoOnlyPathParamsType, RoOnlyQueryType } from "@/lib/axios/utils";
 import type { CompleteGoal, ProgressGoal } from "../types";
 import { GOALS_CHECK, GOALS_COMPLETE } from "./path";
@@ -36,5 +36,18 @@ export function postCreateTempSaveGoal({ data }: { data: GoalData }) {
 export function getTempGoal(pathParam: { goalId: number }) {
   return GET({
     url: `${BASE_PATH}/check/${pathParam.goalId}`
+  });
+}
+
+export function patchTempGoal({
+  pathParam,
+  data
+}: {
+  pathParam: { goalId: number };
+  data: GoalData;
+}) {
+  return PATCH({
+    url: `${BASE_PATH}/${pathParam.goalId}/draft`,
+    data
   });
 }

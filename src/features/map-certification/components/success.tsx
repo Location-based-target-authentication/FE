@@ -23,7 +23,7 @@ function MapCertificationSuccess() {
         <p className="text-2xl font-medium text-[#4CAF50]">{`"${name}"`}</p>
         <div className="text-center">
           <p className="text-2xl font-medium leading-relaxed">
-            목표를 완료해서 <span className="text-[#4CAF50]">{point}</span>를
+            목표를 완료해서 <span className="text-[#4CAF50]">{point}p</span>를
           </p>
           <p className="text-xl font-medium">획득했어요!</p>
         </div>

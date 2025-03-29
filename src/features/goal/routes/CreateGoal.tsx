@@ -3,19 +3,24 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import containTargetUrl from "@/asset/map/contain-target.svg?url";
 import {
   getTempGoal,
+  patchTempGoal,
   postCreateGoal,
   postCreateTempSaveGoal
 } from "@/features/goal/api/goal";
 import BalanceInfo from "@/features/goal/components/create-goal/BalanceInfo";
 import DatePicker from "@/features/goal/components/create-goal/DatePicker";
 import DayPicker from "@/features/goal/components/create-goal/DayPicker";
-import { DAY_MAPPING } from "@/features/goal/components/create-goal/goal.constants";
+import {
+  DAY_MAPPING,
+  REVERSE_DAY_MAPPING
+} from "@/features/goal/components/create-goal/goal.constants";
 import SaveButtons from "@/features/goal/components/create-goal/SaveButtons";
 import { GoalData, GoalStatus } from "@/features/goal/types/goal-create";
 import { getPoint } from "@/features/point/api/point";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { debounce, isNull } from "es-toolkit";
+import { map } from "es-toolkit/compat";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
@@ -27,7 +32,7 @@ import { paths } from "@/config/paths";
 import { generate_qo_getGoals as generate_qo_home } from "@/lib/react-query/queryOptions/home.ts";
 
 interface CreateGoalProps {
-  goalId?: number;
+  goalId: number;
 }
 
 const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
@@ -60,9 +65,10 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
       goalName.trim().length >= 2 &&
       !!startDate &&
       !!endDate &&
-      selectedDays.length > 0
+      selectedDays.length > 0 &&
+      targetLocation.trim().length > 0
     );
-  }, [goalName, startDate, endDate, selectedDays]);
+  }, [goalName, startDate, endDate, selectedDays, targetLocation]);
 
   const fetchBalancePoint = useCallback(async (): Promise<void> => {
     try {
@@ -85,10 +91,12 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     []
   );
 
+  const formStatus = useMemo(() => {
+    return goalId === -1 ? GoalStatus.ACTIVE : GoalStatus.DRAFT;
+  }, [goalId]);
+
   useEffect(() => {
     if (isNull(location.state)) return;
-
-    console.log(location.state);
 
     if (location.state.position && location.state.placeName) {
       const { position, placeName } = location.state;
@@ -120,24 +128,37 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   }, [fetchBalancePoint, userId]);
 
   useEffect(() => {
-    if (!goalId) return;
+    const locationStateGoalId = location.state?.goalId;
+    if (goalId === -1 || !locationStateGoalId) return;
 
     const fetchGoalData = async (): Promise<void> => {
       try {
-        const { goal } = await getTempGoal({ goalId });
-        const { name = "", startDate, endDate, locationName = "" } = goal; // ✅ goal 내부 값도 구조 분해!
+        const res = await getTempGoal({ goalId });
+        const {
+          name = "",
+          startDate,
+          endDate,
+          locationName = "",
+          dayOfWeek,
+          latitude,
+          longitude
+        } = res; // ✅ goal 내부 값도 구조 분해!
 
         setGoalName(name);
         setStartDate(startDate ? new Date(startDate) : null);
         setEndDate(endDate ? new Date(endDate) : null);
         setTargetLocation(locationName);
+        setPosition({ lat: latitude, lng: longitude });
+        setSelectedDays(
+          map(dayOfWeek.split(","), (item) => REVERSE_DAY_MAPPING[item])
+        );
       } catch (error) {
         console.error("임시 목표 데이터 불러오기 실패:", error);
       }
     };
 
     fetchGoalData();
-  }, [goalId]);
+  }, [goalId, location.state]);
 
   const handleDateClick = (mode: "start" | "end"): void => {
     navigate(paths.goal.date.path, {
@@ -172,9 +193,14 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     };
 
     try {
-      status === GoalStatus.DRAFT
-        ? await postCreateTempSaveGoal({ data: goalData })
-        : await postCreateGoal({ data: goalData });
+      if (formStatus === GoalStatus.ACTIVE) {
+        status === GoalStatus.DRAFT
+          ? await postCreateTempSaveGoal({ data: goalData })
+          : await postCreateGoal({ data: goalData });
+      } else {
+        if (goalId === -1) return;
+        await patchTempGoal({ data: goalData, pathParam: { goalId } });
+      }
 
       setPoint(useUserStore.getState().point - 200);
       const homeKey = generate_qo_home.DELETE_KEY(userId);
@@ -194,7 +220,8 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
         goalName,
         startDate,
         endDate,
-        selectedDays
+        selectedDays,
+        goalId
       })
     );
   };
@@ -269,6 +296,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
         onTempSave={() => handleSaveWithStatus(GoalStatus.DRAFT)}
         onSave={() => handleSaveWithStatus(GoalStatus.ACTIVE)}
         isFormValid={isFormValid}
+        formStatus={formStatus}
       />
     </div>
   );

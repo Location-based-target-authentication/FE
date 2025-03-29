@@ -17,7 +17,8 @@ export const HEADER_TITLE_MAP = new Map([
   [paths.goal.create.getHref(), "목표추가"],
   [paths.profile.reward.getHref(), "리워드 신청"],
   [paths.auth.agreement.getHref(), "약관동의"],
-  [paths.auth.phoneNumber.getHref(), "정보입력"]
+  [paths.auth.phoneNumber.getHref(), "정보입력"],
+  [paths.user.account.getHref(), "계정관리"]
 ]);
 
 export const backgroundImages = [

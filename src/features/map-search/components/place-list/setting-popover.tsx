@@ -30,7 +30,9 @@ function SettingPopover({ lat, lng, placeName }: SettingPopoverProps) {
       return;
     }
 
-    return navigate(paths.goal.create.getHref(), {
+    const goalId = Number(localStorage.getItem("goalId"));
+    const url = `${paths.goal.create.getHref()}${goalId !== -1 ? `?goalId=${goalId}` : ""}`;
+    return navigate(url, {
       state: { position, placeName }
     });
   };

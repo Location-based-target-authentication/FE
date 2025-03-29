@@ -47,13 +47,13 @@ function KakaoMap() {
   const getDistance = useCallback(
     (destinationLat: number, destinationLng: number) => {
       return getFormattedDistance({
-        originLat: center.lat,
-        originLng: center.lng,
+        originLat: position.lat,
+        originLng: position.lng,
         destinationLat,
         destinationLng
       });
     },
-    [center.lat, center.lng]
+    [position.lat, position.lng]
   );
 
   const memoizedSelectedMarker = useMemo(() => {

@@ -9,3 +9,13 @@ export const DAY_MAPPING: Record<string, string> = {
   금: "FRI",
   토: "SAT"
 };
+
+export const REVERSE_DAY_MAPPING: Record<string, string> = {
+  SUN: "일",
+  MON: "월",
+  TUE: "화",
+  WED: "수",
+  THU: "목",
+  FRI: "금",
+  SAT: "토"
+};

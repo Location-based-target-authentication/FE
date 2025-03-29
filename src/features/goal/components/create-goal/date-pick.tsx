@@ -56,9 +56,11 @@ const DatePick = () => {
   };
 
   const handleConfirm = () => {
+    const goalId = Number(localStorage.getItem("goalId"));
+    const url = `${paths.goal.create.path}${goalId !== -1 ? `?goalId=${goalId}` : ""}`;
     if (!dateState.selectedDate) return;
     if (mode === "end") {
-      navigate(paths.goal.create.path, {
+      navigate(url, {
         state: {
           startDate: dateState.startDate,
           endDate: dateState.selectedDate,
@@ -66,7 +68,7 @@ const DatePick = () => {
         }
       });
     } else {
-      navigate(paths.goal.create.path, {
+      navigate(url, {
         state: { startDate: dateState.selectedDate, goalName }
       });
     }

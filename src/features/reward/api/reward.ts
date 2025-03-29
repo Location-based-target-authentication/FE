@@ -14,7 +14,7 @@ export function postRewards({
   { points: number; pointType: string; description: string },
   { userId: number }
 >): R<{
-  point: number;
+  totalPoints: number;
   status: string;
 }> {
   return POST({ url: POINT_DEDUC(userId), data });

@@ -16,7 +16,6 @@ export const generate_qo_getGoals: GenerateQoGetGoals = (goalId) => {
     queryKey: [GOALS_DETAIL(goalId)],
     queryFn: () =>
       getGoals({ pathParams: { goalId } }).then((data) => {
-        console.log(data, "목표 인증 데이터");
         return data;
       }),
     staleTime: simpleGenerateSecond([[10, "s"]])
@@ -25,7 +24,7 @@ export const generate_qo_getGoals: GenerateQoGetGoals = (goalId) => {
 
 interface UseMutationGoalsAchieveOptions
   extends UseMutationOptions<
-    { totalPoints: number; bonusPoints: number },
+    { totalPoints: number; currentPoints: number },
     AxiosError,
     void,
     unknown
@@ -62,7 +61,10 @@ type GenerateQoGetGoalsCheck = (userId: number) => UseQueryGoalsCheckOptions;
 export const generate_qo_getGoalsCheck = ((userId) => {
   const options: UseQueryGoalsCheckOptions = {
     queryKey: [GOALS_CHECK, userId],
-    queryFn: () => getGoalsCheck({ query: { userId } }).then((data) => data)
+    queryFn: () =>
+      getGoalsCheck({ query: { userId } }).then((data) => {
+        return data;
+      })
   };
 
   return options;

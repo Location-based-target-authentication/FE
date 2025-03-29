@@ -10,7 +10,7 @@ interface RewardData {
 
 interface UseMutationRewardsOptions
   extends UseMutationOptions<
-    { point: number; status: string },
+    { totalPoints: number; status: string },
     AxiosError,
     RewardData,
     unknown
