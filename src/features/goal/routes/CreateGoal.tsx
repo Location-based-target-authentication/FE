@@ -32,7 +32,7 @@ import { paths } from "@/config/paths";
 import { generate_qo_getGoals as generate_qo_home } from "@/lib/react-query/queryOptions/home.ts";
 
 interface CreateGoalProps {
-  goalId?: number;
+  goalId: number;
 }
 
 const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
@@ -91,10 +91,9 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     []
   );
 
-  const formStatus = useMemo(
-    () => (goalId ? GoalStatus.DRAFT : GoalStatus.ACTIVE),
-    [goalId]
-  );
+  const formStatus = useMemo(() => {
+    return goalId === -1 ? GoalStatus.ACTIVE : GoalStatus.DRAFT;
+  }, [goalId]);
 
   useEffect(() => {
     if (isNull(location.state)) return;
@@ -129,7 +128,8 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
   }, [fetchBalancePoint, userId]);
 
   useEffect(() => {
-    if (!goalId) return;
+    const locationStateGoalId = location.state?.goalId;
+    if (goalId === -1 || !locationStateGoalId) return;
 
     const fetchGoalData = async (): Promise<void> => {
       try {
@@ -158,7 +158,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
     };
 
     fetchGoalData();
-  }, [goalId]);
+  }, [goalId, location.state]);
 
   const handleDateClick = (mode: "start" | "end"): void => {
     navigate(paths.goal.date.path, {
@@ -198,7 +198,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
           ? await postCreateTempSaveGoal({ data: goalData })
           : await postCreateGoal({ data: goalData });
       } else {
-        if (!goalId) return;
+        if (goalId === -1) return;
         await patchTempGoal({ data: goalData, pathParam: { goalId } });
       }
 
@@ -220,7 +220,8 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
         goalName,
         startDate,
         endDate,
-        selectedDays
+        selectedDays,
+        goalId
       })
     );
   };

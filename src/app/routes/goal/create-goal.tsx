@@ -8,7 +8,10 @@ const CreateGoalView = () => {
   const parsedGoalId = useMemo(() => {
     const queryParams = new URLSearchParams(search);
     const goalId = queryParams.get("goalId");
-    return goalId ? Number(goalId) : undefined;
+    const numberedGoalId = goalId ? Number(goalId) : -1;
+    localStorage.setItem("goalId", String(numberedGoalId));
+
+    return numberedGoalId;
   }, [search]);
 
   return <CreateGoal goalId={parsedGoalId} />;

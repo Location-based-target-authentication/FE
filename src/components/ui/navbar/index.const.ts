@@ -16,7 +16,8 @@ export const NOT_VISIBLE_NAVBAR_PAGES = [
   paths.map.certification.sucess.getHref(),
   paths.auth.login.getHref(),
   paths.user.account.getHref(),
-  paths.goal.create.getHref()
+  paths.goal.create.getHref(),
+  paths.goal.date.getHref()
 ];
 
 const isEqualPath = (locationPath: string, path: string) => {
