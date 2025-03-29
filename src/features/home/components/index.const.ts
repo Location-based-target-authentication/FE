@@ -18,6 +18,8 @@ export const generatDdateText = (startDate: string, endDate: string) => {
 };
 
 export const generateDayText = (days: string) => {
+  if (!days) return "";
+
   const dayArr = days.split(",");
   const transformDays = map(dayArr, (day) => DAYS_STRING_MAP.get(day));
   const day = dayArr.length === 7 ? "매일" : join(transformDays, ", ");

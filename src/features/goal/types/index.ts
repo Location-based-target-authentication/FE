@@ -1,8 +1,8 @@
 export type STATUS = "DRAF" | "ACTIVE" | "COMPLETE";
 
 export interface CertificationInfo {
-  date: string;
-  verified: boolean;
+  achievedAt: string;
+  achievedSuccess: boolean;
 }
 
 export interface ProgressGoal {

@@ -60,9 +60,10 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
       goalName.trim().length >= 2 &&
       !!startDate &&
       !!endDate &&
-      selectedDays.length > 0
+      selectedDays.length > 0 &&
+      targetLocation.trim().length > 0
     );
-  }, [goalName, startDate, endDate, selectedDays]);
+  }, [goalName, startDate, endDate, selectedDays, targetLocation]);
 
   const fetchBalancePoint = useCallback(async (): Promise<void> => {
     try {
@@ -87,8 +88,6 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ goalId }) => {
 
   useEffect(() => {
     if (isNull(location.state)) return;
-
-    console.log(location.state);
 
     if (location.state.position && location.state.placeName) {
       const { position, placeName } = location.state;

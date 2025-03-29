@@ -6,4 +6,4 @@ export const POINTS = (userId: number) =>
   generatePathByBase(BASE_PATH, String(userId));
 
 export const POINT_DEDUC = (userId: number) =>
-  generatePathByBase(BASE_PATH, String(userId), "deduc");
+  generatePathByBase(BASE_PATH, String(userId), "deduct");

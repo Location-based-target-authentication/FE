@@ -6,7 +6,7 @@ interface CertificationButtonProps {
   isContainRadar: boolean;
   isPending: boolean;
   mutate: UseMutateFunction<
-    { totalPoints: number; bonusPoints: number },
+    { totalPoints: number; currentPoints: number },
     AxiosError,
     void,
     unknown

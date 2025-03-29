@@ -47,7 +47,6 @@ const MyPage: React.FC = () => {
       console.error("사용자 정보가 없습니다.");
       return;
     }
-    console.log(userInfo, "userinfo");
     navigate(paths.user.account.path, { state: { ...userInfo, userId } });
   };
 
@@ -55,7 +54,7 @@ const MyPage: React.FC = () => {
 
   return (
     <div>
-      <ProfileHeader />
+      <ProfileHeader popoverContent="문의사항은 willdo.contact@gmail.com으로 문의주세요!" />
 
       <div className="flex w-[375px] flex-col">
         <button

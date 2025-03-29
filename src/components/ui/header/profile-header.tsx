@@ -19,7 +19,7 @@ import {
   generateProgressPercent
 } from "./index.const";
 
-function ProfileHeader() {
+function ProfileHeader({ popoverContent }: { popoverContent: string }) {
   const { userName, point } = useUserStore();
   const [bgImage, setBgImage] = useState("");
 
@@ -85,15 +85,15 @@ function ProfileHeader() {
             side="left"
             className="w-50 p-2 text-xs text-green-500"
           >
-            목표는 최대 3개까지 생성 가능합니다.
+            {popoverContent}
           </PopoverContent>
         </Popover>
       </div>
 
       <div>
         <p className="text-xl">
-          안녕하세요!
-          <span className="font-bold text-green-300">{userName}</span>님
+          <span>안녕하세요!</span>
+          <span className="font-bold text-green-300">{` ${userName}`}</span>님
         </p>
         <p className="text-sm">오늘도 일단 가볼까요?</p>
       </div>

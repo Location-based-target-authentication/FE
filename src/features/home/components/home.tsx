@@ -72,7 +72,7 @@ const HomePage = () => {
 
   return (
     <div className="relative min-h-screen w-full bg-gray-100">
-      <ProfileHeader />
+      <ProfileHeader popoverContent="목표는 최대 3개까지 생성 가능합니다." />
 
       <GoalList goalCount={goalCount} transformGoals={transformGoals} />
 

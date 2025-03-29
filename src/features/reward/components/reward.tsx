@@ -20,7 +20,7 @@ export default function Reward() {
         return;
       }
 
-      setPoint(data.point);
+      setPoint(data.totalPoints);
       toast(<SuccessToast />, {
         position: "bottom-center",
         autoClose: 3000,
@@ -43,7 +43,9 @@ export default function Reward() {
     mutate({ points, pointType, description });
   };
 
-  const loaledPoint = useMemo(() => `${point.toLocaleString()}p`, [point]);
+  const loaledPoint = useMemo(() => {
+    return `${point.toLocaleString()}p`;
+  }, [point]);
   const coupons = useMemo(
     () => generateCoupons(point, isPending),
     [point, isPending]

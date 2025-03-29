@@ -26,7 +26,7 @@ import {
   generateInitialGoalsData
 } from "./map-certification.const";
 
-const DISTANCE_DIFFRENCE = 20;
+const DISTANCE_DIFFRENCE = 100;
 
 function MapCertification() {
   // Hooks
@@ -69,14 +69,13 @@ function MapCertification() {
 
       addPoint(data.totalPoints);
       navigate("/map/certification/success", {
-        state: { name, point: data.bonusPoints }
+        state: { name, point: data.currentPoints }
       });
     }
   });
 
   // useMemos
   const isContainRadar = useMemo(() => {
-    console.log(position.lat, position.lng, serverLatitude, serverLongitude);
     if (!serverLatitude || !serverLongitude) return false;
 
     const distance =
@@ -119,7 +118,7 @@ function MapCertification() {
         <Map
           className="size-full"
           center={center}
-          level={1}
+          level={4}
           onCenterChanged={updateCenterWhenMapMoved}
         >
           <Circle
