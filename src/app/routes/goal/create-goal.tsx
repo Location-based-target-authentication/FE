@@ -1,9 +1,15 @@
+import { useMemo } from "react";
+
 import CreateGoal from "@/features/goal/routes/CreateGoal";
-import { useParams } from "react-router";
+import { useLocation } from "react-router";
 
 const CreateGoalView = () => {
-  const { goalId } = useParams<{ goalId?: string }>();
-  const parsedGoalId: number | undefined = goalId ? Number(goalId) : undefined;
+  const { search } = useLocation();
+  const parsedGoalId = useMemo(() => {
+    const queryParams = new URLSearchParams(search);
+    const goalId = queryParams.get("goalId");
+    return goalId ? Number(goalId) : undefined;
+  }, [search]);
 
   return <CreateGoal goalId={parsedGoalId} />;
 };

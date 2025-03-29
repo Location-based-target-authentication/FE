@@ -52,7 +52,7 @@ const HomePage = () => {
         const redirectionCallback = () => {
           const url =
             item.status === "DRAFT"
-              ? paths.goal.create.getHref()
+              ? `${paths.goal.create.getHref()}?goalId=${item.goalId}`
               : paths.map.certification.getHref();
 
           navigate(url, { state: { goalId: item.goalId, userId } });
